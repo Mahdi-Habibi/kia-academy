@@ -24,7 +24,8 @@ type Section =
   | 'readiness'
   | 'bootcamp'
   | 'courses'
-  | 'adminAccess';
+  | 'adminAccess'
+  | 'backup';
 
 export default function AdminSettingsPage() {
   const { t } = useLanguage();
@@ -50,6 +51,7 @@ export default function AdminSettingsPage() {
     if (isSuper) {
       items.splice(2, 0, { id: 'payment', label: t('admin.settings.nav.payment') });
       items.push({ id: 'adminAccess', label: t('admin.settings.nav.adminAccess') });
+      items.push({ id: 'backup', label: t('admin.settings.nav.backup') });
     }
     return items;
   }, [t, isSuper]);
@@ -144,6 +146,32 @@ export default function AdminSettingsPage() {
       {error && <p className="form-error">{error}</p>}
       {saved && <p className="form-success">{saved}</p>}
 
+      {section === 'backup' && isSuper ? (
+        <section className="admin-card">
+          <h2>{t('admin.settings.backup.title')}</h2>
+          <p className="admin-sub">{t('admin.settings.backup.sub')}</p>
+          <p className="admin-sub">{t('admin.settings.backup.note')}</p>
+          <button
+            type="button"
+            className="cta-primary"
+            onClick={() => {
+              const blob = new Blob([JSON.stringify(settings, null, 2)], {
+                type: 'application/json',
+              });
+              const url = URL.createObjectURL(blob);
+              const anchor = document.createElement('a');
+              anchor.href = url;
+              anchor.download = `kia-settings-${new Date().toISOString().slice(0, 10)}.json`;
+              anchor.click();
+              URL.revokeObjectURL(url);
+              setSaved(t('admin.settings.backup.exported'));
+            }}
+          >
+            {t('admin.settings.backup.export')}
+          </button>
+        </section>
+      ) : null}
+
       {section === 'courses' ? (
         <section className="admin-section">
           <div className="admin-header-row">
@@ -203,8 +231,8 @@ export default function AdminSettingsPage() {
           </div>
           {courses.length === 0 && <p className="admin-sub">{t('admin.courses.empty')}</p>}
         </section>
-      ) : (
-        <form className="admin-form" onSubmit={handleSaveSection}>
+      ) : section === 'backup' ? null : (
+        <form className="admin-form" style={{ maxWidth: 'none' }} onSubmit={handleSaveSection}>
           {section === 'general' && (
             <>
               <label className="form-field">
