@@ -25,6 +25,7 @@ import {
   AdminCreateChallengeDto,
   AdminCreateCourseDto,
   AdminCreateLessonDto,
+  AdminCreateUserDto,
   AdminUpdateChallengeDto,
   AdminUpdateCourseDto,
   AdminUpdateLessonDto,
@@ -140,6 +141,12 @@ export class AdminController {
   @AdminAccess('users', 'view')
   listUsers() {
     return this.adminService.listUsers();
+  }
+
+  @Post('users')
+  @AdminAccess('users', 'manage')
+  createUser(@CurrentUser() actor: AuthUser, @Body() dto: AdminCreateUserDto) {
+    return this.adminService.createUser(dto, actor);
   }
 
   @Patch('users/:id/role')

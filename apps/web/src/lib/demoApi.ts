@@ -32,6 +32,7 @@ import type {
   AdminLesson,
   AdminChallenge,
   AdminContactMessage,
+  AdminCreateUserDto,
   AdminUser,
   AdminPayment,
   SiteAdminAccessSettings,
@@ -68,6 +69,27 @@ const DEMO_ADMIN: AuthUser = {
   role: 'SUPER_ADMIN',
   profileComplete: true,
 };
+
+const DEMO_CREATED_AT = '2026-01-01T00:00:00.000Z';
+
+let demoAdminUsers: AdminUser[] = [
+  {
+    id: DEMO_LEARNER.id,
+    name: DEMO_LEARNER.name,
+    email: DEMO_LEARNER.email,
+    phone: DEMO_LEARNER.phone,
+    role: DEMO_LEARNER.role,
+    createdAt: DEMO_CREATED_AT,
+  },
+  {
+    id: DEMO_ADMIN.id,
+    name: DEMO_ADMIN.name,
+    email: DEMO_ADMIN.email,
+    phone: DEMO_ADMIN.phone,
+    role: DEMO_ADMIN.role,
+    createdAt: DEMO_CREATED_AT,
+  },
+];
 
 interface DemoLesson {
   id: string;
@@ -867,35 +889,87 @@ export const demoApi = {
 
   async adminListUsers(): Promise<AdminUser[]> {
     requireUser();
-    return delay([
-      {
-        id: DEMO_LEARNER.id,
-        name: DEMO_LEARNER.name,
-        email: DEMO_LEARNER.email,
-        role: DEMO_LEARNER.role,
-        createdAt: new Date().toISOString(),
-      },
-      {
-        id: DEMO_ADMIN.id,
-        name: DEMO_ADMIN.name,
-        email: DEMO_ADMIN.email,
-        role: DEMO_ADMIN.role,
-        createdAt: new Date().toISOString(),
-      },
-    ]);
+    return delay(demoAdminUsers.map((u) => ({ ...u })));
+  },
+
+  async adminCreateUser(dto: AdminCreateUserDto): Promise<AdminUser> {
+    requireUser();
+    const email = dto.email.trim().toLowerCase();
+    if (!email.includes('@')) throw new ApiError('Invalid email', 400);
+    if (!dto.password || dto.password.length < 8) {
+      throw new ApiError('Password must be at least 8 characters', 400);
+    }
+    if (demoAdminUsers.some((u) => (u.email ?? '').toLowerCase() === email)) {
+      throw new ApiError('Email already registered', 409);
+    }
+    const phone = dto.phone?.trim() || null;
+    if (phone && demoAdminUsers.some((u) => u.phone === phone)) {
+      throw new ApiError('Phone already registered', 409);
+    }
+    const role = dto.role ?? 'LEARNER';
+    const created: AdminUser = {
+      id: `demo-user-${Date.now()}`,
+      name: dto.name.trim(),
+      email,
+      phone,
+      role,
+      createdAt: new Date().toISOString(),
+      adminPanelAccess:
+        role === 'ADMIN'
+          ? normalizeAdminAccess(readDemoSettings().adminAccess)
+          : null,
+    };
+    demoAdminUsers = [created, ...demoAdminUsers];
+    return delay({ ...created });
   },
 
   async adminListPayments(): Promise<AdminPayment[]> {
     requireUser();
-    return delay([]);
+    const state = readState();
+    if (state.payments.length === 0) {
+      state.payments = [
+        {
+          id: 'demo-pay-1',
+          productType: 'ROADMAP_BUNDLE',
+          amountCents: 2_490_000,
+          currency: 'irr',
+          status: 'COMPLETED',
+        },
+      ];
+      writeState(state);
+    }
+    const user = DEMO_LEARNER;
+    return delay(
+      state.payments.map((p) => ({
+        id: p.id,
+        userId: user.id,
+        userName: user.name,
+        userEmail: user.email,
+        productType: p.productType,
+        productRef: null,
+        amountCents: p.amountCents,
+        currency: p.currency,
+        status: p.status,
+        createdAt: DEMO_CREATED_AT,
+      })),
+    );
   },
 
   async adminUpdateUserRole(userId: string, role: UserRole): Promise<AdminUser> {
     requireUser();
-    const users = await this.adminListUsers();
-    const user = users.find((u) => u.id === userId);
-    if (!user) throw new ApiError('User not found', 404);
-    return delay({ ...user, role });
+    const index = demoAdminUsers.findIndex((u) => u.id === userId);
+    if (index < 0) throw new ApiError('User not found', 404);
+    const updated: AdminUser = {
+      ...demoAdminUsers[index],
+      role,
+      adminPanelAccess:
+        role === 'ADMIN'
+          ? demoAdminUsers[index].adminPanelAccess ??
+            normalizeAdminAccess(readDemoSettings().adminAccess)
+          : null,
+    };
+    demoAdminUsers = demoAdminUsers.map((u, i) => (i === index ? updated : u));
+    return delay({ ...updated });
   },
 
   async adminUpdateUserAccess(
@@ -903,14 +977,15 @@ export const demoApi = {
     adminPanelAccess: SiteAdminAccessSettings,
   ): Promise<AdminUser> {
     requireUser();
-    const users = await this.adminListUsers();
-    const user = users.find((u) => u.id === userId);
-    if (!user) throw new ApiError('User not found', 404);
-    return delay({
-      ...user,
+    const index = demoAdminUsers.findIndex((u) => u.id === userId);
+    if (index < 0) throw new ApiError('User not found', 404);
+    const updated: AdminUser = {
+      ...demoAdminUsers[index],
       role: 'ADMIN',
       adminPanelAccess: normalizeAdminAccess(adminPanelAccess),
-    });
+    };
+    demoAdminUsers = demoAdminUsers.map((u, i) => (i === index ? updated : u));
+    return delay({ ...updated });
   },
 
   async adminListContactMessages(): Promise<AdminContactMessage[]> {

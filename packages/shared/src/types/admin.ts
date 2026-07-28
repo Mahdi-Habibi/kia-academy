@@ -51,9 +51,18 @@ export interface AdminUser {
   id: string;
   name: string;
   email: string | null;
+  phone?: string | null;
   role: UserRole;
   createdAt: string;
   adminPanelAccess?: SiteAdminAccessSettings | null;
+}
+
+export interface AdminCreateUserDto {
+  name: string;
+  email: string;
+  password: string;
+  phone?: string;
+  role?: UserRole;
 }
 
 export interface AdminPayment {

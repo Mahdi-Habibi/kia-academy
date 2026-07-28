@@ -1,7 +1,8 @@
 'use client';
 
-import { Check, Loader2, X } from 'lucide-react';
-import { Fragment, useEffect, useState } from 'react';
+import Link from 'next/link';
+import { Check, Loader2, Plus, X } from 'lucide-react';
+import { Fragment, useEffect, useMemo, useState } from 'react';
 import {
   createDefaultSiteSettings,
   normalizeAdminAccess,
@@ -35,6 +36,8 @@ export default function AdminUsersPage() {
   const [updatingId, setUpdatingId] = useState<string | null>(null);
   const [savingAccessId, setSavingAccessId] = useState<string | null>(null);
   const [feedback, setFeedback] = useState<Record<string, 'success' | 'error'>>({});
+  const [search, setSearch] = useState('');
+  const [roleFilter, setRoleFilter] = useState('');
 
   useEffect(() => {
     api
@@ -58,6 +61,22 @@ export default function AdminUsersPage() {
       })
       .finally(() => setLoading(false));
   }, [t]);
+
+  const filteredUsers = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    return users.filter((user) => {
+      if (roleFilter && user.role !== roleFilter) return false;
+      if (!q) return true;
+      const roleText = roleLabel(user.role, t).toLowerCase();
+      return (
+        user.name.toLowerCase().includes(q) ||
+        (user.email ?? '').toLowerCase().includes(q) ||
+        (user.phone ?? '').toLowerCase().includes(q) ||
+        user.role.toLowerCase().includes(q) ||
+        roleText.includes(q)
+      );
+    });
+  }, [users, search, roleFilter, t]);
 
   const saveRole = async (user: AdminUser) => {
     const nextRole = draftRoles[user.id];
@@ -129,11 +148,43 @@ export default function AdminUsersPage() {
 
   return (
     <div className="admin-content">
-      <h1>{t('admin.users.title')}</h1>
-      <p className="admin-sub">{t('admin.users.sub')}</p>
-      {isSuper && <p className="admin-sub">{t('admin.users.moderatorAccessHint')}</p>}
+      <div className="admin-header-row">
+        <div>
+          <h1>{t('admin.users.title')}</h1>
+          <p className="admin-sub">{t('admin.users.sub')}</p>
+          {isSuper && <p className="admin-sub">{t('admin.users.moderatorAccessHint')}</p>}
+        </div>
+        <Link href="/admin/users/create" className="cta-primary">
+          <Plus size={16} /> {t('admin.nav.usersCreate')}
+        </Link>
+      </div>
 
       {error && <p className="form-error">{error}</p>}
+
+      <div className="admin-toolbar">
+        <label className="form-field" style={{ flex: '1 1 220px', margin: 0 }}>
+          <span className="sr-only">{t('admin.users.search')}</span>
+          <input
+            className="admin-input"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder={t('admin.users.searchPlaceholder')}
+          />
+        </label>
+        <label className="form-field" style={{ flex: '0 1 180px', margin: 0 }}>
+          <span className="sr-only">{t('admin.users.col.role')}</span>
+          <select
+            className="admin-select"
+            value={roleFilter}
+            onChange={(e) => setRoleFilter(e.target.value)}
+          >
+            <option value="">{t('admin.users.allRoles')}</option>
+            <option value="LEARNER">{t('domain.roles.learner')}</option>
+            <option value="ADMIN">{t('domain.roles.moderator')}</option>
+            <option value="SUPER_ADMIN">{t('domain.roles.superAdmin')}</option>
+          </select>
+        </label>
+      </div>
 
       <div className="admin-table-wrap">
         <table className="admin-table">
@@ -147,7 +198,7 @@ export default function AdminUsersPage() {
             </tr>
           </thead>
           <tbody>
-            {users.map((user) => {
+            {filteredUsers.map((user) => {
               const draft = draftRoles[user.id] ?? user.role;
               const dirty = draft !== user.role;
               const rowFeedback = feedback[user.id];

@@ -38,6 +38,7 @@ import type {
   AdminLesson,
   AdminChallenge,
   AdminContactMessage,
+  AdminCreateUserDto,
   AdminUser,
   AdminPayment,
 } from '@pathwise/shared';
@@ -394,6 +395,13 @@ const liveApi = {
 
   adminListUsers(): Promise<AdminUser[]> {
     return request<AdminUser[]>('/admin/users');
+  },
+
+  adminCreateUser(dto: AdminCreateUserDto): Promise<AdminUser> {
+    return request<AdminUser>('/admin/users', {
+      method: 'POST',
+      body: JSON.stringify(dto),
+    });
   },
 
   adminListPayments(): Promise<AdminPayment[]> {
