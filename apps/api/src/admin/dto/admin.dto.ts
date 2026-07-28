@@ -2,6 +2,7 @@ import {
   IsArray,
   IsBoolean,
   IsDateString,
+  IsIn,
   IsInt,
   IsOptional,
   IsString,
@@ -12,6 +13,25 @@ import { Type } from 'class-transformer';
 import {
   SiteAdminAccessDto,
 } from '../../site-settings/dto/update-site-settings.dto';
+
+export class AdminCreateUserDto {
+  @IsString()
+  name!: string;
+
+  @IsString()
+  email!: string;
+
+  @IsString()
+  password!: string;
+
+  @IsOptional()
+  @IsString()
+  phone?: string;
+
+  @IsOptional()
+  @IsIn(['LEARNER', 'ADMIN', 'SUPER_ADMIN'])
+  role?: 'LEARNER' | 'ADMIN' | 'SUPER_ADMIN';
+}
 
 export class AdminCreateLessonDto {
   @IsString()

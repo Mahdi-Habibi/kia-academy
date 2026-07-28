@@ -10,7 +10,8 @@ import type {
   AuthUser,
   SiteAdminAccessSettings,
 } from '@pathwise/shared';
-import { normalizeAdminAccess } from '@pathwise/shared';
+import { normalizeAdminAccess, normalizeIranianPhone } from '@pathwise/shared';
+import * as bcrypt from 'bcrypt';
 import { MediaStorageService } from '../media/media-storage.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { SiteSettingsService } from '../site-settings/site-settings.service';
@@ -18,6 +19,7 @@ import {
   AdminCreateChallengeDto,
   AdminCreateCourseDto,
   AdminCreateLessonDto,
+  AdminCreateUserDto,
   AdminUpdateChallengeDto,
   AdminUpdateCourseDto,
   AdminUpdateLessonDto,
@@ -25,6 +27,8 @@ import {
   AdminUpdateUserRoleDto,
 } from './dto/admin.dto';
 import { Prisma } from '@prisma/client';
+
+const BCRYPT_ROUNDS = 12;
 
 function toJsonAccess(value: SiteAdminAccessSettings): Prisma.InputJsonValue {
   return JSON.parse(JSON.stringify(value)) as Prisma.InputJsonValue;
@@ -346,6 +350,7 @@ export class AdminService {
         id: true,
         name: true,
         email: true,
+        phone: true,
         role: true,
         createdAt: true,
         adminPanelAccess: true,
@@ -357,6 +362,7 @@ export class AdminService {
       id: user.id,
       name: user.name,
       email: user.email,
+      phone: user.phone,
       role: user.role,
       createdAt: user.createdAt.toISOString(),
       adminPanelAccess:
@@ -364,6 +370,86 @@ export class AdminService {
           ? normalizeAdminAccess(user.adminPanelAccess)
           : null,
     }));
+  }
+
+  async createUser(dto: AdminCreateUserDto, actor: AuthUser): Promise<AdminUser> {
+    const email = dto.email.trim().toLowerCase();
+    if (!email.includes('@')) {
+      throw new BadRequestException('Invalid email');
+    }
+    if (!dto.password || dto.password.length < 8) {
+      throw new BadRequestException('Password must be at least 8 characters');
+    }
+
+    const role = dto.role ?? 'LEARNER';
+    if (role === 'SUPER_ADMIN' && actor.role !== 'SUPER_ADMIN') {
+      throw new ForbiddenException('Only super admins can create super-admin accounts');
+    }
+
+    let phone: string | null = null;
+    if (dto.phone?.trim()) {
+      phone = normalizeIranianPhone(dto.phone.trim());
+      if (!phone) {
+        throw new BadRequestException('Invalid Iranian phone number');
+      }
+    }
+
+    const existingEmail = await this.prisma.user.findUnique({ where: { email } });
+    if (existingEmail) {
+      throw new ConflictException('Email already registered');
+    }
+    if (phone) {
+      const existingPhone = await this.prisma.user.findUnique({ where: { phone } });
+      if (existingPhone) {
+        throw new ConflictException('Phone already registered');
+      }
+    }
+
+    const settings = await this.siteSettings.get();
+    const passwordHash = await bcrypt.hash(dto.password, BCRYPT_ROUNDS);
+    const name = dto.name.trim();
+
+    const user = await this.prisma.user.create({
+      data: {
+        name,
+        email,
+        phone,
+        passwordHash,
+        role,
+        profileComplete: true,
+        emailVerified: true,
+        adminPanelAccess:
+          role === 'ADMIN' ? toJsonAccess(settings.adminAccess) : undefined,
+        bootcampProfile: {
+          create: {
+            rank: settings.bootcamp.defaultRank,
+            points: settings.bootcamp.defaultPoints,
+          },
+        },
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        phone: true,
+        role: true,
+        createdAt: true,
+        adminPanelAccess: true,
+      },
+    });
+
+    return {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      phone: user.phone,
+      role: user.role,
+      createdAt: user.createdAt.toISOString(),
+      adminPanelAccess:
+        user.role === 'ADMIN'
+          ? normalizeAdminAccess(user.adminPanelAccess)
+          : null,
+    };
   }
 
   async updateUserRole(
@@ -407,6 +493,7 @@ export class AdminService {
         id: true,
         name: true,
         email: true,
+        phone: true,
         role: true,
         createdAt: true,
         adminPanelAccess: true,
@@ -417,6 +504,7 @@ export class AdminService {
       id: updated.id,
       name: updated.name,
       email: updated.email,
+      phone: updated.phone,
       role: updated.role,
       createdAt: updated.createdAt.toISOString(),
       adminPanelAccess:
@@ -452,6 +540,7 @@ export class AdminService {
         id: true,
         name: true,
         email: true,
+        phone: true,
         role: true,
         createdAt: true,
         adminPanelAccess: true,
@@ -462,6 +551,7 @@ export class AdminService {
       id: updated.id,
       name: updated.name,
       email: updated.email,
+      phone: updated.phone,
       role: updated.role,
       createdAt: updated.createdAt.toISOString(),
       adminPanelAccess: normalizeAdminAccess(updated.adminPanelAccess),
