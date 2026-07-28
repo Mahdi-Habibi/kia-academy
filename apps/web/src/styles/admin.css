@@ -553,6 +553,7 @@
 .admin-chart-bar {
   flex: 1;
   min-width: 0;
+  height: var(--value, 8%);
   border-radius: 6px 6px 2px 2px;
   background: linear-gradient(180deg, var(--admin-accent-soft), var(--admin-accent-dark));
   transform-origin: bottom;

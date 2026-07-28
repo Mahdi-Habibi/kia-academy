@@ -1,16 +1,20 @@
 'use client';
 
 import { Loader2 } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import type { AdminPayment } from '@pathwise/shared';
 import { useLanguage } from '@/context/LanguageProvider';
 import { api, ApiError } from '@/lib/api';
+
+const PAYMENT_STATUSES = ['COMPLETED', 'PENDING', 'FAILED', 'REFUNDED'] as const;
 
 export default function AdminPaymentsPage() {
   const { t, format } = useLanguage();
   const [payments, setPayments] = useState<AdminPayment[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [search, setSearch] = useState('');
+  const [statusFilter, setStatusFilter] = useState('');
 
   useEffect(() => {
     api
@@ -21,6 +25,21 @@ export default function AdminPaymentsPage() {
       })
       .finally(() => setLoading(false));
   }, [t]);
+
+  const filtered = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    return payments.filter((payment) => {
+      if (statusFilter && payment.status !== statusFilter) return false;
+      if (!q) return true;
+      return (
+        payment.userName.toLowerCase().includes(q) ||
+        (payment.userEmail ?? '').toLowerCase().includes(q) ||
+        payment.productType.toLowerCase().includes(q) ||
+        payment.status.toLowerCase().includes(q) ||
+        payment.id.toLowerCase().includes(q)
+      );
+    });
+  }, [payments, search, statusFilter]);
 
   if (loading) {
     return (
@@ -36,6 +55,33 @@ export default function AdminPaymentsPage() {
       <p className="admin-sub">{t('admin.payments.sub')}</p>
       {error && <p className="form-error">{error}</p>}
 
+      <div className="admin-toolbar">
+        <label className="form-field" style={{ flex: '1 1 220px', margin: 0 }}>
+          <span className="sr-only">{t('admin.finance.search')}</span>
+          <input
+            className="admin-input"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder={t('admin.finance.searchPlaceholder')}
+          />
+        </label>
+        <label className="form-field" style={{ flex: '0 1 180px', margin: 0 }}>
+          <span className="sr-only">{t('admin.payments.col.status')}</span>
+          <select
+            className="admin-select"
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+          >
+            <option value="">{t('admin.finance.allStatuses')}</option>
+            {PAYMENT_STATUSES.map((status) => (
+              <option key={status} value={status}>
+                {t(`domain.payments.${status.toLowerCase()}` as 'domain.payments.completed')}
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
+
       <div className="admin-table-wrap">
         <table className="admin-table">
           <thead>
@@ -48,12 +94,12 @@ export default function AdminPaymentsPage() {
             </tr>
           </thead>
           <tbody>
-            {payments.length === 0 ? (
+            {filtered.length === 0 ? (
               <tr>
                 <td colSpan={5}>{t('admin.payments.empty')}</td>
               </tr>
             ) : (
-              payments.map((p) => (
+              filtered.map((p) => (
                 <tr key={p.id}>
                   <td>{format.date(p.createdAt)}</td>
                   <td>
