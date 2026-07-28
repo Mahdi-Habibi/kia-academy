@@ -15,3 +15,4 @@ export * from './utils/readiness';
 export * from './utils/challenge';
 export * from './utils/entitlements';
 export * from './utils/escape';
+export * from './exam';

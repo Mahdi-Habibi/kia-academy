@@ -17,6 +17,9 @@ import type {
   LessonSummary,
   LoginDto,
   PaymentResponse,
+  ExamAttemptSession,
+  ExamResponse,
+  ExamSubmitResult,
   ReadinessResult,
   ReadinessScores,
   ReadinessTestSummary,
@@ -270,6 +273,42 @@ const liveApi = {
     });
   },
 
+  startExam(roadmapId?: string): Promise<ExamAttemptSession> {
+    return request<ExamAttemptSession>('/readiness/exam/start', {
+      method: 'POST',
+      body: JSON.stringify(roadmapId ? { roadmapId } : {}),
+    });
+  },
+
+  saveExamAnswers(
+    attemptId: string,
+    answers: Record<string, ExamResponse>,
+  ): Promise<{ ok: true; remainingSec: number }> {
+    return request<{ ok: true; remainingSec: number }>(
+      `/readiness/exam/${attemptId}/answers`,
+      {
+        method: 'PATCH',
+        body: JSON.stringify({ answers }),
+      },
+    );
+  },
+
+  submitExam(
+    attemptId: string,
+    answers?: Record<string, ExamResponse>,
+  ): Promise<ExamSubmitResult> {
+    return request<ExamSubmitResult>(`/readiness/exam/${attemptId}/submit`, {
+      method: 'POST',
+      body: JSON.stringify(answers ? { answers } : {}),
+    });
+  },
+
+  getExamAttempt(attemptId: string): Promise<ExamAttemptSession | ExamSubmitResult> {
+    return request<ExamAttemptSession | ExamSubmitResult>(
+      `/readiness/exam/${attemptId}`,
+    );
+  },
+
   saveReadinessTest(scores: ReadinessScores): Promise<ReadinessResult> {
     const dto: ReadinessTestDto = { scores };
     return request<ReadinessResult>('/readiness', {
@@ -282,8 +321,12 @@ const liveApi = {
     return request<ReadinessTestSummary[]>('/readiness');
   },
 
-  getReadinessTest(id: string): Promise<ReadinessResult & { id: string; createdAt: string }> {
-    return request<ReadinessResult & { id: string; createdAt: string }>(`/readiness/${id}`);
+  getReadinessTest(
+    id: string,
+  ): Promise<ReadinessResult & { id: string; createdAt: string; outcome?: ExamSubmitResult['outcome'] }> {
+    return request<
+      ReadinessResult & { id: string; createdAt: string; outcome?: ExamSubmitResult['outcome'] }
+    >(`/readiness/${id}`);
   },
 
   submitContactForm(dto: ContactFormDto): Promise<ContactFormResponse> {

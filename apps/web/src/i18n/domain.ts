@@ -52,6 +52,11 @@ export const SKILL_LEVEL_FROM_KEY: Record<SkillLevelKey, SkillLevel> = {
 };
 
 export const MODULE_NAME_TO_KEY: Record<string, string> = {
+  'Refresher: Digital workplace': 'refresherDigitalWorkplace',
+  'Refresher: Logical thinking': 'refresherLogicalThinking',
+  'Refresher: Tech reading': 'refresherTechReading',
+  'Refresher: Code basics': 'refresherCodeBasics',
+  'Refresher: Problem solving': 'refresherProblemSolving',
   'HTML/CSS Foundations': 'htmlCssFoundations',
   'JavaScript Core': 'javascriptCore',
   'React Fundamentals': 'reactFundamentals',

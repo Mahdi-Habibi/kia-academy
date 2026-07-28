@@ -1,16 +1,16 @@
 'use client';
 
-import { READINESS_MODULES } from '@pathwise/shared';
+import { EXAM_DOMAINS } from '@pathwise/shared';
 import { useLanguage } from '@/context/LanguageProvider';
-import { readinessModuleMessageKey } from '@/i18n/domain';
 
 interface RadarChartProps {
   percentages: Record<string, number>;
+  domains?: readonly string[];
 }
 
-export function RadarChart({ percentages }: RadarChartProps) {
+export function RadarChart({ percentages, domains = EXAM_DOMAINS }: RadarChartProps) {
   const { t, locale } = useLanguage();
-  const modules = READINESS_MODULES;
+  const modules = domains;
   const cx = 150;
   const cy = 150;
   const r = 110;
@@ -22,7 +22,7 @@ export function RadarChart({ percentages }: RadarChartProps) {
   };
 
   const fontFamily =
-    locale === 'fa' ? 'var(--font-noto-arabic), Inter, sans-serif' : 'Inter, sans-serif';
+    locale === 'fa' ? 'var(--font-noto-arabic), Vazirmatn, sans-serif' : 'var(--font-display), sans-serif';
 
   const gridPolygons = [0.25, 0.5, 0.75, 1].map((scale) => {
     const pts = modules.map((_, i) => point(i, scale).join(',')).join(' ');
@@ -39,7 +39,7 @@ export function RadarChart({ percentages }: RadarChartProps) {
   const dots = modules.map((m, i) => {
     const [x, y] = point(i, (percentages[m] ?? 0) / 100);
     const [lx, ly] = point(i, 1.28);
-    const label = t(readinessModuleMessageKey(m));
+    const label = t(`exam.domains.${m}` as 'exam.domains.digitalOps');
     const shortLabel = label.split(/[\s/&]+/)[0] ?? label;
     return (
       <g key={m}>

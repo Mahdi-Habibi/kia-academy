@@ -10,7 +10,7 @@ import { useLanguage } from '@/context/LanguageProvider';
 export default function ReadinessGatePage() {
   const router = useRouter();
   const { t } = useLanguage();
-  const { resetReadinessTest, testCompleted } = useApp();
+  const { resetReadinessTest, testCompleted, roadmap } = useApp();
   const { loading, isAuthenticated } = useAuth();
 
   const startTest = () => {
@@ -18,52 +18,54 @@ export default function ReadinessGatePage() {
       router.push('/education?next=/readiness/test');
       return;
     }
-    // Preparations test is free after assessment — no purchase gate.
     resetReadinessTest();
     router.push('/readiness/test');
   };
 
   const goResults = () => router.push('/readiness/results');
-  const goRoadmap = () => router.push('/roadmap');
+  const goRoadmap = () =>
+    router.push(
+      roadmap?.id ? `/roadmap?roadmapId=${encodeURIComponent(roadmap.id)}` : '/roadmap',
+    );
 
   return (
     <div className="page-content">
-      <div className="app gate">
+      <div className="app gate exam-gate">
         <PageBackButton href="/assessment" label={t('readiness.gate.backAssessment')} />
-        <span className="eyebrow amber">🔓 {t('readiness.gate.eyebrowFree')}</span>
-        <h1>{t('readiness.gate.title')}</h1>
-        <p className="desc">{t('readiness.gate.descFree')}</p>
+        <span className="eyebrow amber">{t('exam.gate.eyebrow')}</span>
+        <h1>{t('exam.gate.title')}</h1>
+        <p className="desc">{t('exam.gate.desc')}</p>
         <div className="cover-grid">
           <div className="cover-card">
             <span className="ci">🗂️</span>
-            <b>{t('readiness.gate.computer.title')}</b>
-            <span>{t('readiness.gate.computer.desc')}</span>
-          </div>
-          <div className="cover-card">
-            <span className="ci">🇬🇧</span>
-            <b>{t('readiness.gate.english.title')}</b>
-            <span>{t('readiness.gate.english.desc')}</span>
+            <b>{t('exam.domains.digitalOps')}</b>
+            <span>{t('exam.gate.digitalOps')}</span>
           </div>
           <div className="cover-card">
             <span className="ci">🧠</span>
-            <b>{t('readiness.gate.algo.title')}</b>
-            <span>{t('readiness.gate.algo.desc')}</span>
+            <b>{t('exam.domains.logicalReasoning')}</b>
+            <span>{t('exam.gate.logicalReasoning')}</span>
           </div>
           <div className="cover-card">
-            <span className="ci">🔀</span>
-            <b>{t('readiness.gate.flow.title')}</b>
-            <span>{t('readiness.gate.flow.desc')}</span>
+            <span className="ci">📖</span>
+            <b>{t('exam.domains.techReading')}</b>
+            <span>{t('exam.gate.techReading')}</span>
           </div>
           <div className="cover-card">
             <span className="ci">💻</span>
-            <b>{t('readiness.gate.code.title')}</b>
-            <span>{t('readiness.gate.code.desc')}</span>
+            <b>{t('exam.domains.codeSense')}</b>
+            <span>{t('exam.gate.codeSense')}</span>
+          </div>
+          <div className="cover-card">
+            <span className="ci">🧩</span>
+            <b>{t('exam.domains.problemSolving')}</b>
+            <span>{t('exam.gate.problemSolving')}</span>
           </div>
         </div>
         <div className="gate-footer">
           <div className="price-tag">
             {t('readiness.gate.priceFree')}
-            <span>{t('readiness.gate.priceMeta')}</span>
+            <span>{t('exam.gate.meta')}</span>
           </div>
           {loading ? (
             <button type="button" className="cta-primary" disabled>
@@ -77,16 +79,14 @@ export default function ReadinessGatePage() {
               <button type="button" className="cta-secondary" onClick={goRoadmap}>
                 {t('readiness.gate.viewRoadmap')}
               </button>
+              <button type="button" className="cta-secondary" onClick={startTest}>
+                {t('exam.gate.retake')}
+              </button>
             </div>
           ) : (
-            <div className="gate-actions">
-              <button type="button" className="cta-primary" onClick={startTest}>
-                {t('readiness.gate.start')}
-              </button>
-              <button type="button" className="cta-secondary" onClick={() => router.push('/courses')}>
-                {t('readiness.gate.viewCourses')}
-              </button>
-            </div>
+            <button type="button" className="cta-primary" onClick={startTest}>
+              {t('exam.gate.start')}
+            </button>
           )}
         </div>
       </div>

@@ -16,6 +16,9 @@ import type {
   LessonSummary,
   LoginDto,
   PaymentResponse,
+  ExamAttemptSession,
+  ExamResponse,
+  ExamSubmitResult,
   ReadinessResult,
   ReadinessScores,
   ReadinessTestSummary,
@@ -44,6 +47,13 @@ import {
   createDefaultSiteSettings,
   mergeSiteSettings,
   normalizeAdminAccess,
+  EXAM_BLUEPRINT_VERSION,
+  EXAM_DURATION_SEC,
+  EXAM_QUESTION_BANK,
+  buildExamOutcome,
+  buildExamVerdict,
+  gradeAttempt,
+  toPublicExamQuestions,
 } from '@pathwise/shared';
 import { ApiError } from '@/lib/apiError';
 import { clearTokens, setAccessToken } from '@/lib/auth';
@@ -124,6 +134,16 @@ interface DemoPersistedState {
   roadmapId: string | null;
   lastAnswers: AssessmentAnswers | null;
   payments: PaymentResponse[];
+  examAttempt: {
+    attemptId: string;
+    startedAt: string;
+    endsAt: string;
+    answers: Record<string, ExamResponse>;
+    status: 'IN_PROGRESS' | 'SUBMITTED' | 'EXPIRED';
+    result?: ExamSubmitResult;
+  } | null;
+  roadmapModules: string[] | null;
+  roadmapLevel: string | null;
 }
 
 function lessonKey(courseSlug: string, lessonSlug: string): string {
@@ -304,6 +324,9 @@ function defaultState(): DemoPersistedState {
       personality: { teamwork: 60, pace: 55 },
     },
     payments: [],
+    examAttempt: null,
+    roadmapModules: null,
+    roadmapLevel: null,
   };
 }
 
@@ -620,6 +643,154 @@ export const demoApi = {
     );
   },
 
+  async startExam(roadmapId?: string): Promise<ExamAttemptSession> {
+    requireUser();
+    const state = readState();
+    const now = Date.now();
+    if (
+      state.examAttempt &&
+      state.examAttempt.status === 'IN_PROGRESS' &&
+      new Date(state.examAttempt.endsAt).getTime() > now
+    ) {
+      return delay({
+        attemptId: state.examAttempt.attemptId,
+        blueprintVersion: EXAM_BLUEPRINT_VERSION,
+        durationSec: EXAM_DURATION_SEC,
+        startedAt: state.examAttempt.startedAt,
+        endsAt: state.examAttempt.endsAt,
+        roadmapId: roadmapId ?? state.roadmapId,
+        questions: toPublicExamQuestions(EXAM_QUESTION_BANK),
+        savedAnswers: state.examAttempt.answers,
+        status: 'IN_PROGRESS',
+      });
+    }
+
+    const startedAt = new Date();
+    const endsAt = new Date(startedAt.getTime() + EXAM_DURATION_SEC * 1000);
+    const attemptId = `demo-exam-${startedAt.getTime()}`;
+    state.examAttempt = {
+      attemptId,
+      startedAt: startedAt.toISOString(),
+      endsAt: endsAt.toISOString(),
+      answers: {},
+      status: 'IN_PROGRESS',
+    };
+    writeState(state);
+
+    return delay({
+      attemptId,
+      blueprintVersion: EXAM_BLUEPRINT_VERSION,
+      durationSec: EXAM_DURATION_SEC,
+      startedAt: startedAt.toISOString(),
+      endsAt: endsAt.toISOString(),
+      roadmapId: roadmapId ?? state.roadmapId,
+      questions: toPublicExamQuestions(EXAM_QUESTION_BANK),
+      savedAnswers: {},
+      status: 'IN_PROGRESS',
+    });
+  },
+
+  async saveExamAnswers(
+    attemptId: string,
+    answers: Record<string, ExamResponse>,
+  ): Promise<{ ok: true; remainingSec: number }> {
+    requireUser();
+    const state = readState();
+    if (!state.examAttempt || state.examAttempt.attemptId !== attemptId) {
+      throw new ApiError('Exam attempt not found', 404);
+    }
+    state.examAttempt.answers = { ...state.examAttempt.answers, ...answers };
+    writeState(state);
+    const remainingSec = Math.max(
+      0,
+      Math.floor((new Date(state.examAttempt.endsAt).getTime() - Date.now()) / 1000),
+    );
+    return delay({ ok: true, remainingSec });
+  },
+
+  async submitExam(
+    attemptId: string,
+    answers?: Record<string, ExamResponse>,
+  ): Promise<ExamSubmitResult> {
+    requireUser();
+    const state = readState();
+    if (!state.examAttempt || state.examAttempt.attemptId !== attemptId) {
+      throw new ApiError('Exam attempt not found', 404);
+    }
+    if (state.examAttempt.result) {
+      return delay(state.examAttempt.result);
+    }
+
+    const merged = { ...state.examAttempt.answers, ...(answers ?? {}) };
+    const graded = gradeAttempt(EXAM_QUESTION_BANK, merged);
+    const modules =
+      state.roadmapModules ??
+      buildRoadmapFromAnswers(
+        state.lastAnswers ?? defaultState().lastAnswers!,
+        true,
+        state.roadmapId ?? 'demo-roadmap',
+      ).modules;
+    const level = state.roadmapLevel ?? 'absoluteBeginner';
+    const outcome = buildExamOutcome({
+      passed: graded.passed,
+      average: graded.average,
+      percentages: graded.percentages,
+      roadmap: {
+        id: state.roadmapId ?? 'demo-roadmap',
+        modules,
+        level,
+      },
+    });
+    state.roadmapModules = outcome.roadmapModules;
+    state.roadmapLevel = outcome.levelAfter || level;
+    const verdict = buildExamVerdict({
+      passed: graded.passed,
+      average: graded.average,
+      outcome,
+    });
+    const result: ExamSubmitResult = {
+      attemptId,
+      average: graded.average,
+      passed: graded.passed,
+      domainScores: graded.domainScores,
+      percentages: graded.percentages,
+      outcome,
+      verdict,
+      submittedAt: new Date().toISOString(),
+    };
+    state.examAttempt = {
+      ...state.examAttempt,
+      answers: merged,
+      status: 'SUBMITTED',
+      result,
+    };
+    state.testCompleted = true;
+    writeState(state);
+    return delay(result);
+  },
+
+  async getExamAttempt(
+    attemptId: string,
+  ): Promise<ExamAttemptSession | ExamSubmitResult> {
+    requireUser();
+    const state = readState();
+    if (!state.examAttempt || state.examAttempt.attemptId !== attemptId) {
+      throw new ApiError('Exam attempt not found', 404);
+    }
+    if (state.examAttempt.result) return delay(state.examAttempt.result);
+    return delay({
+      attemptId,
+      blueprintVersion: EXAM_BLUEPRINT_VERSION,
+      durationSec: EXAM_DURATION_SEC,
+      startedAt: state.examAttempt.startedAt,
+      endsAt: state.examAttempt.endsAt,
+      roadmapId: state.roadmapId,
+      questions: toPublicExamQuestions(EXAM_QUESTION_BANK),
+      savedAnswers: state.examAttempt.answers,
+      status: state.examAttempt.status,
+    });
+  },
+
   async saveReadinessTest(scores: ReadinessScores): Promise<ReadinessResult> {
     requireUser();
     const state = readState();
@@ -637,18 +808,39 @@ export const demoApi = {
     if (!state.testCompleted) return delay([]);
     return delay([
       {
-        id: 'demo-readiness',
+        id: state.examAttempt?.attemptId ?? 'demo-readiness',
         createdAt: new Date().toISOString(),
-        average: 72,
-        passed: true,
+        average: state.examAttempt?.result?.average ?? 72,
+        passed: state.examAttempt?.result?.passed ?? true,
       },
     ]);
   },
 
-  async getReadinessTest(id: string): Promise<ReadinessResult & { id: string; createdAt: string }> {
+  async getReadinessTest(id: string): Promise<
+    ReadinessResult & { id: string; createdAt: string; outcome?: ExamSubmitResult['outcome'] }
+  > {
     requireUser();
     const state = readState();
     if (!state.testCompleted) throw new ApiError('Test not found', 404);
+    if (state.examAttempt?.result) {
+      const result = state.examAttempt.result;
+      return delay({
+        id,
+        createdAt: result.submittedAt,
+        percentages: result.percentages,
+        average: result.average,
+        passed: result.passed,
+        verdict: {
+          icon: result.verdict.icon,
+          title: result.verdict.title.en,
+          message: result.verdict.message.en,
+          unlockTitle: result.verdict.unlockTitle.en,
+          unlockSub: result.verdict.unlockSub.en,
+          variant: result.verdict.variant,
+        },
+        outcome: result.outcome,
+      });
+    }
     const settings = readDemoSettings();
     const result = computeReadinessResult({}, settings.readiness);
     return delay({

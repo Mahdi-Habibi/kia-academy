@@ -7,6 +7,7 @@ import {
   computeReadinessResult,
   hasRoadmapEntitlement,
   type AssessmentAnswers,
+  type ExamSubmitResult,
   type LearnerState,
   type ReadinessResult,
   type RoadmapResponse,
@@ -26,6 +27,7 @@ interface UseAppActionsArgs {
   refreshSession: () => Promise<void>;
   setModal: (modal: ModalState | null) => void;
   setReadinessResult: (result: ReadinessResult | null) => void;
+  setExamResult: (result: ExamSubmitResult | null) => void;
 }
 
 export function useAppActions({
@@ -37,6 +39,7 @@ export function useAppActions({
   refreshSession,
   setModal,
   setReadinessResult,
+  setExamResult,
 }: UseAppActionsArgs) {
   const router = useRouter();
   const { t, format } = useLanguage();
@@ -160,6 +163,46 @@ export function useAppActions({
     return result;
   }, [state.readinessScores, patch, refreshSession, setReadinessResult]);
 
+  const completeExam = useCallback(
+    async (result: ExamSubmitResult) => {
+      setExamResult(result);
+      setReadinessResult({
+        percentages: result.percentages,
+        average: result.average,
+        passed: result.passed,
+        verdict: {
+          icon: result.verdict.icon,
+          title: result.verdict.title.en,
+          message: result.verdict.message.en,
+          unlockTitle: result.verdict.unlockTitle.en,
+          unlockSub: result.verdict.unlockSub.en,
+          variant: result.verdict.variant,
+        },
+      });
+      patch({
+        testCompleted: true,
+        readinessModuleIndex: 0,
+        readinessScores: {},
+        roadmap:
+          result.outcome.roadmapId && state.roadmap
+            ? {
+                ...state.roadmap,
+                id: result.outcome.roadmapId,
+                modules: result.outcome.roadmapModules,
+                level: result.outcome.levelAfter || state.roadmap.level,
+              }
+            : state.roadmap,
+      });
+      try {
+        await refreshSession();
+      } catch {
+        // best-effort
+      }
+      return result;
+    },
+    [patch, refreshSession, setExamResult, setReadinessResult, state.roadmap],
+  );
+
   const submitChallenge = useCallback(
     async (code: string) => {
       let result;
@@ -204,7 +247,8 @@ export function useAppActions({
   const resetReadinessTest = useCallback(() => {
     patch({ readinessScores: {}, readinessModuleIndex: 0 });
     setReadinessResult(null);
-  }, [patch, setReadinessResult]);
+    setExamResult(null);
+  }, [patch, setReadinessResult, setExamResult]);
 
   return {
     setAnswers,
@@ -214,6 +258,7 @@ export function useAppActions({
     completeWizard,
     enrollBundle,
     completeReadinessTest,
+    completeExam,
     submitChallenge,
     resetReadinessTest,
   };

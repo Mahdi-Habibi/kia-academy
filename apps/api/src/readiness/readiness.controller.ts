@@ -1,16 +1,46 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import type { AuthUser, ReadinessTestSummary } from '@pathwise/shared';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { ProfileCompleteGuard } from '../common/guards/profile-complete.guard';
 import { ReadinessService } from './readiness.service';
 import { CreateReadinessTestDto } from './dto/create-readiness-test.dto';
+import { SaveExamAnswersDto, StartExamDto, SubmitExamDto } from './dto/exam.dto';
 
 @Controller('readiness')
 @UseGuards(JwtAuthGuard, ProfileCompleteGuard)
 export class ReadinessController {
   constructor(private readonly readinessService: ReadinessService) {}
 
+  @Post('exam/start')
+  startExam(@CurrentUser() user: AuthUser, @Body() dto: StartExamDto) {
+    return this.readinessService.startExam(user.id, dto.roadmapId);
+  }
+
+  @Patch('exam/:attemptId/answers')
+  saveAnswers(
+    @CurrentUser() user: AuthUser,
+    @Param('attemptId') attemptId: string,
+    @Body() dto: SaveExamAnswersDto,
+  ) {
+    return this.readinessService.saveAnswers(attemptId, user.id, dto.answers);
+  }
+
+  @Post('exam/:attemptId/submit')
+  submitExam(
+    @CurrentUser() user: AuthUser,
+    @Param('attemptId') attemptId: string,
+    @Body() dto: SubmitExamDto,
+  ) {
+    return this.readinessService.submitExam(attemptId, user.id, dto.answers);
+  }
+
+  @Get('exam/:attemptId')
+  getExam(@CurrentUser() user: AuthUser, @Param('attemptId') attemptId: string) {
+    return this.readinessService.getExamAttempt(attemptId, user.id);
+  }
+
+  /** Legacy client-scored create — prefer exam/start + exam/submit. */
   @Post()
   create(@CurrentUser() user: AuthUser, @Body() dto: CreateReadinessTestDto) {
     return this.readinessService.create(dto, user.id);

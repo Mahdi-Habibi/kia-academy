@@ -55,6 +55,7 @@ model User {
   assessments          Assessment[]
   roadmaps             Roadmap[]
   readinessTests       ReadinessTest[]
+  examAttempts         ExamAttempt[]
   bootcampProfile      BootcampProfile?
   challengeSubmissions ChallengeSubmission[]
   payments             Payment[]
@@ -122,6 +123,31 @@ model ReadinessTest {
   verdict     String
   paymentId   String?
   createdAt   DateTime @default(now())
+}
+
+/** Server-graded timed digital readiness exam attempt. */
+model ExamAttempt {
+  id               String    @id @default(cuid())
+  userId           String
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  roadmapId        String?
+  blueprintVersion String
+  status           String    @default("IN_PROGRESS")
+  questionIds      String
+  answers          String    @default("{}")
+  startedAt        DateTime  @default(now())
+  endsAt           DateTime
+  submittedAt      DateTime?
+  average          Int?
+  passed           Boolean?
+  domainScores     String?
+  percentages      String?
+  outcome          String?
+  verdict          String?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  @@index([userId, status])
 }
 
 model BootcampProfile {
