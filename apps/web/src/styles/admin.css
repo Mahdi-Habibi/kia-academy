@@ -724,11 +724,11 @@
 }
 
 .contact-unread td:first-child {
-  box-shadow: inset 3px 0 0 var(--admin-accent);
+  box-shadow: inset -3px 0 0 var(--admin-accent);
 }
 
 [dir='ltr'] .contact-unread td:first-child {
-  box-shadow: inset -3px 0 0 var(--admin-accent);
+  box-shadow: inset 3px 0 0 var(--admin-accent);
 }
 
 /* ----- Badges ----- */
