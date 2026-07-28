@@ -84,15 +84,98 @@ export function normalizeIranianPhone(input: string): string | null {
   return normalized;
 }
 
-const UNSAFE_PATTERN =
-  /<|>|javascript:|data:text\/html|on\w+\s*=|https?:\/\/|\b(viagra|casino|crypto\s*giveaway)\b/i;
+function isAsciiLetter(ch: string): boolean {
+  const code = ch.charCodeAt(0);
+  return (code >= 65 && code <= 90) || (code >= 97 && code <= 122);
+}
+
+function isWordChar(ch: string): boolean {
+  const code = ch.charCodeAt(0);
+  return (
+    (code >= 48 && code <= 57) ||
+    (code >= 65 && code <= 90) ||
+    (code >= 97 && code <= 122) ||
+    ch === '_'
+  );
+}
+
+function hasInlineEventHandlerLikePattern(value: string): boolean {
+  const lower = value.toLowerCase();
+  for (let i = 0; i < lower.length - 3; i += 1) {
+    if (lower[i] !== 'o' || lower[i + 1] !== 'n') continue;
+    const prev = i > 0 ? lower[i - 1] : '';
+    if (prev && isWordChar(prev)) continue;
+    let j = i + 2;
+    let sawLetter = false;
+    while (j < lower.length && isAsciiLetter(lower[j]!)) {
+      sawLetter = true;
+      j += 1;
+    }
+    if (!sawLetter) continue;
+    while (
+      j < lower.length &&
+      (lower[j] === ' ' || lower[j] === '\t' || lower[j] === '\n' || lower[j] === '\r')
+    ) {
+      j += 1;
+    }
+    if (lower[j] === '=') return true;
+  }
+  return false;
+}
 
 export function containsUnsafeText(value: string): boolean {
-  return UNSAFE_PATTERN.test(value);
+  const normalized = String(value || '');
+  if (!normalized) return false;
+  const lower = normalized.toLowerCase();
+  const collapsed = lower
+    .split(' ')
+    .filter(Boolean)
+    .join(' ');
+  if (lower.includes('<') || lower.includes('>')) return true;
+  if (lower.includes('javascript:')) return true;
+  if (lower.includes('data:text/html')) return true;
+  if (lower.includes('http://') || lower.includes('https://')) return true;
+  if (lower.includes('viagra') || lower.includes('casino')) return true;
+  if (collapsed.includes('crypto giveaway')) return true;
+  if (hasInlineEventHandlerLikePattern(lower)) return true;
+  return false;
 }
 
 export function isValidEmail(value: string): boolean {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
+  const input = String(value || '').trim();
+  if (!input || input.length > 254) return false;
+  if (input.includes(' ')) return false;
+  const at = input.indexOf('@');
+  if (at <= 0 || at !== input.lastIndexOf('@') || at === input.length - 1) return false;
+  const local = input.slice(0, at);
+  const domain = input.slice(at + 1);
+  if (!local || !domain) return false;
+  if (domain.startsWith('.') || domain.endsWith('.') || domain.includes('..')) return false;
+  const dot = domain.lastIndexOf('.');
+  if (dot <= 0 || dot === domain.length - 1) return false;
+  const tld = domain.slice(dot + 1);
+  if (tld.length < 2) return false;
+  for (const ch of tld) {
+    if (!isAsciiLetter(ch)) return false;
+  }
+  for (const ch of local) {
+    const code = ch.charCodeAt(0);
+    const allowedPunct = "._%+-!#$&'*=/^`{|}~";
+    const isAlphaNum =
+      (code >= 48 && code <= 57) ||
+      (code >= 65 && code <= 90) ||
+      (code >= 97 && code <= 122);
+    if (!isAlphaNum && !allowedPunct.includes(ch)) return false;
+  }
+  for (const ch of domain) {
+    const code = ch.charCodeAt(0);
+    const isAlphaNum =
+      (code >= 48 && code <= 57) ||
+      (code >= 65 && code <= 90) ||
+      (code >= 97 && code <= 122);
+    if (!isAlphaNum && ch !== '.' && ch !== '-') return false;
+  }
+  return true;
 }
 
 export function sanitizeProfileText(value: string, maxLength = 80): string {
