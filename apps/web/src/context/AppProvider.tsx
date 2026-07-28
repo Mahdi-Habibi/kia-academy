@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, useContext, useMemo, useState, type ReactNode } from 'react';
-import type { AssessmentAnswers, ReadinessResult } from '@pathwise/shared';
+import type { AssessmentAnswers, ExamSubmitResult, ReadinessResult } from '@pathwise/shared';
 import {
   defaultAnswers,
   defaultCourses,
@@ -16,6 +16,7 @@ interface AppContextValue extends PersistedAppState {
   hydrated: boolean;
   modal: ModalState | null;
   readinessResult: ReadinessResult | null;
+  examResult: ExamSubmitResult | null;
   setAnswers: (answers: AssessmentAnswers) => void;
   setStageIndex: (index: number) => void;
   setReadinessModuleIndex: (index: number) => void;
@@ -23,6 +24,7 @@ interface AppContextValue extends PersistedAppState {
   completeWizard: () => Promise<void>;
   enrollBundle: (onEnrolled?: () => void) => Promise<void>;
   completeReadinessTest: () => Promise<ReadinessResult>;
+  completeExam: (result: ExamSubmitResult) => Promise<ExamSubmitResult>;
   submitChallenge: (code: string) => Promise<void>;
   openModal: (modal: ModalState) => void;
   closeModal: () => void;
@@ -36,6 +38,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const { state, setState, patch, hydrated } = usePersistedAppState(learnerState);
   const { modal, setModal, openModal, closeModal } = useModalState();
   const [readinessResult, setReadinessResult] = useState<ReadinessResult | null>(null);
+  const [examResult, setExamResult] = useState<ExamSubmitResult | null>(null);
 
   const actions = useAppActions({
     state,
@@ -46,6 +49,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     refreshSession,
     setModal,
     setReadinessResult,
+    setExamResult,
   });
 
   const value = useMemo<AppContextValue>(
@@ -54,11 +58,12 @@ export function AppProvider({ children }: { children: ReactNode }) {
       hydrated,
       modal,
       readinessResult,
+      examResult,
       openModal,
       closeModal,
       ...actions,
     }),
-    [state, hydrated, modal, readinessResult, openModal, closeModal, actions],
+    [state, hydrated, modal, readinessResult, examResult, openModal, closeModal, actions],
   );
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

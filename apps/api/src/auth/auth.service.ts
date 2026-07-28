@@ -298,13 +298,17 @@ export class AuthService {
       throw new UnauthorizedException('User not found');
     }
 
-    const [roadmaps, readinessTests, entitlements, enrollments] = await Promise.all([
+    const [roadmaps, readinessTests, examAttempts, entitlements, enrollments] = await Promise.all([
       this.prisma.roadmap.findMany({
         where: { userId },
         select: { enrolled: true },
       }),
       this.prisma.readinessTest.findMany({
         where: { userId },
+        select: { id: true },
+      }),
+      this.prisma.examAttempt.findMany({
+        where: { userId, status: 'SUBMITTED' },
         select: { id: true },
       }),
       this.prisma.entitlement.findMany({ where: { userId } }),
@@ -326,7 +330,7 @@ export class AuthService {
       hasRoadmap,
       roadmapEnrolled,
       readinessPaid,
-      testCompleted: readinessTests.length > 0,
+      testCompleted: readinessTests.length > 0 || examAttempts.length > 0,
       profileComplete: authUser.profileComplete,
       entitlements: entitlements.map(
         (entitlement) => `${entitlement.resourceType}:${entitlement.resourceId}`,

@@ -13,6 +13,33 @@ export function toPublicQuestion(q: ExamQuestion): PublicExamQuestion {
   return rest;
 }
 
+/** Fisher–Yates shuffle (copy). */
+export function shuffleCopy<T>(items: T[], rng: () => number = Math.random): T[] {
+  const next = [...items];
+  for (let i = next.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(rng() * (i + 1));
+    [next[i], next[j]] = [next[j]!, next[i]!];
+  }
+  return next;
+}
+
+/** Public questions for a live attempt — answers stripped, order items shuffled. */
+export function toPublicExamQuestions(
+  questions: ExamQuestion[],
+  rng: () => number = Math.random,
+): PublicExamQuestion[] {
+  return questions.map((q) => {
+    const pub = toPublicQuestion(q);
+    if (pub.orderItems?.length) {
+      return { ...pub, orderItems: shuffleCopy(pub.orderItems, rng) };
+    }
+    if (pub.options?.length && (q.type === 'single_choice' || q.type === 'multi_choice')) {
+      return { ...pub, options: shuffleCopy(pub.options, rng) };
+    }
+    return pub;
+  });
+}
+
 function sameSet(a: string[], b: string[]): boolean {
   if (a.length !== b.length) return false;
   const left = [...a].sort();
