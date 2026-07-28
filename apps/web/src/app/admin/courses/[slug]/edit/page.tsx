@@ -9,6 +9,13 @@ import { api, ApiError } from '@/lib/api';
 import type { AdminCourse, AdminLesson } from '@pathwise/shared';
 import { mediaUrl } from '@/lib/mediaUrl';
 
+const LESSON_VIDEO_PATH_RE = /^\/uploads\/lessons\/[a-z0-9/_-]+\.(mp4|webm|ogg|mov|m4v)$/i;
+
+function sanitizeLessonVideoPath(path: string | null | undefined): string | null {
+  if (!path) return null;
+  return LESSON_VIDEO_PATH_RE.test(path) ? path : null;
+}
+
 export default function AdminEditCoursePage() {
   const params = useParams();
   const slug = params.slug as string;
@@ -88,7 +95,7 @@ export default function AdminEditCoursePage() {
     setLessonDuration(lesson.durationMin);
     setLessonSortOrder(lesson.sortOrder);
     setLessonVideoFile(null);
-    setLessonVideoUrl(lesson.videoUrl);
+    setLessonVideoUrl(sanitizeLessonVideoPath(lesson.videoUrl));
   };
 
   const handleSave = async (e: FormEvent) => {
@@ -207,7 +214,9 @@ export default function AdminEditCoursePage() {
   }
 
   const lessons: AdminLesson[] = course.lessons ?? [];
-  const previewSrc = previewObjectUrl ?? mediaUrl(lessonVideoUrl);
+  const safePreviewObjectUrl =
+    previewObjectUrl && previewObjectUrl.startsWith('blob:') ? previewObjectUrl : null;
+  const previewSrc = safePreviewObjectUrl ?? mediaUrl(sanitizeLessonVideoPath(lessonVideoUrl));
 
   return (
     <div className="admin-content">
