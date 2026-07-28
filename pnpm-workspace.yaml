@@ -8,3 +8,7 @@ allowBuilds:
   esbuild: true
   prisma: true
   sharp: true
+overrides:
+  fast-uri: 3.1.4
+  postcss: 8.5.23
+  sharp: 0.35.3
