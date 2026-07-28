@@ -6,7 +6,7 @@ import {
   type ExamResponse,
   type PublicExamQuestion,
 } from '@pathwise/shared';
-import { useCallback, useEffect, useEffectEvent, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useLanguage } from '@/context/LanguageProvider';
 
 interface ExamPlayerProps {
@@ -54,18 +54,29 @@ export function ExamPlayer({
 
   const domainLabel = (domain: string) => t(`exam.domains.${domain}` as 'exam.domains.digitalOps');
 
-  const persist = useEffectEvent(async () => {
+  // Store latest values in refs for stable callbacks
+  const answersRef = useRef(answers);
+  const onSaveAnswersRef = useRef(onSaveAnswers);
+  const onSubmitRef = useRef(onSubmit);
+  
+  useEffect(() => {
+    answersRef.current = answers;
+    onSaveAnswersRef.current = onSaveAnswers;
+    onSubmitRef.current = onSubmit;
+  });
+
+  const persist = useCallback(async () => {
     try {
-      await onSaveAnswers(answers);
+      await onSaveAnswersRef.current(answersRef.current);
       setDirty(false);
     } catch {
       /* keep local answers; retry on next change / submit */
     }
-  });
+  }, []);
 
-  const finish = useEffectEvent(async () => {
-    await onSubmit(answers);
-  });
+  const finish = useCallback(async () => {
+    await onSubmitRef.current(answersRef.current);
+  }, []);
 
   useEffect(() => {
     const tick = window.setInterval(() => {
