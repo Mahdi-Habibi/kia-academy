@@ -1,43 +1,174 @@
 'use client';
 
 import Link from 'next/link';
+import {
+  ArrowRight,
+  ClipboardCheck,
+  Gauge,
+  Map as MapIcon,
+  Palette,
+  PlayCircle,
+  Sparkles,
+  Trophy,
+} from 'lucide-react';
+import type { ComponentType } from 'react';
 import { useLanguage } from '@/context/LanguageProvider';
+
+const journeySteps: { key: string; Icon: ComponentType<{ size?: number }> }[] = [
+  { key: 'assess', Icon: ClipboardCheck },
+  { key: 'measure', Icon: Gauge },
+  { key: 'roadmap', Icon: MapIcon },
+  { key: 'learn', Icon: PlayCircle },
+  { key: 'prove', Icon: Trophy },
+];
+
+const featureKeys = ['goal', 'readiness', 'courses', 'bootcamp'] as const;
 
 export default function HomePage() {
   const { t } = useLanguage();
 
   return (
-    <div className="page-content landing-minimal">
-      <div className="landing-orbs" aria-hidden="true">
-        <span className="landing-orb landing-orb-a" />
-        <span className="landing-orb landing-orb-b" />
+    <div className="page-content landing">
+      <div className="landing-aurora" aria-hidden="true">
+        <span className="landing-aurora-a" />
+        <span className="landing-aurora-b" />
+        <span className="landing-aurora-c" />
       </div>
 
-      <section className="app landing-hero">
-        <header className="landing-header">
-          <span className="landing-brand">{t('common.brand')}</span>
-          <p className="landing-eyebrow">{t('landing.eyebrow')}</p>
-        </header>
+      {/* ---------- hero ---------- */}
+      <header className="app landing-hero">
+        <span className="landing-brand">
+          <span className="landing-brand-mark" aria-hidden="true" />
+          {t('common.brand')}
+        </span>
+
+        <p className="eyebrow landing-eyebrow">
+          <Sparkles size={13} aria-hidden="true" />
+          {t('landing.eyebrow')}
+        </p>
 
         <h1 className="landing-title">{t('landing.heroTitle')}</h1>
         <p className="landing-body">{t('landing.heroBody')}</p>
 
-        <div className="landing-actions">
-          <Link href="/material" className="landing-path-card">
-            <span className="landing-path-title">{t('landing.ctaMaterial')}</span>
-            <span className="landing-path-badge">{t('landing.materialBadge')}</span>
-          </Link>
-          <Link href="/education" className="landing-path-card landing-path-card--accent">
-            <span className="landing-path-title">{t('landing.ctaEducation')}</span>
-          </Link>
-        </div>
+        <dl className="landing-trust">
+          <div className="landing-trust-item">
+            <dt>{t('landing.trust.free')}</dt>
+            <dd className="text-progress">{t('landing.trust.freeValue')}</dd>
+          </div>
+          <div className="landing-trust-item">
+            <dt>{t('landing.trust.stages')}</dt>
+            <dd>{t('landing.trust.stagesValue')}</dd>
+          </div>
+          <div className="landing-trust-item">
+            <dt>{t('landing.trust.domains')}</dt>
+            <dd>{t('landing.trust.domainsValue')}</dd>
+          </div>
+        </dl>
+      </header>
 
-        <footer className="landing-guest-footer" aria-label={t('nav.footer.legal')}>
+      {/* ---------- the two doors ---------- */}
+      <section className="app landing-doors" aria-label={t('landing.doors.heading')}>
+        <Link href="/education" className="door door--primary">
+          <span className="door-top">
+            <span className="door-icon door-icon--brand" aria-hidden="true">
+              <MapIcon size={20} />
+            </span>
+            <span className="chip chip--mint">{t('landing.doors.educationBadge')}</span>
+          </span>
+          <h2 className="door-title">{t('landing.doors.educationTitle')}</h2>
+          <p className="door-desc">{t('landing.doors.educationDesc')}</p>
+          <span className="door-action">
+            {t('landing.doors.educationAction')}
+            <ArrowRight className="nav-arrow" size={16} aria-hidden="true" />
+          </span>
+        </Link>
+
+        <Link href="/material" className="door door--material">
+          <span className="door-top">
+            <span className="door-icon door-icon--amber" aria-hidden="true">
+              <Palette size={20} />
+            </span>
+            <span className="chip chip--amber">{t('landing.materialBadge')}</span>
+          </span>
+          <h2 className="door-title">{t('landing.doors.materialTitle')}</h2>
+          <p className="door-desc">{t('landing.doors.materialDesc')}</p>
+          <span className="door-action">
+            {t('landing.doors.materialAction')}
+            <ArrowRight className="nav-arrow" size={16} aria-hidden="true" />
+          </span>
+        </Link>
+      </section>
+
+      {/* ---------- learner journey ---------- */}
+      <section className="app landing-journey">
+        <h2 className="section-heading">{t('landing.journey.heading')}</h2>
+        <p className="section-sub">{t('landing.journey.sub')}</p>
+
+        <ol className="journey-rail">
+          {journeySteps.map(({ key, Icon }, index) => (
+            <li key={key} className="journey-step">
+              <span className="journey-index mono" aria-hidden="true">
+                {String(index + 1).padStart(2, '0')}
+              </span>
+              <span className="journey-icon" aria-hidden="true">
+                <Icon size={18} />
+              </span>
+              <h3>{t(`landing.journey.${key}.title`)}</h3>
+              <p>{t(`landing.journey.${key}.body`)}</p>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      {/* ---------- what you get ---------- */}
+      <section className="app features-section">
+        <h2 className="section-heading">{t('landing.howHeading')}</h2>
+        <p className="section-sub">{t('landing.howSub')}</p>
+
+        <div className="features-grid">
+          {featureKeys.map((key, index) => (
+            <article key={key} className="feature-card">
+              <span
+                className={`feature-icon${index % 3 === 1 ? ' feature-icon--mint' : ''}${
+                  index % 3 === 2 ? ' feature-icon--amber' : ''
+                }`}
+                aria-hidden="true"
+              >
+                <Sparkles size={20} />
+              </span>
+              <h3>{t(`landing.feature.${key}.title`)}</h3>
+              <p>{t(`landing.feature.${key}.body`)}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      {/* ---------- closing call ---------- */}
+      <section className="app landing-close">
+        <div className="landing-close-panel surface--ink">
+          <h2>{t('landing.journey.heading')}</h2>
+          <p>{t('landing.trust.note')}</p>
+          <div className="hero-actions">
+            <Link href="/education" className="btn btn--accent btn--lg hero-cta">
+              {t('landing.ctaAssessment')}
+              <ArrowRight className="nav-arrow" size={18} aria-hidden="true" />
+            </Link>
+            <Link href="/material" className="btn btn--ghost landing-close-ghost hero-cta">
+              {t('landing.ctaMaterial')}
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <footer className="app landing-guest-footer" aria-label={t('nav.footer.legal')}>
+        <span className="landing-guest-brand">{t('common.brand')}</span>
+        <nav>
           <Link href="/contact">{t('landing.ctaContact')}</Link>
           <Link href="/privacy">{t('nav.footer.privacy')}</Link>
           <Link href="/terms">{t('nav.footer.terms')}</Link>
-        </footer>
-      </section>
+          <Link href="/login">{t('landing.ctaSignIn')}</Link>
+        </nav>
+      </footer>
     </div>
   );
 }

@@ -119,6 +119,50 @@ export const en = {
         body: 'Weekly coding challenges earn points and unlock bonus content like interview prep and personal branding courses.',
       },
     },
+    doors: {
+      heading: 'Two ways in',
+      materialTitle: 'Material Studio',
+      materialDesc: 'Palettes, icons, motion presets and type pairings. Open it now — no account, no email.',
+      materialAction: 'Open the studio',
+      educationTitle: 'Learning path',
+      educationDesc:
+        'Sign up with your Iranian phone number, take the free assessment, and get a roadmap built around your goal.',
+      educationAction: 'Start free',
+      educationBadge: 'Assessment is free',
+    },
+    journey: {
+      heading: 'From "where do I start?" to a hireable portfolio',
+      sub: 'Five honest steps. You only pay once you have seen your own roadmap.',
+      assess: {
+        title: 'Assess',
+        body: 'Six short stages capture your goal, current skills, personality, interests, learning style and available hours.',
+      },
+      measure: {
+        title: 'Measure',
+        body: 'A free timed readiness test across five domains shows exactly where you stand — no guessing, no flattery.',
+      },
+      roadmap: {
+        title: 'Get your roadmap',
+        body: 'Your answers and score become an ordered module tree. You see the whole plan before spending anything.',
+      },
+      learn: {
+        title: 'Learn',
+        body: 'Video lessons, written guides, notes and a live HTML/CSS/JS playground in one focused player.',
+      },
+      prove: {
+        title: 'Prove it',
+        body: 'Weekly bootcamp challenges score your code, build a public rank and unlock bonus interview-prep content.',
+      },
+    },
+    trust: {
+      free: 'Assessment & readiness test',
+      freeValue: 'Free',
+      stages: 'Assessment stages',
+      stagesValue: '6',
+      domains: 'Readiness domains',
+      domainsValue: '5',
+      note: 'Material Studio needs no account. Education uses Iranian phone verification.',
+    },
   },
   education: {
     phone: {

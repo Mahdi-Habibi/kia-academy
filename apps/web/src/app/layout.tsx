@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Inter, JetBrains_Mono, Vazirmatn } from 'next/font/google';
+import { Inter, JetBrains_Mono, Sora, Vazirmatn } from 'next/font/google';
 import { ClientProviders } from '@/components/layout/ClientProviders';
 import { SiteChrome } from '@/components/layout/SiteChrome';
 import { DEFAULT_LOCALE, dirForLocale } from '@/i18n/locales';
@@ -10,6 +10,12 @@ const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
   weight: ['400', '500', '600', '700', '800'],
+});
+
+const sora = Sora({
+  subsets: ['latin'],
+  variable: '--font-sora',
+  weight: ['500', '600', '700', '800'],
 });
 
 const jetbrainsMono = JetBrains_Mono({
@@ -37,8 +43,8 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 5,
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#e8f1f6' },
-    { media: '(prefers-color-scheme: dark)', color: '#071821' },
+    { media: '(prefers-color-scheme: light)', color: '#f5f6fb' },
+    { media: '(prefers-color-scheme: dark)', color: '#0e1626' },
   ],
 };
 
@@ -55,7 +61,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html
       lang={locale}
       dir={dir}
-      className={`${inter.variable} ${jetbrainsMono.variable} ${vazirmatn.variable}`}
+      className={`${inter.variable} ${sora.variable} ${jetbrainsMono.variable} ${vazirmatn.variable}`}
       data-theme="light"
       suppressHydrationWarning
     >

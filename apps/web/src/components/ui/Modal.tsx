@@ -10,7 +10,7 @@ interface ModalProps {
 }
 
 function launchConfetti(overlay: HTMLElement) {
-  const colors = ['#6C63FF', '#10B981', '#F5A524', '#EDEFF7'];
+  const colors = ['#6464ff', '#c4eed9', '#ffc864', '#8a8aff'];
   for (let i = 0; i < 70; i++) {
     const piece = document.createElement('div');
     piece.className = 'confetti-piece';

@@ -1,154 +1,192 @@
-/* ===== GitHub Pages demo banner ===== */
+/* =============================================================================
+   Global chrome — demo banner, floating top bar, page back button
+   ========================================================================== */
+
 .demo-banner {
   width: 100%;
-  padding: 8px 16px;
+  padding: var(--space-2) var(--space-4);
   text-align: center;
-  font-size: 13px;
-  line-height: 1.4;
-  color: var(--text);
-  background: color-mix(in srgb, var(--indigo-fill) 18%, transparent);
-  border-bottom: 1px solid var(--border-soft);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--value);
+  background: var(--value-tint);
+  border-bottom: 1px solid rgba(255, 200, 100, 0.32);
 }
 
-/* ===== shared top bar ===== */
+/* --- floating top bar ----------------------------------------------------- */
 .topbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 20px;
-  width: calc(100% - 32px);
-  max-width: 1080px;
-  padding: 13px 18px;
-  margin: 0 auto;
+  gap: var(--space-5);
+  width: calc(100% - 24px);
+  max-width: var(--shell-max);
+  padding: var(--space-2) var(--space-3) var(--space-2) var(--space-4);
+  margin: var(--space-3) auto var(--space-6);
   position: sticky;
-  top: 0;
-  z-index: 50;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  top: var(--space-3);
+  z-index: var(--z-sticky);
   background: var(--bg-glass);
-  border-bottom: 1px solid var(--border-soft);
-  border-radius: 0 0 var(--radius) var(--radius);
-}
-.logo {
-  flex: 0 0 auto;
-  font-weight: 800;
-  font-size: 18px;
-  letter-spacing: -0.02em;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
-  border: none;
-  background: none;
-  color: var(--text);
-}
-.logo-mark {
-  width: 22px;
-  height: 22px;
-  border-radius: 6px;
-  background: linear-gradient(135deg, var(--kia-deep, var(--teal-fill)), var(--kia-accent, var(--indigo-fill)));
-  display: inline-block;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-md);
 }
 
-.page-back-wrap {
+@supports not (backdrop-filter: blur(1px)) {
+  .topbar {
+    background: var(--bg-card);
+  }
+}
+
+/* --- brand --------------------------------------------------------------- */
+.logo {
+  flex: 0 0 auto;
   display: flex;
-  margin: 0 0 1.25rem;
-  position: relative;
-  z-index: 2;
-}
-.page-back-btn {
-  display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  margin-inline: 8px;
-  padding: 0.45rem 0.85rem;
-  border-radius: 999px;
-  border: 1px solid var(--border);
-  background: var(--bg-card);
-  color: var(--text-dim);
-  text-decoration: none;
-  font-size: 0.85rem;
-  font-weight: 600;
-  box-shadow: var(--shadow-sm);
-}
-.page-back-btn:hover {
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-2);
+  border: none;
+  border-radius: var(--radius-pill);
+  background: none;
   color: var(--text);
-  border-color: var(--kia-accent, var(--indigo));
+  font-family: var(--font-display);
+  font-size: 1.0625rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  cursor: pointer;
+  transition: color var(--dur-base) var(--ease-out);
 }
+
+[dir='rtl'] .logo {
+  font-family: var(--font-fa);
+}
+
+.logo:hover {
+  color: var(--brand);
+}
+
+.logo-mark {
+  position: relative;
+  width: 26px;
+  height: 26px;
+  flex: 0 0 auto;
+  border-radius: 9px;
+  background: var(--gradient-brand);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.28),
+    var(--glow-brand);
+}
+
+/* The mark reads as a rising path: a mint step inside the brand tile. */
+.logo-mark::after {
+  content: '';
+  position: absolute;
+  inset-inline-start: 6px;
+  bottom: 6px;
+  width: 8px;
+  height: 8px;
+  border-inline-start: 2px solid var(--mint-200);
+  border-bottom: 2px solid var(--mint-200);
+  border-end-start-radius: 3px;
+}
+
+.logo-text {
+  white-space: nowrap;
+}
+
+/* --- nav ----------------------------------------------------------------- */
+.mobile-nav-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  background: var(--bg-card);
+  color: var(--text);
+  flex-shrink: 0;
+}
+
 .top-right {
   flex: 0 0 auto;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--space-2);
 }
+
+/* --- theme + language controls ------------------------------------------- */
 .theme-toggle {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: var(--space-2);
+  min-height: var(--control-h-sm);
+  padding: 0 var(--space-3);
   background: var(--bg-card);
   border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
   color: var(--text-dim);
-  border-radius: 20px;
-  padding: 7px 14px;
-  font-size: 12px;
-  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  font-weight: 600;
   cursor: pointer;
+  transition:
+    color var(--dur-base) var(--ease-out),
+    border-color var(--dur-base) var(--ease-out);
 }
+
 .theme-toggle:hover {
-  color: var(--text);
-  border-color: var(--indigo);
+  color: var(--brand);
+  border-color: var(--brand-hairline);
 }
+
 .lang-selector {
   position: relative;
   flex: 0 0 auto;
 }
+
 .topbar button.lang-toggle {
   appearance: none;
   -webkit-appearance: none;
-  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 7px;
-  min-height: 36px;
-  min-width: 92px;
-  padding-block: 7px;
-  padding-inline: 10px 12px;
-  overflow: hidden;
-  background: linear-gradient(135deg, var(--indigo-dim), transparent 65%), var(--bg-card);
+  gap: var(--space-2);
+  min-height: var(--control-h-sm);
+  min-width: 86px;
+  padding-inline: var(--space-2) var(--space-3);
+  background: var(--bg-card);
   border: 1px solid var(--border);
-  border-radius: 999px;
-  color: var(--text);
+  border-radius: var(--radius-pill);
+  color: var(--text-dim);
   font-family: inherit;
-  font-size: 12px;
+  font-size: var(--fs-micro);
   font-weight: 600;
   line-height: 1;
   cursor: pointer;
-  box-shadow: var(--shadow-sm);
   transition:
-    color 0.2s ease,
-    border-color 0.2s ease,
-    background 0.2s ease,
-    box-shadow 0.2s ease,
-    transform 0.2s ease;
+    color var(--dur-base) var(--ease-out),
+    border-color var(--dur-base) var(--ease-out),
+    box-shadow var(--dur-base) var(--ease-out);
 }
+
 .topbar button.lang-toggle svg {
-  flex: 0 0 auto;
-  color: var(--indigo-bright);
+  color: var(--brand);
 }
+
 .topbar button.lang-toggle:hover {
-  color: var(--text);
-  border-color: var(--indigo);
-  box-shadow: 0 6px 20px var(--indigo-dim);
-  transform: translateY(-1px);
+  color: var(--brand);
+  border-color: var(--brand-hairline);
 }
+
 .topbar button.lang-toggle[aria-expanded='true'] {
-  border-color: var(--indigo);
-  background: linear-gradient(135deg, var(--indigo-dim), var(--teal-dim)), var(--bg-card);
-  box-shadow: 0 0 0 3px var(--indigo-dim);
+  color: var(--brand);
+  border-color: var(--brand-hairline);
+  box-shadow: var(--focus-ring);
 }
+
 .lang-code {
   display: inline-flex;
   align-items: center;
@@ -156,103 +194,105 @@
   min-width: 24px;
   min-height: 20px;
   padding-inline: 5px;
-  border-radius: 6px;
-  background: var(--indigo-dim);
-  color: var(--indigo-bright);
+  border-radius: var(--radius-xs);
+  background: var(--brand-tint);
+  color: var(--brand);
   font-family: var(--font-mono);
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.04em;
 }
+
 .lang-label {
-  font-size: 12px;
+  font-size: var(--fs-micro);
   white-space: nowrap;
 }
+
 .lang-selector [lang='fa'] {
-  font-family: var(--font-vazirmatn), Tahoma, Arial, sans-serif;
+  font-family: var(--font-fa);
 }
+
 .lang-menu {
   position: absolute;
   inset-inline-end: 0;
-  top: calc(100% + 8px);
+  top: calc(100% + var(--space-2));
   width: max-content;
-  min-width: min(180px, calc(100vw - 32px));
+  min-width: min(190px, calc(100vw - 32px));
   max-width: calc(100vw - 32px);
-  background: color-mix(in srgb, var(--bg-card) 94%, transparent);
+  background: var(--bg-card);
   border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 8px;
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.32);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
+  border-radius: var(--radius-md);
+  padding: var(--space-2);
+  box-shadow: var(--shadow-lg);
   list-style: none;
-  z-index: 100;
+  z-index: var(--z-dropdown);
 }
+
 .lang-menu button {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: var(--space-3);
   width: 100%;
-  padding: 10px;
+  padding: var(--space-3);
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   background: none;
   color: var(--text);
   font-family: inherit;
-  font-size: 13px;
+  font-size: var(--fs-xs);
   font-weight: 600;
   text-align: start;
   cursor: pointer;
-  transition:
-    background 0.18s ease,
-    color 0.18s ease;
+  transition: background var(--dur-base) var(--ease-out);
 }
+
 .lang-menu button:hover,
 .lang-menu button.active {
-  background: var(--indigo-dim);
-  color: var(--text);
+  background: var(--brand-tint);
 }
+
 .lang-menu button.active {
-  box-shadow: inset 3px 0 0 var(--indigo);
+  color: var(--brand);
+  box-shadow: inset 3px 0 0 var(--brand-500);
 }
+
 [dir='rtl'] .lang-code {
   letter-spacing: normal;
 }
+
 [dir='rtl'] .lang-menu button.active {
-  box-shadow: inset -3px 0 0 var(--indigo);
+  box-shadow: inset -3px 0 0 var(--brand-500);
 }
+
+/* --- account chip -------------------------------------------------------- */
 .user-chip {
   display: flex;
   align-items: center;
   flex: 0 0 auto;
-  gap: 8px;
+  gap: var(--space-2);
+  min-height: var(--control-h-sm);
   background: var(--bg-card);
   border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
   color: var(--text);
-  border-radius: 20px;
-  padding-block: 6px;
-  padding-inline: 6px 14px;
-  font-size: 13px;
+  padding-block: 4px;
+  padding-inline: 4px var(--space-3);
   font-family: inherit;
-  font-weight: 600;
+  font-size: var(--fs-xs);
+  font-weight: 700;
   cursor: pointer;
+  transition:
+    border-color var(--dur-base) var(--ease-out),
+    box-shadow var(--dur-base) var(--ease-out);
 }
 
 .user-chip:hover {
-  border-color: var(--indigo);
-  color: var(--text);
-}
-
-.user-chip:focus-visible,
-.theme-toggle:focus-visible,
-.lang-toggle:focus-visible,
-.logo:focus-visible {
-  outline: 3px solid var(--indigo-dim);
-  outline-offset: 3px;
+  border-color: var(--brand-hairline);
+  box-shadow: var(--shadow-xs);
 }
 
 .user-chip-name {
-  max-width: 120px;
+  max-width: 110px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -263,5 +303,59 @@
   width: 26px;
   height: 26px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--emerald-fill), var(--indigo-fill));
+  background: var(--gradient-brand);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.25);
+}
+
+/* --- page back ----------------------------------------------------------- */
+.page-back-wrap {
+  display: flex;
+  margin: 0 0 var(--space-5);
+  position: relative;
+  z-index: var(--z-raised);
+}
+
+.page-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--control-h-sm);
+  padding: 0 var(--space-4);
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text-dim);
+  text-decoration: none;
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  box-shadow: var(--shadow-xs);
+  transition:
+    color var(--dur-base) var(--ease-out),
+    border-color var(--dur-base) var(--ease-out);
+}
+
+.page-back-btn:hover {
+  color: var(--brand);
+  border-color: var(--brand-hairline);
+}
+
+/* --- page header pattern ------------------------------------------------- */
+.page-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-8);
+}
+
+.page-head h1 {
+  font-size: var(--fs-h1);
+  font-weight: 800;
+}
+
+.page-head p {
+  color: var(--text-dim);
+  max-width: 60ch;
+  margin-top: var(--space-2);
 }

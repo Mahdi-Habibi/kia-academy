@@ -1,27 +1,27 @@
 /* Scoped to Material Studio — do not override global site theme */
 .material-studio-root {
-  --primary-deep: var(--kia-deep, #0a2f44);
-  --primary-accent: var(--kia-accent, #1f6e8c);
-  --primary-soft: var(--kia-soft, #2e8a99);
-  --gold-luxe: var(--kia-gold, #c9a959);
-  --text-main: var(--text, #0f1e2c);
-  --text-soft: var(--text-dim, #385e77);
-  --text-faint: #5d7f95;
-  --white-glass: rgba(255, 255, 255, 0.78);
-  --line-glass: rgba(255, 255, 255, 0.56);
+  --primary-deep: var(--ink-950);
+  --primary-accent: var(--brand-700);
+  --primary-soft: var(--brand-500);
+  --gold-luxe: var(--amber-600);
+  --text-main: var(--text);
+  --text-soft: var(--text-dim);
+  --text-faint: var(--ink-500);
+  --white-glass: rgba(255, 255, 255, 0.82);
+  --line-glass: rgba(255, 255, 255, 0.6);
   --shadow-luxe:
-    0 30px 45px -20px rgba(0, 20, 30, 0.25),
-    0 12px 24px -10px rgba(0, 0, 0, 0.08);
-  --focus-ring: 0 0 0 3px rgba(31, 110, 140, 0.2);
-  --radius-lg: 1.35rem;
-  --radius-md: 0.95rem;
+    0 30px 60px -24px rgba(14, 22, 38, 0.26),
+    0 12px 24px -10px rgba(14, 22, 38, 0.1);
+  --focus-ring: 0 0 0 3px rgba(100, 100, 255, 0.4);
+  --radius-lg: 1.375rem;
+  --radius-md: 0.875rem;
   --radius-pill: 999px;
-  --control-h: 38px;
+  --control-h: 40px;
 }
 
 .material-studio-root ::selection {
-  background: rgba(31, 110, 140, 0.2);
-  color: #062030;
+  background: rgba(100, 100, 255, 0.22);
+  color: var(--ink-950);
 }
 
 .material-studio-root *::-webkit-scrollbar {
@@ -30,7 +30,7 @@
 }
 
 .material-studio-root *::-webkit-scrollbar-thumb {
-  background: rgba(31, 110, 140, 0.28);
+  background: rgba(100, 100, 255, 0.3);
   border-radius: 999px;
 }
 
@@ -51,7 +51,7 @@
   height: 380px;
   background: radial-gradient(
     circle,
-    rgba(46, 138, 153, 0.25),
+    rgba(100, 100, 255, 0.28),
     transparent 65%
   );
   top: -120px;
@@ -64,7 +64,7 @@
   height: 320px;
   background: radial-gradient(
     circle,
-    rgba(201, 169, 89, 0.22),
+    rgba(196, 238, 217, 0.5),
     transparent 65%
   );
   bottom: -120px;
@@ -203,7 +203,7 @@
 .splash-option:hover {
   transform: translateY(-6px);
   box-shadow: 0 22px 24px -18px rgba(6, 32, 46, 0.48);
-  border-color: rgba(201, 169, 89, 0.55);
+  border-color: rgba(245, 174, 51, 0.6);
 }
 
 .splash-option h2 {
@@ -239,7 +239,7 @@
 
 .command-hint kbd {
   background: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(31, 110, 140, 0.25);
+  border: 1px solid rgba(100, 100, 255, 0.25);
   border-radius: 6px;
   padding: 0.1rem 0.35rem;
 }
@@ -329,22 +329,22 @@
   margin-bottom: 0.8rem;
 }
 
-.brand {
+.material-studio-root .brand {
   margin: 0 0 0.25rem;
   color: var(--primary-deep);
 }
 
-.field-label {
+.material-studio-root .field-label {
   display: block;
   font-size: 0.9rem;
   color: var(--text-soft);
   margin-bottom: 0.35rem;
 }
 
-.input,
-.color-text-input {
+.material-studio-root .input,
+.material-studio-root .color-text-input {
   width: 100%;
-  border: 1px solid rgba(31, 110, 140, 0.22);
+  border: 1px solid rgba(100, 100, 255, 0.22);
   background: rgba(255, 255, 255, 0.9);
   border-radius: var(--radius-md);
   padding: 0.62rem 0.72rem;
@@ -354,16 +354,16 @@
   font-size: 0.92rem;
 }
 
-.input::placeholder,
-.color-text-input::placeholder,
-.note-editor::placeholder {
-  color: #7b96a8;
+.material-studio-root .input::placeholder,
+.material-studio-root .color-text-input::placeholder,
+.material-studio-root .note-editor::placeholder {
+  color: var(--text-faint);
 }
 
-.input:focus,
-.color-text-input:focus {
-  border-color: rgba(31, 110, 140, 0.5);
-  box-shadow: 0 0 0 3px rgba(31, 110, 140, 0.13);
+.material-studio-root .input:focus,
+.material-studio-root .color-text-input:focus {
+  border-color: rgba(100, 100, 255, 0.5);
+  box-shadow: 0 0 0 3px rgba(100, 100, 255, 0.18);
 }
 
 .learn-progress {
@@ -430,12 +430,12 @@
 }
 
 .lesson-item.active {
-  background: rgba(31, 110, 140, 0.18);
-  outline: 1px solid rgba(31, 110, 140, 0.28);
+  background: rgba(100, 100, 255, 0.18);
+  outline: 1px solid rgba(100, 100, 255, 0.32);
 }
 
 .lesson-item.is-done {
-  border-left: 3px solid rgba(46, 138, 153, 0.7);
+  border-left: 3px solid rgba(100, 100, 255, 0.7);
 }
 
 .lesson-main-label {
@@ -448,7 +448,7 @@
   font-size: 0.72rem;
   padding: 0.15rem 0.4rem;
   border-radius: 999px;
-  background: rgba(31, 110, 140, 0.12);
+  background: rgba(100, 100, 255, 0.12);
   color: var(--primary-deep);
 }
 
@@ -498,7 +498,7 @@
 
 .meta-chip {
   background: rgba(255, 255, 255, 0.8);
-  border: 1px solid rgba(31, 110, 140, 0.18);
+  border: 1px solid rgba(100, 100, 255, 0.18);
   color: var(--text-soft);
   border-radius: 999px;
   padding: 0.2rem 0.5rem;
@@ -525,7 +525,7 @@
 }
 
 .quiz-option {
-  border: 1px solid rgba(31, 110, 140, 0.2);
+  border: 1px solid rgba(100, 100, 255, 0.2);
   background: rgba(255, 255, 255, 0.72);
   color: var(--text-main);
   border-radius: 0.8rem;
@@ -553,7 +553,7 @@
 .note-editor {
   width: 100%;
   min-height: 130px;
-  border: 1px solid rgba(31, 110, 140, 0.2);
+  border: 1px solid rgba(100, 100, 255, 0.2);
   border-radius: 1rem;
   padding: 0.7rem;
   resize: vertical;
@@ -574,7 +574,7 @@
   justify-content: space-between;
   gap: 0.8rem;
   flex-wrap: wrap;
-  border-bottom: 1px dashed rgba(31, 110, 140, 0.15);
+  border-bottom: 1px dashed rgba(100, 100, 255, 0.16);
   padding-bottom: 0.5rem;
 }
 
@@ -661,14 +661,14 @@
 #code-preview {
   width: 100%;
   min-height: 210px;
-  border: 1px solid rgba(31, 110, 140, 0.25);
+  border: 1px solid rgba(100, 100, 255, 0.25);
   border-radius: 1rem;
   background: #fff;
   display: block;
 }
 
 .console-panel {
-  border: 1px solid rgba(31, 110, 140, 0.2);
+  border: 1px solid rgba(100, 100, 255, 0.2);
   border-radius: 1rem;
   background: rgba(15, 23, 42, 0.95);
   color: #c7d6e3;
@@ -849,7 +849,7 @@
   min-height: 38px;
   border-radius: 0.7rem;
   background: rgba(255, 255, 255, 0.8);
-  border: 1px solid rgba(31, 110, 140, 0.2);
+  border: 1px solid rgba(100, 100, 255, 0.2);
   color: var(--primary-deep);
   font-weight: 600;
 }
@@ -976,7 +976,7 @@
 .font-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 14px 18px -14px rgba(8, 39, 57, 0.45);
-  border-color: rgba(31, 110, 140, 0.35);
+  border-color: rgba(100, 100, 255, 0.35);
 }
 
 .icon-card svg {
@@ -1021,8 +1021,8 @@
   border-radius: 999px;
   background: linear-gradient(
     90deg,
-    rgba(31, 110, 140, 0.35),
-    rgba(46, 138, 153, 0.55)
+    rgba(100, 100, 255, 0.35),
+    rgba(138, 138, 255, 0.75)
   );
 }
 
@@ -1031,8 +1031,8 @@
   border-radius: 999px;
   background: linear-gradient(
     90deg,
-    rgba(31, 110, 140, 0.35),
-    rgba(46, 138, 153, 0.55)
+    rgba(100, 100, 255, 0.35),
+    rgba(138, 138, 255, 0.75)
   );
   border: none;
 }
@@ -1040,7 +1040,7 @@
 .material-studio-root input[type='range']::-moz-range-progress {
   height: 8px;
   border-radius: 999px;
-  background: rgba(46, 138, 153, 0.55);
+  background: rgba(138, 138, 255, 0.75);
   border: none;
 }
 
@@ -1051,9 +1051,9 @@
   height: 18px;
   margin-top: -5px;
   border-radius: 50%;
-  background: var(--primary-deep, #0a2f44);
+  background: var(--primary-deep);
   border: 2px solid #fff;
-  box-shadow: 0 2px 8px rgba(10, 47, 68, 0.35);
+  box-shadow: 0 2px 8px rgba(14, 22, 38, 0.35);
   cursor: pointer;
 }
 
@@ -1061,17 +1061,17 @@
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  background: var(--primary-deep, #0a2f44);
+  background: var(--primary-deep);
   border: 2px solid #fff;
-  box-shadow: 0 2px 8px rgba(10, 47, 68, 0.35);
+  box-shadow: 0 2px 8px rgba(14, 22, 38, 0.35);
   cursor: pointer;
 }
 
 .material-studio-root input[type='range']:focus-visible::-webkit-slider-thumb,
 .material-studio-root input[type='range']:focus-visible::-moz-range-thumb {
   box-shadow:
-    0 2px 8px rgba(10, 47, 68, 0.35),
-    0 0 0 3px rgba(31, 110, 140, 0.25);
+    0 2px 8px rgba(14, 22, 38, 0.35),
+    0 0 0 3px rgba(100, 100, 255, 0.25);
 }
 
 .slider-wrap input[type='range'] {
@@ -1116,14 +1116,14 @@
 .preview-box {
   border-radius: 1rem;
   padding: 0.85rem;
-  border: 1px dashed rgba(31, 110, 140, 0.25);
+  border: 1px dashed rgba(100, 100, 255, 0.25);
 }
 
 .animation-preview > div {
   margin: 0 auto;
   padding: 0.6rem 1rem;
   border-radius: 999px;
-  background: rgba(31, 110, 140, 0.14);
+  background: rgba(100, 100, 255, 0.14);
   color: var(--primary-deep);
 }
 

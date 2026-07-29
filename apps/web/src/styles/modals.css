@@ -1,61 +1,100 @@
-/* ================= MODALS (shared) ================= */
+/* =============================================================================
+   Modals, confetti, pointer drag
+   ========================================================================== */
+
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(6, 8, 16, 0.75);
+  background: rgba(14, 22, 38, 0.72);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   display: none;
   align-items: center;
   justify-content: center;
-  z-index: 60;
-  padding: 20px;
+  z-index: var(--z-modal);
+  padding: var(--space-5);
   overflow: hidden;
 }
+
 .modal-overlay.active {
   display: flex;
+  animation: fadeUp var(--dur-fast) var(--ease-out) both;
 }
+
 .modal {
-  background: var(--bg-elevated);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  padding: 32px;
-  max-width: 400px;
-  text-align: center;
-  z-index: 2;
   position: relative;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: var(--space-8);
+  max-width: 420px;
+  text-align: center;
+  box-shadow: var(--shadow-xl);
+  z-index: var(--z-raised);
 }
+
 .modal .mi {
-  font-size: 40px;
-  margin-bottom: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  margin-bottom: var(--space-4);
+  border-radius: var(--radius-lg);
+  background: var(--brand-tint);
+  border: 1px solid var(--brand-hairline);
+  color: var(--brand);
+  font-size: 1.75rem;
 }
+
 .modal h4 {
-  font-size: 19px;
+  font-size: var(--fs-h3);
   font-weight: 800;
-  margin-bottom: 8px;
+  margin-bottom: var(--space-2);
 }
+
 .modal p {
-  font-size: 13.5px;
+  font-size: var(--fs-sm);
   color: var(--text-dim);
-  margin-bottom: 22px;
-  line-height: 1.55;
+  margin-bottom: var(--space-6);
 }
+
 .modal button {
-  background: var(--indigo-fill);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: var(--control-h);
+  background: var(--brand-fill);
   color: var(--on-fill);
   border: none;
-  border-radius: 10px;
-  padding: 12px 24px;
+  border-radius: var(--radius-md);
+  padding: 0 var(--space-6);
+  font-family: inherit;
   font-weight: 700;
+  font-size: var(--fs-body);
   cursor: pointer;
-  font-size: 14px;
+  box-shadow: var(--glow-brand);
+  transition:
+    background var(--dur-base) var(--ease-out),
+    transform var(--dur-base) var(--ease-out);
 }
+
+.modal button:hover {
+  background: var(--brand-fill-hover);
+  transform: translateY(-2px);
+}
+
 .confetti-piece {
   position: absolute;
   top: -20px;
   width: 8px;
   height: 14px;
+  border-radius: 2px;
   opacity: 0.9;
   animation: fall linear forwards;
 }
+
 @keyframes fall {
   to {
     transform: translateY(110vh) rotate(540deg);
@@ -63,23 +102,29 @@
   }
 }
 
-/* ===== Touch & pointer drag ===== */
+/* =============================================================================
+   Touch & pointer drag
+   ========================================================================== */
+
 .touch-draggable {
   touch-action: none;
   user-select: none;
   -webkit-user-select: none;
   cursor: grab;
 }
+
 .touch-draggable.is-dragging,
 .r-item.dragging {
   opacity: 0.85;
-  transform: scale(1.02);
-  z-index: 5;
+  box-shadow: var(--shadow-lg);
+  z-index: var(--z-raised);
   cursor: grabbing;
 }
+
+/* Drag feedback stays neutral — it must not imply a correct drop. */
 .pointer-drop-zone.dragover-touch,
 .folder-drop.dragover-touch,
 .flow-slot.dragover-touch {
-  border-color: var(--indigo-bright) !important;
-  background: var(--indigo-dim) !important;
+  border-color: var(--brand-500) !important;
+  background: var(--brand-tint) !important;
 }

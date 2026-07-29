@@ -21,8 +21,7 @@ export function RadarChart({ percentages, domains = EXAM_DOMAINS }: RadarChartPr
     return [cx + Math.cos(a) * r * scale, cy + Math.sin(a) * r * scale];
   };
 
-  const fontFamily =
-    locale === 'fa' ? 'var(--font-noto-arabic), Vazirmatn, sans-serif' : 'var(--font-display), sans-serif';
+  const fontFamily = locale === 'fa' ? 'var(--font-fa)' : 'var(--font-display)';
 
   const gridPolygons = [0.25, 0.5, 0.75, 1].map((scale) => {
     const pts = modules.map((_, i) => point(i, scale).join(',')).join(' ');
@@ -43,7 +42,7 @@ export function RadarChart({ percentages, domains = EXAM_DOMAINS }: RadarChartPr
     const shortLabel = label.split(/[\s/&]+/)[0] ?? label;
     return (
       <g key={m}>
-        <circle cx={x} cy={y} r={4} fill="var(--indigo-bright)" />
+        <circle cx={x} cy={y} r={4} fill="var(--brand-500)" stroke="var(--bg-card)" strokeWidth={1.5} />
         <text
           x={lx}
           y={ly}
@@ -64,10 +63,11 @@ export function RadarChart({ percentages, domains = EXAM_DOMAINS }: RadarChartPr
       {axes}
       <polygon
         points={dataPts}
-        fill="var(--indigo-bright)"
-        fillOpacity={0.35}
-        stroke="var(--indigo-bright)"
+        fill="var(--brand-500)"
+        fillOpacity={0.28}
+        stroke="var(--brand-500)"
         strokeWidth={2}
+        strokeLinejoin="round"
       />
       {dots}
     </svg>

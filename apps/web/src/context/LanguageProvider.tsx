@@ -14,7 +14,6 @@ import { readLocaleCookie, writeLocaleCookie } from '@/i18n/cookie';
 import { createFormatters, type Formatters } from '@/i18n/formatters';
 import {
   DEFAULT_LOCALE,
-  detectBrowserLocale,
   dirForLocale,
   LOCALE_COOKIE,
   parseLocale,
@@ -51,11 +50,12 @@ export function LanguageProvider({
   const [locale, setLocaleState] = useState<Locale>(parseLocale(initialLocale));
 
   useEffect(() => {
-    let next = locale;
+    // Persian-first: prefer an explicit cookie, otherwise keep DEFAULT_LOCALE (fa).
+    // Do not auto-switch to the browser language — that silently flipped the site to English.
+    let next = parseLocale(initialLocale);
     if (hasLocaleCookie()) {
       next = readLocaleCookie(document.cookie);
     } else {
-      next = detectBrowserLocale();
       writeLocaleCookie(next);
     }
     if (next !== locale) {

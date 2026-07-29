@@ -1,33 +1,39 @@
-/* Contact page */
+/* =============================================================================
+   Contact page, unified test flow, roadmap course picker, admin perm matrix
+   Note: test-history styles live in hub.css — do not duplicate them here,
+   this file is imported last and would silently win.
+   ========================================================================== */
+
 .contact-shell {
-  max-width: 960px;
-  padding-bottom: 48px;
+  max-width: 1000px;
+  padding-bottom: var(--space-section);
 }
 
 .contact-grid {
   display: grid;
-  grid-template-columns: minmax(240px, 1fr) minmax(0, 1.4fr);
-  gap: 24px;
-  margin-top: 28px;
+  grid-template-columns: minmax(min(240px, 100%), 1fr) minmax(0, 1.4fr);
+  gap: var(--bento-gap);
+  margin-top: var(--space-8);
 }
 
-.contact-info {
-  padding: 22px;
-  border-radius: calc(var(--radius) + 2px);
+.contact-info,
+.contact-form {
+  padding: var(--space-6);
+  border-radius: var(--radius-xl);
   border: 1px solid var(--border);
   background: var(--bg-card);
   box-shadow: var(--shadow-sm);
 }
 
 .contact-info h2 {
-  margin: 0 0 10px;
-  font-size: 1.15rem;
+  margin: 0 0 var(--space-3);
+  font-size: var(--fs-h3);
+  font-weight: 800;
 }
 
 .contact-info p {
-  margin: 0 0 16px;
+  margin: 0 0 var(--space-4);
   color: var(--text-dim);
-  line-height: 1.65;
 }
 
 .contact-info-list {
@@ -35,18 +41,19 @@
   margin: 0;
   padding: 0;
   display: grid;
-  gap: 12px;
+  gap: var(--space-3);
 }
 
 .contact-info-list li {
   display: flex;
   align-items: flex-start;
-  gap: 10px;
+  gap: var(--space-3);
   color: var(--text);
+  font-size: var(--fs-sm);
 }
 
 .contact-info-list a {
-  color: var(--kia-accent, var(--indigo-bright));
+  color: var(--brand);
   text-decoration: none;
 }
 
@@ -55,40 +62,38 @@
 }
 
 .contact-note {
-  margin-top: 18px !important;
-  font-size: 0.88rem;
+  margin-top: var(--space-5) !important;
+  font-size: var(--fs-xs);
   color: var(--text-faint) !important;
 }
 
 .contact-form {
-  padding: 22px;
-  border-radius: calc(var(--radius) + 2px);
-  border: 1px solid var(--border);
-  background: var(--bg-card);
-  box-shadow: var(--shadow-sm);
   display: grid;
-  gap: 14px;
+  gap: var(--space-4);
 }
 
 .contact-alt {
-  margin-top: 24px;
-  font-size: 0.92rem;
+  margin-top: var(--space-6);
+  font-size: var(--fs-sm);
   color: var(--text-dim);
 }
 
 .contact-alt a {
-  color: var(--kia-accent, var(--indigo-bright));
+  color: var(--brand);
 }
 
-@media (max-width: 760px) {
+@media (max-width: 800px) {
   .contact-grid {
     grid-template-columns: 1fr;
   }
 }
 
-/* Unified test flow */
+/* =============================================================================
+   Unified test flow
+   ========================================================================== */
+
 .unified-test-flow {
-  margin-top: 8px;
+  margin-top: var(--space-2);
 }
 
 .unified-test-flow--transition .unified-test-panel {
@@ -97,158 +102,106 @@
 }
 
 .unified-test-panel {
-  animation: fadeUp 0.35s ease both;
+  animation: fadeUp var(--dur-slow) var(--ease-out) both;
 }
 
-/* Landing — three CTAs */
-.landing-actions--three {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  width: min(100%, 720px);
-}
+/* =============================================================================
+   Roadmap course picker
+   ========================================================================== */
 
-.landing-path-badge {
-  display: inline-block;
-  margin-top: 2px;
-  padding: 2px 8px;
-  border-radius: 999px;
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: var(--kia-deep, var(--indigo));
-  background: color-mix(in srgb, var(--kia-gold, var(--amber)) 22%, transparent);
-  border: 1px solid color-mix(in srgb, var(--kia-gold, var(--amber)) 40%, transparent);
-}
-
-.landing-path-card--contact {
-  align-items: center;
-  text-align: center;
-}
-
-/* Roadmap course picker */
 .course-picker-list {
   display: grid;
-  gap: 10px;
-  margin: 14px 0 18px;
+  gap: var(--space-2);
+  margin: var(--space-4) 0 var(--space-5);
 }
 
 .course-picker-item {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px 14px;
-  border-radius: var(--radius);
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
   border: 1px solid var(--border);
-  background: var(--bg);
+  background: var(--bg-elevated);
   cursor: pointer;
-  transition: border-color 0.15s ease, background 0.15s ease;
+  font-size: var(--fs-sm);
+  transition:
+    border-color var(--dur-base) var(--ease-out),
+    background var(--dur-base) var(--ease-out);
 }
 
 .course-picker-item:hover {
-  border-color: var(--kia-accent, var(--indigo));
+  border-color: var(--brand-hairline);
 }
 
 .course-picker-item.selected {
-  border-color: var(--kia-accent, var(--indigo));
-  background: color-mix(in srgb, var(--kia-accent, var(--indigo)) 8%, var(--bg-card));
+  border-color: var(--brand-500);
+  background: var(--brand-tint);
 }
 
 .course-picker-item input {
   width: 18px;
   height: 18px;
-  accent-color: var(--kia-accent, var(--indigo));
+  accent-color: var(--brand-500);
 }
 
 .course-picker-meta {
   margin-inline-start: auto;
-  font-size: 0.88rem;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
   color: var(--text-dim);
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .course-picker-total {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 12px;
-  font-weight: 700;
-}
-
-/* Dashboard test history */
-.test-history {
-  margin-top: 28px;
-  padding: 20px;
-  border-radius: calc(var(--radius) + 2px);
-  border: 1px solid var(--border);
-  background: var(--bg-card);
-}
-
-.test-history h3 {
-  margin: 0 0 12px;
-}
-
-.test-history-list {
-  display: grid;
-  gap: 10px;
-}
-
-.test-history-item {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 10px 16px;
-  padding: 12px 14px;
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-  background: var(--bg);
-}
-
-.test-history-score {
+  gap: var(--space-4);
+  margin-bottom: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border-soft);
   font-weight: 800;
-  font-family: var(--font-mono);
-  color: var(--kia-deep, var(--indigo-bright));
 }
 
-.test-history-pass {
-  font-size: 0.82rem;
-  padding: 2px 8px;
-  border-radius: 999px;
-  background: var(--emerald-dim);
-  color: var(--emerald);
+/* Inside the premium panel the picker inherits the ink surface. */
+.p-card.highlight .course-picker-item {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(154, 164, 206, 0.22);
+  color: var(--ink-100);
 }
 
-.test-history-fail {
-  background: var(--amber-dim);
-  color: var(--amber);
+.p-card.highlight .course-picker-item.selected {
+  border-color: var(--brand-400);
+  background: rgba(100, 100, 255, 0.2);
 }
 
-/* Admin permissions matrix */
+/* =============================================================================
+   Admin permissions matrix
+   ========================================================================== */
+
 .admin-perm-table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 12px;
+  margin-top: var(--space-3);
 }
 
 .admin-perm-table th,
 .admin-perm-table td {
-  padding: 10px 12px;
-  border-bottom: 1px solid var(--border);
+  padding: var(--space-3);
+  border-bottom: 1px solid var(--admin-line, var(--border));
   text-align: start;
 }
 
 .admin-perm-table th {
-  font-size: 0.82rem;
-  color: var(--text-dim);
-  font-weight: 600;
+  font-size: var(--fs-xs);
+  color: var(--admin-muted, var(--text-dim));
+  font-weight: 700;
 }
 
 .admin-role-save-row {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 10px;
-}
-
-@media (max-width: 680px) {
-  .landing-actions--three {
-    grid-template-columns: 1fr;
-  }
+  gap: var(--space-3);
 }

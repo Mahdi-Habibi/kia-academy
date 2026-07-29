@@ -1,42 +1,43 @@
-/* ===== Responsive — tablet ===== */
+/* =============================================================================
+   Responsive overrides
+   Breakpoints: 1024 / 900 / 768 / 480 / 360
+   ========================================================================== */
+
+/* --- tablet: collapse the top nav into a sheet ---------------------------- */
 @media (max-width: 900px) {
   .mobile-nav-toggle {
     display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    border: 1px solid var(--border-soft);
-    border-radius: var(--radius-sm);
-    background: var(--bg-elevated);
-    color: var(--text);
-    flex-shrink: 0;
   }
+
+  .topbar {
+    position: sticky;
+    flex-wrap: wrap;
+  }
+
   .top-nav {
     display: none;
     position: absolute;
-    top: calc(100% + 8px);
+    top: calc(100% + var(--space-2));
     inset-inline: 0;
     flex-direction: column;
     align-items: stretch;
-    gap: 4px;
-    padding: 12px;
-    background: var(--bg-elevated);
-    border: 1px solid var(--border-soft);
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-md);
-    z-index: 50;
+    gap: 2px;
+    padding: var(--space-3);
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    z-index: var(--z-dropdown);
   }
+
   .top-nav--open {
     display: flex;
+    animation: fadeUp var(--dur-fast) var(--ease-out) both;
   }
+
   .top-nav-link {
-    padding: 10px 12px;
+    padding: var(--space-3);
     border-radius: var(--radius-sm);
-  }
-  .topbar {
-    position: relative;
-    flex-wrap: wrap;
   }
 }
 
@@ -46,44 +47,37 @@
   }
 }
 
+/* --- small tablet / large phone ------------------------------------------- */
 @media (max-width: 768px) {
-  .app {
-    padding: 0 16px;
-  }
   .topbar {
     width: calc(100% - 20px);
-    padding: 11px 12px;
-    gap: 8px;
+    padding: var(--space-2);
+    gap: var(--space-2);
   }
-  .top-right {
-    gap: 8px;
-  }
+
   .hero {
-    padding: 40px 0 32px;
+    padding: var(--space-10) 0 var(--space-8);
   }
-  .hero p {
-    font-size: 16px;
-  }
-  .hero-note {
-    font-size: 12px;
-    padding: 0 8px;
-  }
+
   .proof-row {
-    gap: 28px;
-    margin-top: 40px;
+    gap: var(--space-8);
+    margin-top: var(--space-10);
   }
+
   .wizard-shell,
   .test-shell,
   .gate,
   .results {
-    padding-bottom: 48px;
+    padding-bottom: var(--space-14);
   }
+
   .wizard-nav,
   .test-nav {
     flex-direction: column-reverse;
-    gap: 12px;
+    gap: var(--space-3);
     align-items: stretch;
   }
+
   .wizard-nav .btn-next,
   .test-nav .btn-next,
   .wizard-nav .btn-ghost,
@@ -91,213 +85,197 @@
     width: 100%;
     text-align: center;
   }
-  .gate-footer {
-    flex-direction: column;
-    align-items: stretch;
-    text-align: center;
-    gap: 16px;
-  }
-  .gate-footer .cta-primary {
-    width: 100%;
-  }
+
+  .gate-footer,
+  .unlock-cta,
   .teaser {
     flex-direction: column;
     align-items: stretch;
-    gap: 14px;
+    text-align: center;
+    gap: var(--space-4);
   }
+
+  .gate-footer .cta-primary,
+  .unlock-cta .cta-primary,
   .teaser-btn {
     width: 100%;
     text-align: center;
   }
-  .unlock-cta {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 14px;
+
+  .teaser-left {
+    justify-content: center;
   }
-  .unlock-cta .cta-primary {
-    width: 100%;
-  }
+
   .dash-head {
     flex-direction: column;
     align-items: stretch;
   }
+
   .rank-card {
     width: 100%;
     min-width: unset;
   }
+
   .ch-top {
     flex-direction: column;
     align-items: stretch;
-    gap: 12px;
+    gap: var(--space-3);
   }
-  .roadmap-wrap {
-    padding: 24px 16px;
-    border-radius: 16px;
-  }
-  .tree {
-    min-width: 520px;
-  }
+
   .modal {
     max-width: calc(100vw - 32px);
-    padding: 24px 20px;
-    margin: 0 8px;
+    padding: var(--space-6) var(--space-5);
   }
+
   .flow-slot {
     width: 100%;
     max-width: 100%;
   }
+
   .flow-pool {
     justify-content: center;
   }
+
   .results-grid svg {
     max-height: 280px;
   }
+
   .score-label {
     width: 110px;
-    font-size: 12px;
+    font-size: var(--fs-micro);
   }
+
   .profile-strip {
-    gap: 8px;
+    gap: var(--space-2);
   }
+
   .profile-chip {
     flex: 1 1 calc(50% - 8px);
     min-width: 140px;
   }
+
   .purchase-head h3 {
-    font-size: 18px;
+    font-size: var(--fs-h3);
   }
+
   .code-editor {
-    min-height: 180px;
-    font-size: 13px;
+    min-height: 200px;
+    font-size: var(--fs-xs);
   }
+
   .explorer {
     justify-content: center;
   }
+
   .folder-row {
     flex-direction: column;
   }
+
   .folder-drop {
     min-width: unset;
     width: 100%;
   }
 }
 
-/* ===== Responsive — phone ===== */
+/* --- phone ---------------------------------------------------------------- */
 @media (max-width: 480px) {
-  .app {
-    padding: 0 12px;
-  }
   .topbar {
     width: calc(100% - 16px);
-    padding: 10px;
+    padding: var(--space-2);
   }
+
   .logo {
-    font-size: 16px;
+    font-size: 1rem;
   }
+
   .theme-toggle,
   .topbar button.lang-toggle {
     width: 40px;
     min-width: 40px;
-    padding: 8px;
-    font-size: 11px;
+    padding: 0;
+    justify-content: center;
     min-height: 40px;
   }
+
   .theme-toggle-label,
   .lang-label,
   .user-chip-name {
     display: none;
   }
+
   .user-chip {
     min-height: 40px;
-    padding-block: 6px;
-    padding-inline: 6px 8px;
+    padding-inline: 4px var(--space-2);
   }
-  .hero h1 {
-    font-size: clamp(28px, 8vw, 40px);
-  }
-  .proof-row {
-    flex-direction: column;
-    gap: 20px;
-  }
-  .q-title {
-    font-size: 22px;
-  }
-  .m-title {
-    font-size: 20px;
-  }
+
+  /* Touch targets: WCAG 2.5.5 asks for 44px; 48px is comfortable. */
   .tag,
   .opt-card,
   .tile,
-  .challenge-card {
-    min-height: 48px;
-  }
+  .challenge-card,
+  .btn,
   .btn-next,
   .cta-primary,
+  .cta-secondary,
   .submit-btn,
   .btn-fill-full,
   .btn-outline-full {
     min-height: 48px;
   }
-  .cta-primary {
-    width: 100%;
-    display: block;
-    text-align: center;
-  }
+
+  .cta-primary,
   .cta-secondary {
-    margin-inline-start: 0;
-    margin-top: 12px;
     width: 100%;
+    margin-inline-start: 0;
   }
+
   .p-card {
-    padding: 20px 18px;
+    padding: var(--space-6) var(--space-5);
   }
+
   .price-final {
-    font-size: 26px;
+    font-size: 1.625rem;
   }
-  .gate h1 {
-    font-size: clamp(24px, 7vw, 32px);
-  }
-  .dash-head h1 {
-    font-size: 24px;
-  }
-  .hub h2,
-  .rewards h2 {
-    font-size: 22px;
-  }
-  .result-shell h2,
-  .results h2 {
-    font-size: clamp(22px, 6vw, 28px);
-  }
+
   .node-label {
-    font-size: 11px;
-    max-width: 90px;
+    font-size: var(--fs-micro);
   }
+
   .node-circle {
     width: 44px;
     height: 44px;
-    font-size: 17px;
+    font-size: 1rem;
   }
+
   .file-item {
     min-width: 110px;
-    padding: 14px 10px;
+    padding: var(--space-3) var(--space-2);
   }
+
   .r-item {
-    padding: 16px;
-    font-size: 13.5px;
+    padding: var(--space-4);
+    font-size: var(--fs-xs);
   }
+
   .flow-block {
-    padding: 12px 14px;
-    font-size: 12.5px;
+    padding: var(--space-3) var(--space-4);
+    font-size: var(--fs-micro);
   }
+
   .timer-box {
     width: 100%;
     text-align: center;
-    font-size: 18px;
   }
+
   .score-preview {
     flex-direction: column;
-    gap: 8px;
+    gap: var(--space-2);
     text-align: center;
+  }
+
+  .proof-row {
+    flex-direction: column;
+    gap: var(--space-5);
   }
 }
 
@@ -307,30 +285,36 @@
   }
 }
 
-/* ===== Coarse pointer (touch devices) ===== */
+/* --- coarse pointer ------------------------------------------------------- */
 @media (hover: none) and (pointer: coarse) {
   .opt-card:hover,
   .tile:hover,
   .challenge-card:hover,
   .file-item:hover,
   .cta-primary:hover,
+  .btn:hover,
   .btn-next:hover,
+  .door:hover,
+  .journey-step:hover,
   .submit-btn:hover {
     transform: none;
   }
+
   .opt-card:active,
   .tile:active,
   .challenge-card:active,
   .tag:active {
-    transform: scale(0.98);
-    border-color: var(--indigo-bright);
+    border-color: var(--brand-500);
+    background: var(--brand-tint);
   }
+
   input[type='range'] {
-    height: 22px;
+    height: 24px;
   }
+
   input[type='range']::-webkit-slider-thumb {
-    width: 22px;
-    height: 22px;
-    margin-top: -7px;
+    width: 24px;
+    height: 24px;
+    margin-top: -8px;
   }
 }

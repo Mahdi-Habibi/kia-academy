@@ -1,47 +1,102 @@
-/* ===== Auth ===== */
+/* =============================================================================
+   Auth & education funnel + top-bar nav / account dropdown
+   ========================================================================== */
+
 .auth-shell {
-  max-width: 480px;
-  padding: clamp(2rem, 6vh, 3rem) 1.25rem clamp(3rem, 8vh, 5rem);
+  max-width: 520px;
+  padding: clamp(1rem, 4vh, 2.5rem) var(--space-5) clamp(3rem, 8vh, 5rem);
   margin: 0 auto;
 }
 
 .auth-card {
+  position: relative;
   background: var(--bg-card);
   border: 1px solid var(--border);
-  border-radius: calc(var(--radius) + 4px);
-  box-shadow: var(--shadow-md);
-  padding: 28px 24px 26px;
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  padding: var(--space-8) var(--space-6) var(--space-6);
+  overflow: hidden;
+}
+
+/* Brand hairline across the top of the card. */
+.auth-card::before {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 3px;
+  background: var(--gradient-brand);
 }
 
 .auth-card h1 {
-  font-size: clamp(1.45rem, 3vw, 1.75rem);
-  margin: 10px 0 8px;
-  letter-spacing: -0.02em;
-  color: var(--text);
+  font-size: var(--fs-h2);
   font-weight: 800;
+  margin: var(--space-4) 0 var(--space-2);
+  color: var(--text);
 }
 
 .auth-sub {
   color: var(--text-dim);
-  font-size: 15px;
-  margin-bottom: 24px;
-  line-height: 1.65;
+  font-size: var(--fs-body);
+  margin-bottom: var(--space-6);
 }
 
 .auth-form {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--space-4);
 }
 
+/* --- step rail ----------------------------------------------------------- */
+.auth-steps {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-5);
+  list-style: none;
+}
+
+.auth-steps li {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  font-size: var(--fs-micro);
+  font-weight: 700;
+  color: var(--text-faint);
+}
+
+.auth-steps li::before {
+  content: '';
+  height: 4px;
+  border-radius: var(--radius-pill);
+  background: var(--progress-track);
+  transition: background var(--dur-slow) var(--ease-out);
+}
+
+.auth-steps li[data-state='active'] {
+  color: var(--brand);
+}
+
+.auth-steps li[data-state='active']::before {
+  background: var(--brand-500);
+}
+
+.auth-steps li[data-state='done'] {
+  color: var(--progress);
+}
+
+.auth-steps li[data-state='done']::before {
+  background: var(--progress-fill);
+}
+
+/* --- fields -------------------------------------------------------------- */
 .form-field {
   display: flex;
   flex-direction: column;
-  gap: 7px;
-  font-size: 13px;
-  font-weight: 600;
+  gap: var(--space-2);
+  font-size: var(--fs-xs);
+  font-weight: 700;
   color: var(--text-dim);
 }
 
@@ -49,17 +104,24 @@
 .form-field select,
 .form-field textarea {
   width: 100%;
+  min-height: var(--control-h);
   background: var(--bg-elevated);
   border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 13px 14px;
-  font-size: 15px;
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--fs-body);
   font-weight: 500;
   color: var(--text);
   font-family: inherit;
   transition:
-    border-color 0.15s,
-    box-shadow 0.15s;
+    border-color var(--dur-base) var(--ease-out),
+    box-shadow var(--dur-base) var(--ease-out);
+}
+
+.form-field textarea {
+  min-height: 120px;
+  line-height: 1.7;
+  resize: vertical;
 }
 
 .form-field input::placeholder,
@@ -68,77 +130,104 @@
   font-weight: 400;
 }
 
+.form-field input:hover,
+.form-field select:hover,
+.form-field textarea:hover {
+  border-color: var(--border-strong);
+}
+
 .form-field input:focus,
 .form-field select:focus,
 .form-field textarea:focus {
   outline: none;
-  border-color: var(--kia-accent, var(--indigo));
-  box-shadow: 0 0 0 3px rgba(31, 110, 140, 0.18);
+  border-color: var(--brand-500);
+  box-shadow: var(--focus-ring);
 }
 
 .form-field input:disabled {
-  opacity: 0.72;
+  opacity: 0.7;
   cursor: not-allowed;
-  background: color-mix(in srgb, var(--bg-elevated) 70%, var(--border-soft));
+  background: var(--bg-sunken);
 }
 
 .form-field .form-error {
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .form-hint {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--text-dim);
-  background: var(--amber-dim);
-  border: 1px solid color-mix(in srgb, var(--kia-gold, #c9a959) 35%, transparent);
-  padding: 0.65rem 0.85rem;
-  border-radius: var(--radius-sm);
-  margin: 0 0 4px;
+  display: flex;
+  gap: var(--space-2);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--value);
+  background: var(--value-tint);
+  border: 1px solid rgba(255, 200, 100, 0.4);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  margin: 0 0 var(--space-1);
 }
 
 .form-error {
-  color: var(--danger);
-  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--negative);
+  font-size: var(--fs-xs);
   margin: 0;
 }
 
+/* Icon glyph so the error is not signalled by colour alone. */
+.form-error::before {
+  content: '!';
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: var(--negative);
+  color: var(--ink-0);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+}
+
 .form-success {
-  color: var(--emerald);
-  font-size: 14px;
-  margin: 12px 0 0;
+  color: var(--progress);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  margin: var(--space-3) 0 0;
 }
 
 .auth-submit {
   width: 100%;
-  margin-top: 6px;
-}
-
-.auth-submit:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
+  margin-top: var(--space-1);
 }
 
 .auth-footer {
-  margin-top: 24px;
-  font-size: 14px;
+  margin-top: var(--space-6);
+  font-size: var(--fs-sm);
   color: var(--text-dim);
   text-align: center;
 }
 
 .auth-footer a {
-  color: var(--indigo-bright);
+  color: var(--brand);
   text-decoration: none;
-  font-weight: 600;
+  font-weight: 700;
+}
+
+.auth-footer a:hover {
+  text-decoration: underline;
 }
 
 .auth-loading {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: var(--space-3);
   min-height: 40vh;
   color: var(--text-dim);
 }
@@ -146,55 +235,67 @@
 .auth-loading-inline {
   color: var(--text-dim);
   text-align: center;
-  padding: 24px 0;
+  padding: var(--space-6) 0;
 }
 
 .auth-step-badge {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  font-size: 12px;
+  gap: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
   font-weight: 700;
-  color: var(--kia-deep, var(--indigo-bright));
-  background: var(--indigo-dim);
-  border: 1px solid var(--border);
-  border-radius: 999px;
+  color: var(--brand);
+  background: var(--brand-tint);
+  border: 1px solid var(--brand-hairline);
+  border-radius: var(--radius-pill);
   padding: 5px 12px;
 }
 
 .education-brand {
-  display: block;
-  font-size: 1.15rem;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-display);
+  font-size: var(--fs-h3);
   font-weight: 800;
-  color: var(--kia-deep, var(--indigo-bright));
+  color: var(--text);
   text-decoration: none;
-  margin-bottom: 14px;
+  margin-bottom: var(--space-4);
   letter-spacing: -0.02em;
 }
 
+[dir='rtl'] .education-brand {
+  font-family: var(--font-fa);
+}
+
 .education-brand:hover {
-  color: var(--kia-accent, var(--indigo));
+  color: var(--brand);
 }
 
 .otp-input {
-  letter-spacing: 0.35em;
-  font-size: 1.25rem !important;
+  letter-spacing: 0.4em;
+  font-family: var(--font-mono) !important;
+  font-size: 1.5rem !important;
   font-weight: 700 !important;
   text-align: center;
 }
 
 .education-page .back-link {
   display: inline-flex;
-  margin-top: 18px;
+  margin-top: var(--space-5);
   text-decoration: none;
 }
 
-/* ===== Top bar nav ===== */
+/* =============================================================================
+   Top bar navigation + account dropdown
+   ========================================================================== */
+
 .top-nav {
   flex: 1 1 auto;
   display: flex;
   justify-content: center;
-  gap: 16px;
+  gap: var(--space-1);
   align-items: center;
   min-width: 0;
 }
@@ -203,28 +304,44 @@
   flex: 0 0 auto;
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 13px;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-pill);
+  font-size: var(--fs-xs);
+  font-weight: 700;
   color: var(--text-dim);
   text-decoration: none;
-  font-weight: 600;
+  transition:
+    color var(--dur-base) var(--ease-out),
+    background var(--dur-base) var(--ease-out);
 }
 
 .top-nav-link:hover {
-  color: var(--text);
+  color: var(--brand);
+  background: var(--brand-tint);
+}
+
+.top-nav-link[aria-current='page'] {
+  color: var(--brand);
+  background: var(--brand-tint);
 }
 
 .top-login-btn {
   display: flex;
   align-items: center;
-  gap: 6px;
-  background: var(--indigo-fill);
+  gap: var(--space-2);
+  min-height: var(--control-h-sm);
+  background: var(--brand-fill);
   color: var(--on-fill);
-  border-radius: 20px;
-  padding: 8px 16px;
-  font-size: 13px;
-  font-weight: 600;
+  border-radius: var(--radius-pill);
+  padding: 0 var(--space-4);
+  font-size: var(--fs-xs);
+  font-weight: 700;
   text-decoration: none;
+}
+
+.top-login-btn:hover {
+  background: var(--brand-fill-hover);
 }
 
 .user-menu-wrap {
@@ -233,35 +350,36 @@
 
 .user-dropdown {
   position: absolute;
-  top: calc(100% + 8px);
+  top: calc(100% + var(--space-2));
   inset-inline-end: 0;
   width: max-content;
-  min-width: min(220px, calc(100vw - 32px));
+  min-width: min(230px, calc(100vw - 32px));
   max-width: calc(100vw - 32px);
-  background: var(--bg-elevated);
+  background: var(--bg-card);
   border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 8px;
-  box-shadow: var(--shadow-md);
-  z-index: 100;
+  border-radius: var(--radius-md);
+  padding: var(--space-2);
+  box-shadow: var(--shadow-lg);
+  z-index: var(--z-dropdown);
+  animation: fadeUp var(--dur-fast) var(--ease-out) both;
 }
 
 .user-dropdown-head {
-  padding: 8px 10px 12px;
+  padding: var(--space-2) var(--space-3) var(--space-3);
   border-bottom: 1px solid var(--border-soft);
-  margin-bottom: 4px;
+  margin-bottom: var(--space-1);
 }
 
 .user-dropdown-head b {
   display: block;
-  font-size: 14px;
+  font-size: var(--fs-sm);
   color: var(--text);
 }
 
 .user-dropdown-head span {
   display: block;
   overflow: hidden;
-  font-size: 12px;
+  font-size: var(--fs-micro);
   color: var(--text-faint);
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -270,49 +388,62 @@
 .user-dropdown-item {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-2);
   width: 100%;
-  padding: 10px;
+  padding: var(--space-3);
   border: none;
   background: none;
   color: var(--text);
-  font-size: 13px;
+  font-size: var(--fs-xs);
+  font-weight: 600;
   text-decoration: none;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
   text-align: start;
   font-family: inherit;
+  transition: background var(--dur-base) var(--ease-out);
 }
 
 .user-dropdown-item:hover {
-  background: var(--indigo-dim);
+  background: var(--brand-tint);
+  color: var(--brand);
 }
 
 .user-dropdown-item.danger {
-  color: var(--danger);
+  color: var(--negative);
 }
 
-/* Education funnel */
+.user-dropdown-item.danger:hover {
+  background: var(--negative-tint);
+  color: var(--negative);
+}
+
+/* =============================================================================
+   Education funnel
+   ========================================================================== */
+
 .education-card {
-  max-width: 460px;
+  max-width: 500px;
   margin: 0 auto;
 }
 
 .auth-footer-row {
   display: flex;
   justify-content: space-between;
-  gap: 12px;
-  margin-top: 16px;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--border-soft);
 }
 
 .text-btn {
   background: none;
   border: 0;
-  color: var(--kia-accent, var(--indigo-bright));
+  color: var(--brand);
   cursor: pointer;
   font: inherit;
-  font-size: 13px;
-  font-weight: 600;
+  font-size: var(--fs-xs);
+  font-weight: 700;
   padding: 0;
 }
 

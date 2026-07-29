@@ -6,7 +6,8 @@ export const DEFAULT_LOCALE: Locale = 'fa';
 
 export const RTL_LOCALES = new Set<Locale>(['fa']);
 
-export const LOCALE_COOKIE = 'pathwise-locale';
+/** Bumped so stale English auto-detect cookies from earlier builds are ignored. */
+export const LOCALE_COOKIE = 'kia-academy-locale';
 
 export interface LocaleOption {
   code: Locale;

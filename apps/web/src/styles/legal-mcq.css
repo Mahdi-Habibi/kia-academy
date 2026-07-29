@@ -1,56 +1,75 @@
-/* ===== MCQ (English readiness) ===== */
+/* =============================================================================
+   MCQ (English readiness) + small shared utilities
+   RULE: correctness is never shown during the live readiness test.
+   ========================================================================== */
+
 .mcq-progress {
-  font-size: 12px;
   font-family: var(--font-mono);
-  color: var(--text-faint);
-  margin-bottom: 12px;
-}
-.mcq-prompt {
-  font-size: 16px;
+  font-size: var(--fs-micro);
   font-weight: 600;
-  margin-bottom: 16px;
-  line-height: 1.5;
+  color: var(--text-faint);
+  margin-bottom: var(--space-3);
 }
+
+.mcq-prompt {
+  font-size: var(--fs-body-lg);
+  font-weight: 600;
+  margin-bottom: var(--space-4);
+  line-height: 1.65;
+}
+
 .mcq-options {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: var(--space-2);
 }
+
 .mcq-option {
   display: flex;
   align-items: flex-start;
-  gap: 12px;
+  gap: var(--space-3);
   text-align: start;
   background: var(--bg-elevated);
   border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 14px 16px;
-  font-size: 14px;
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  font-family: inherit;
+  font-size: var(--fs-sm);
   color: var(--text);
   cursor: pointer;
-  transition: border-color 0.15s;
+  transition:
+    border-color var(--dur-base) var(--ease-out),
+    background var(--dur-base) var(--ease-out);
 }
+
 .mcq-option:hover {
-  border-color: var(--indigo);
+  border-color: var(--brand-hairline);
 }
+
+/* Selected — neutral brand tint only, never mint/danger. */
 .mcq-option.selected {
-  border-color: var(--indigo-bright);
-  background: var(--indigo-dim);
+  border-color: var(--brand-500);
+  background: var(--brand-tint);
 }
-/* Correctness is never shown during the live readiness test */
+
 .mcq-letter {
   font-family: var(--font-mono);
   font-weight: 700;
   color: var(--text-faint);
   min-width: 18px;
 }
+
+.mcq-option.selected .mcq-letter {
+  color: var(--brand);
+}
+
 .mcq-nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 0.75rem;
-  margin-top: 20px;
-  padding-top: 16px;
+  gap: var(--space-3);
+  margin-top: var(--space-5);
+  padding-top: var(--space-4);
   border-top: 1px solid var(--border-soft);
 }
 
@@ -60,19 +79,29 @@
 }
 
 .reward-link {
-  display: inline-block;
-  margin-top: 10px;
-  font-size: 13px;
-  color: var(--indigo-bright);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin-top: var(--space-3);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  color: var(--brand);
   text-decoration: none;
 }
-.course-row {
+
+.reward-link:hover {
+  text-decoration: underline;
+}
+
+a.course-row {
   text-decoration: none;
   color: inherit;
   cursor: pointer;
+  transition: background var(--dur-base) var(--ease-out);
 }
-.course-row:hover {
-  background: var(--bg-elevated);
+
+a.course-row:hover {
+  background: var(--bg-sunken);
 }
 
 @keyframes spin {
@@ -80,24 +109,7 @@
     transform: rotate(360deg);
   }
 }
+
 .spin {
   animation: spin 0.8s linear infinite;
-}
-
-@media (max-width: 640px) {
-  .top-nav {
-    display: none;
-  }
-  .admin-shell {
-    flex-direction: column;
-  }
-  .admin-sidebar {
-    width: 100%;
-    border-inline-end: none;
-    border-bottom: 1px solid var(--border);
-  }
-  .admin-nav {
-    flex-direction: row;
-    flex-wrap: wrap;
-  }
 }
