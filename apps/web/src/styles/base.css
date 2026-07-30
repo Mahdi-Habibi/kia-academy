@@ -130,7 +130,7 @@
   --bg-elevated: var(--ink-25);
   --bg-card: var(--ink-0);
   --bg-sunken: var(--ink-100);
-  --bg-glass: color-mix(in srgb, var(--ink-25) 94%, transparent);
+  --bg-glass: color-mix(in srgb, var(--ink-0) 42%, transparent);
   --bg-inverse: var(--ink-950);
 
   --border: var(--ink-200);
@@ -190,10 +190,9 @@
 
   --gradient-brand: linear-gradient(135deg, var(--brand-500) 0%, var(--brand-700) 100%);
   --gradient-ink: linear-gradient(150deg, var(--ink-900) 0%, var(--ink-950) 100%);
-  /* Mint stays out of the top strip so the sticky topbar never sits on a green band. */
   --gradient-aurora:
     radial-gradient(ellipse 70% 50% at 78% -8%, rgba(100, 100, 255, 0.16), transparent 62%),
-    radial-gradient(ellipse 54% 40% at 2% 96%, rgba(196, 238, 217, 0.3), transparent 60%),
+    radial-gradient(ellipse 58% 44% at 8% 4%, rgba(196, 238, 217, 0.4), transparent 60%),
     radial-gradient(ellipse 50% 38% at 50% 108%, rgba(255, 200, 100, 0.14), transparent 62%);
   --gradient-hero: var(--gradient-aurora);
 }
@@ -207,7 +206,7 @@
   --bg-elevated: var(--ink-700);
   --bg-card: var(--ink-800);
   --bg-sunken: var(--ink-900);
-  --bg-glass: color-mix(in srgb, var(--ink-800) 92%, transparent);
+  --bg-glass: color-mix(in srgb, var(--ink-800) 48%, transparent);
   --bg-inverse: var(--ink-0);
 
   --border: rgba(154, 164, 206, 0.16);
@@ -261,7 +260,7 @@
   --gradient-ink: linear-gradient(150deg, var(--ink-800) 0%, var(--ink-950) 100%);
   --gradient-aurora:
     radial-gradient(ellipse 70% 50% at 78% -8%, rgba(100, 100, 255, 0.22), transparent 62%),
-    radial-gradient(ellipse 54% 40% at 2% 96%, rgba(46, 146, 105, 0.16), transparent 60%),
+    radial-gradient(ellipse 58% 44% at 8% 4%, rgba(46, 146, 105, 0.18), transparent 60%),
     radial-gradient(ellipse 50% 38% at 50% 108%, rgba(255, 200, 100, 0.1), transparent 62%);
   --gradient-hero: var(--gradient-aurora);
 }
