@@ -32,12 +32,14 @@
   animation: auroraDrift 16s var(--ease-out) infinite;
 }
 
+/* Sits below the hero: the topbar is sticky, so a mint orb near the top
+   reads as a green band through the glass. */
 .landing-aurora-b {
   width: min(440px, 70vw);
   height: min(440px, 70vw);
-  top: 6vh;
+  top: 78vh;
   inset-inline-start: -160px;
-  background: radial-gradient(circle, rgba(196, 238, 217, 0.55), transparent 68%);
+  background: radial-gradient(circle, rgba(196, 238, 217, 0.45), transparent 68%);
   animation: auroraDrift 18s var(--ease-out) infinite reverse;
 }
 
