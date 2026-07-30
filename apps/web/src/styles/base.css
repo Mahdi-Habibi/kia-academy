@@ -130,7 +130,7 @@
   --bg-elevated: var(--ink-25);
   --bg-card: var(--ink-0);
   --bg-sunken: var(--ink-100);
-  --bg-glass: rgba(255, 255, 255, 0.82);
+  --bg-glass: color-mix(in srgb, var(--ink-25) 90%, transparent);
   --bg-inverse: var(--ink-950);
 
   --border: var(--ink-200);
@@ -206,7 +206,7 @@
   --bg-elevated: var(--ink-700);
   --bg-card: var(--ink-800);
   --bg-sunken: var(--ink-900);
-  --bg-glass: rgba(20, 28, 46, 0.78);
+  --bg-glass: color-mix(in srgb, var(--ink-800) 88%, transparent);
   --bg-inverse: var(--ink-0);
 
   --border: rgba(154, 164, 206, 0.16);
