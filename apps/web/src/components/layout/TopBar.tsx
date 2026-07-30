@@ -50,7 +50,7 @@ export function TopBar() {
   };
 
   return (
-    <div className="topbar app">
+    <div className="topbar">
       <button type="button" className="logo" onClick={handleLogoClick}>
         <span className="logo-mark" aria-hidden="true" />
         <span className="logo-text">{settings.general.siteName || t('common.brand')}</span>
