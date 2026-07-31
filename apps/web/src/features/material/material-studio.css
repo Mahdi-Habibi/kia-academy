@@ -1371,6 +1371,11 @@
     gap: 0.4rem;
   }
 
+  /* First tab (palette): hide ghost chips/CSS actions on small screens only */
+  #panel-palette .control-chip-ghost {
+    display: none !important;
+  }
+
   .editor-tabs {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
