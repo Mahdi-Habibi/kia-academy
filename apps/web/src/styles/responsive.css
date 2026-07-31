@@ -4,6 +4,8 @@
    ========================================================================== */
 
 /* --- tablet: collapse the top nav into a sheet ---------------------------- */
+/* Higher specificity (.topbar .top-nav) so these win over auth.css .top-nav
+   display:flex — responsive.css is imported before auth.css in globals.css. */
 @media (max-width: 900px) {
   .mobile-nav-toggle {
     display: inline-flex;
@@ -14,7 +16,7 @@
     flex-wrap: wrap;
   }
 
-  .top-nav {
+  .topbar .top-nav {
     display: none;
     position: absolute;
     top: calc(100% + var(--space-2));
@@ -30,7 +32,7 @@
     z-index: var(--z-dropdown);
   }
 
-  .top-nav--open {
+  .topbar .top-nav.top-nav--open {
     display: flex;
     animation: fadeUp var(--dur-fast) var(--ease-out) both;
   }
@@ -192,15 +194,53 @@
   .topbar button.lang-toggle {
     width: 40px;
     min-width: 40px;
+    max-width: 40px;
     padding: 0;
     justify-content: center;
     min-height: 40px;
+    overflow: hidden;
   }
 
+  /* Icon-only controls: hide labels + extra chips so content stays inside the 40px hit target */
   .theme-toggle-label,
   .lang-label,
+  .topbar button.lang-toggle .lang-code,
   .user-chip-name {
     display: none;
+  }
+
+  .topbar button.lang-toggle svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+  }
+
+  /* ◐ glyph reads tiny at --fs-micro inside a 40px control — bump for touch UI */
+  .theme-toggle-icon {
+    font-size: 1.25rem;
+    line-height: 1;
+  }
+
+  .lang-menu {
+    width: 11.5rem;
+    min-width: 11.5rem;
+    max-width: min(11.5rem, calc(100vw - 24px));
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  .lang-menu button {
+    box-sizing: border-box;
+    min-width: 0;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-3);
+  }
+
+  .lang-menu button span {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .user-chip {
