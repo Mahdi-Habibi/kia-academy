@@ -217,14 +217,14 @@
 
   /* ◐ glyph reads tiny at --fs-micro inside a 40px control — bump for touch UI */
   .theme-toggle-icon {
-    font-size: 1.25rem;
+    font-size: 1.375rem;
     line-height: 1;
   }
 
   .lang-menu {
-    width: 11.5rem;
-    min-width: 11.5rem;
-    max-width: min(11.5rem, calc(100vw - 24px));
+    width: 12.75rem;
+    min-width: 12.75rem;
+    max-width: min(12.75rem, calc(100vw - 24px));
     box-sizing: border-box;
     overflow: hidden;
   }
@@ -236,7 +236,13 @@
     padding: var(--space-2) var(--space-3);
   }
 
-  .lang-menu button span {
+  .lang-menu button .lang-code {
+    display: inline-flex;
+    flex: 0 0 auto;
+  }
+
+  .lang-menu button span:not(.lang-code) {
+    flex: 1 1 auto;
     min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
