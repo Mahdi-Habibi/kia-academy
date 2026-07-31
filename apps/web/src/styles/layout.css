@@ -40,6 +40,123 @@
   }
 }
 
+/* --- logged-in panel shell (sidebar on desktop) -------------------------- */
+.panel-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 100%;
+  position: relative;
+  z-index: var(--z-raised);
+}
+
+.panel-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+@media (min-width: 901px) {
+  .panel-shell {
+    flex-direction: row;
+    align-items: stretch;
+  }
+
+  .panel-shell .topbar {
+    position: sticky;
+    top: 0;
+    align-self: flex-start;
+    flex: 0 0 16.5rem;
+    width: 16.5rem;
+    max-width: 16.5rem;
+    height: 100vh;
+    margin: 0;
+    padding: var(--space-5) var(--space-4);
+    border-radius: 0;
+    border: none;
+    border-inline-end: 1px solid var(--border);
+    box-shadow: none;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: var(--space-5);
+    overflow-y: auto;
+  }
+
+  .panel-shell .logo {
+    width: 100%;
+    justify-content: flex-start;
+    padding-inline: var(--space-2);
+  }
+
+  .panel-shell .top-nav {
+    flex: 1 1 auto;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: var(--space-1);
+    min-width: 0;
+    width: 100%;
+  }
+
+  .panel-shell .top-nav-link {
+    width: 100%;
+    justify-content: flex-start;
+    border-radius: var(--radius-md);
+    padding: var(--space-3);
+  }
+
+  .panel-shell .top-right {
+    margin-top: auto;
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-2);
+  }
+
+  .panel-shell .top-right-tools {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-2);
+  }
+
+  .panel-shell .top-right-tools .theme-toggle,
+  .panel-shell .top-right-tools .lang-toggle,
+  .panel-shell .topbar button.lang-toggle {
+    width: 100%;
+    min-width: 0;
+    justify-content: flex-start;
+  }
+
+  .panel-shell .user-menu-wrap {
+    width: 100%;
+  }
+
+  .panel-shell .user-chip {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .panel-shell .user-dropdown {
+    inset-inline-start: 0;
+    inset-inline-end: auto;
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+  }
+
+  .panel-content {
+    flex: 1 1 auto;
+    min-height: 100vh;
+  }
+
+  .panel-content .site-main {
+    flex: 1 0 auto;
+  }
+}
+
 /* --- brand --------------------------------------------------------------- */
 .logo {
   flex: 0 0 auto;
