@@ -4,6 +4,7 @@ import type { ReactNode } from 'react';
 import { usePathname } from 'next/navigation';
 import { DemoBanner } from '@/components/layout/DemoBanner';
 import { Footer } from '@/components/layout/Footer';
+import { SiteAurora } from '@/components/layout/SiteAurora';
 import { TopBar } from '@/components/layout/TopBar';
 import { useAuth } from '@/context/AuthProvider';
 
@@ -19,6 +20,7 @@ export function SiteChrome({ children }: { children: ReactNode }) {
 
   return (
     <>
+      {!isAdminRoute ? <SiteAurora /> : null}
       {!isAdminRoute ? <DemoBanner /> : null}
       {showChrome ? <TopBar /> : null}
       <main
