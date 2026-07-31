@@ -93,7 +93,7 @@ export default function DashboardPage() {
   if (!ownsRoadmap) {
     return (
       <div className="page-content">
-        <div className="app hub">
+        <div className="container hub">
           <PageBackButton href="/dashboard" />
           <header className="page-head">
             <div>
@@ -142,7 +142,7 @@ export default function DashboardPage() {
 
   return (
     <div className="page-content">
-      <div className="app hub">
+      <div className="container hub">
         <PageBackButton href="/dashboard" />
         <header className="page-head">
           <div>

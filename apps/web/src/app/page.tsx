@@ -51,7 +51,7 @@ export default function HomePage() {
   return (
     <div className="page-content landing">
       {/* ---------- hero + doors (first viewport) ---------- */}
-      <div className="landing-intro app">
+      <div className="landing-intro container">
         <header className="landing-hero">
           <span className="landing-brand">
             <span className="landing-brand-mark" aria-hidden="true" />
@@ -102,7 +102,7 @@ export default function HomePage() {
       </div>
 
       {/* ---------- learner journey ---------- */}
-      <section className="app landing-journey">
+      <section className="container landing-journey">
         <h2 className="section-heading">{t('landing.journey.heading')}</h2>
         <p className="section-sub">{t('landing.journey.sub')}</p>
 
@@ -123,7 +123,7 @@ export default function HomePage() {
       </section>
 
       {/* ---------- what you get ---------- */}
-      <section className="app features-section">
+      <section className="container features-section">
         <h2 className="section-heading">{t('landing.howHeading')}</h2>
         <p className="section-sub">{t('landing.howSub')}</p>
 
@@ -146,7 +146,7 @@ export default function HomePage() {
       </section>
 
       {/* ---------- closing call ---------- */}
-      <section className="app landing-close">
+      <section className="container-fluid landing-close">
         <div className="landing-close-panel surface--ink">
           <h2>{t('landing.journey.heading')}</h2>
           <p>{t('landing.trust.note')}</p>
@@ -162,7 +162,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <footer className="app landing-guest-footer" aria-label={t('nav.footer.legal')}>
+      <footer className="container landing-guest-footer" aria-label={t('nav.footer.legal')}>
         <span className="landing-guest-brand">{t('common.brand')}</span>
         <nav>
           <Link href="/contact">{t('landing.ctaContact')}</Link>

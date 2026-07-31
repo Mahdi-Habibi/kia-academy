@@ -7,7 +7,7 @@ export default function PrivacyPage() {
 
   return (
     <div className="page-content">
-      <div className="app legal-shell">
+      <div className="container legal-shell">
         <h1>{t('legal.privacy.title')}</h1>
         <p className="legal-updated">{t('legal.privacy.updated')}</p>
 

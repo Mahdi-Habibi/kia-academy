@@ -7,7 +7,7 @@ export default function TermsPage() {
 
   return (
     <div className="page-content">
-      <div className="app legal-shell">
+      <div className="container legal-shell">
         <h1>{t('legal.terms.title')}</h1>
         <p className="legal-updated">{t('legal.terms.updated')}</p>
 

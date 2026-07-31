@@ -10,7 +10,7 @@ export function Footer() {
 
   return (
     <footer className="site-footer">
-      <div className="app footer-inner">
+      <div className="container footer-inner">
         <div className="footer-main">
           <div className="footer-brand">
             <Link href="/dashboard" className="footer-logo" aria-label={t('nav.homeAria')}>

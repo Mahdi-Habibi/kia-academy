@@ -31,7 +31,7 @@ function AssessmentContent() {
   if (loading) {
     return (
       <div className="page-content">
-        <div className="app">
+        <div className="container">
           <p>{t('common.loading')}</p>
         </div>
       </div>
@@ -44,7 +44,7 @@ function AssessmentContent() {
 
   return (
     <div className="page-content">
-      <div className="app test-shell">
+      <div className="container test-shell">
         <PageBackButton href="/education" />
         <UnifiedTestFlow backHref="/education" />
       </div>

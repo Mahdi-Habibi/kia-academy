@@ -69,7 +69,7 @@ export default function CoursesPage() {
 
   return (
     <div className="page-content">
-      <div className="app catalog-shell">
+      <div className="container catalog-shell">
         <PageBackButton href="/dashboard" />
         <span className="eyebrow">
           <BookOpen size={14} className="inline-leading-icon" />
