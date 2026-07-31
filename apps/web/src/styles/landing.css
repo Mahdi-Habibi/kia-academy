@@ -7,16 +7,30 @@
   padding-bottom: var(--space-section);
 }
 
-/* --- hero ---------------------------------------------------------------- */
-.landing-hero {
+/* --- first viewport: hero + doors --------------------------------------- */
+.landing-intro {
   position: relative;
   z-index: var(--z-raised);
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
+  gap: var(--space-8);
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding-block: var(--space-8);
+  box-sizing: border-box;
+}
+
+/* --- hero ---------------------------------------------------------------- */
+.landing-hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
   align-items: center;
   text-align: center;
-  padding-top: clamp(48px, 11vh, 104px);
-  padding-bottom: var(--space-14);
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
 .landing-brand {
