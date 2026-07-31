@@ -18,6 +18,8 @@ RUN apt-get update \
 COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
 COPY packages/shared/package.json packages/shared/
 COPY apps/api/package.json apps/api/
+# Schema required during install: root postinstall runs `prisma generate`
+COPY apps/api/prisma apps/api/prisma
 COPY apps/web/package.json apps/web/
 RUN pnpm install --frozen-lockfile
 
