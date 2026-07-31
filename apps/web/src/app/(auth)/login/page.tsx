@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { LogIn } from 'lucide-react';
-import { FormEvent, Suspense, useState } from 'react';
+import { FormEvent, Suspense, useEffect, useState } from 'react';
 import { PageBackButton } from '@/components/layout/PageBackButton';
 import { useAuth } from '@/context/AuthProvider';
 import { useLanguage } from '@/context/LanguageProvider';
@@ -11,7 +11,7 @@ import { useLanguage } from '@/context/LanguageProvider';
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { login } = useAuth();
+  const { login, user, loading, isAuthenticated } = useAuth();
   const { t } = useLanguage();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -20,13 +20,28 @@ function LoginForm() {
 
   const next = searchParams.get('next') ?? '/dashboard';
 
+  useEffect(() => {
+    if (loading) return;
+    if (isAuthenticated && user?.profileComplete) {
+      const dest =
+        user.role === 'SUPER_ADMIN' || user.role === 'ADMIN'
+          ? next.startsWith('/admin')
+            ? next
+            : '/admin'
+          : next === '/'
+            ? '/dashboard'
+            : next;
+      router.replace(dest);
+    }
+  }, [loading, isAuthenticated, user, next, router]);
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError('');
     setSubmitting(true);
     try {
       await login({ email, password });
-      router.push(next);
+      router.push(next === '/' ? '/dashboard' : next);
     } catch {
       setError(t('auth.login.error'));
     } finally {
