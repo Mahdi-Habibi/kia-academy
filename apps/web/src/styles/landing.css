@@ -488,6 +488,10 @@
     max-width: 22rem;
   }
 
+  .landing-trust {
+    display: none;
+  }
+
   .journey-rail {
     grid-template-columns: 1fr;
   }
