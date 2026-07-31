@@ -6,7 +6,6 @@ import {
   ClipboardCheck,
   Gauge,
   Map as MapIcon,
-  Palette,
   PlayCircle,
   Sparkles,
   Trophy,
@@ -70,32 +69,18 @@ export default function HomePage() {
       <section className="app landing-doors" aria-label={t('landing.doors.heading')}>
         <Link href="/education" className="door door--primary">
           <span className="door-top">
-            <span className="door-icon door-icon--brand" aria-hidden="true">
-              <MapIcon size={20} />
-            </span>
             <span className="chip chip--mint">{t('landing.doors.educationBadge')}</span>
           </span>
           <h2 className="door-title">{t('landing.doors.educationTitle')}</h2>
           <p className="door-desc">{t('landing.doors.educationDesc')}</p>
-          <span className="door-action">
-            {t('landing.doors.educationAction')}
-            <ArrowRight className="nav-arrow" size={16} aria-hidden="true" />
-          </span>
         </Link>
 
         <Link href="/material" className="door door--material">
           <span className="door-top">
-            <span className="door-icon door-icon--amber" aria-hidden="true">
-              <Palette size={20} />
-            </span>
             <span className="chip chip--amber">{t('landing.materialBadge')}</span>
           </span>
           <h2 className="door-title">{t('landing.doors.materialTitle')}</h2>
           <p className="door-desc">{t('landing.doors.materialDesc')}</p>
-          <span className="door-action">
-            {t('landing.doors.materialAction')}
-            <ArrowRight className="nav-arrow" size={16} aria-hidden="true" />
-          </span>
         </Link>
       </section>
 
