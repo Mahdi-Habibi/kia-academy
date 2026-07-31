@@ -710,15 +710,45 @@
   border: 1px solid var(--border);
   border-radius: var(--radius-xl);
   padding: clamp(var(--space-5), 3vw, var(--space-8));
-  min-height: 280px;
+  /* Fixed frame: bank worst-case is ~173-char FA prompt + 4 options/order items.
+     Height holds that content; answer area scrolls only if something overflows. */
+  height: 32rem;
+  min-height: 32rem;
+  max-height: 32rem;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  overflow: hidden;
   box-shadow: var(--shadow-sm);
+  box-sizing: border-box;
 }
 
 .exam-player__prompt {
   font-size: var(--fs-body-lg);
   line-height: 1.75;
-  margin-bottom: var(--space-5);
+  margin-bottom: 0;
   white-space: pre-wrap;
+  flex: 0 0 auto;
+  max-height: 9rem;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.exam-player__card > .exam-options,
+.exam-player__card > .exam-order,
+.exam-player__card > .exam-blanks {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 700px) {
+  .exam-player__card {
+    height: 30rem;
+    min-height: 30rem;
+    max-height: 30rem;
+  }
 }
 
 .exam-options {
@@ -731,6 +761,7 @@
   display: flex;
   gap: var(--space-3);
   align-items: flex-start;
+  min-height: 3.5rem;
   padding: var(--space-4);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
@@ -739,6 +770,7 @@
   transition:
     border-color var(--dur-base) var(--ease-out),
     background var(--dur-base) var(--ease-out);
+  box-sizing: border-box;
 }
 
 .exam-option:hover {

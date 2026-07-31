@@ -496,21 +496,6 @@
     grid-template-columns: 1fr;
   }
 
-  .landing-trust {
-    width: 100%;
-  }
-
-  .landing-trust-item {
-    flex: 1 1 100%;
-    align-items: center;
-    text-align: center;
-  }
-
-  .landing-trust-item + .landing-trust-item {
-    border-inline-start: none;
-    border-top: 1px solid var(--border-soft);
-  }
-
   .landing-guest-footer {
     flex-direction: column;
     text-align: center;
