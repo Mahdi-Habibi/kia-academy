@@ -185,6 +185,24 @@
   gap: var(--bento-gap);
 }
 
+/* Desktop only: keep the door pair within the hero title measure */
+@media (min-width: 721px) {
+  .landing-doors {
+    max-width: 22ch;
+    width: 100%;
+    margin-inline: auto;
+  }
+
+  .landing-doors .door {
+    padding: var(--space-4);
+    gap: var(--space-2);
+  }
+
+  .landing-doors .door-title {
+    font-size: var(--fs-h3);
+  }
+}
+
 .door {
   display: flex;
   flex-direction: column;
@@ -233,7 +251,7 @@
 .door-top {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: var(--space-3);
 }
 
