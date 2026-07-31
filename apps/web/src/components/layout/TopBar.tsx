@@ -72,6 +72,20 @@ export function TopBar() {
     router.push('/');
   };
 
+  const renderThemeToggle = () => (
+    <button
+      type="button"
+      className="theme-toggle"
+      onClick={toggleTheme}
+      aria-label={t('nav.toggleColorMode')}
+    >
+      <span className="theme-toggle-icon" aria-hidden="true">
+        ◐
+      </span>
+      <span className="theme-toggle-label">{t('nav.mode')}</span>
+    </button>
+  );
+
   return (
     <div className="topbar" ref={topbarRef}>
       <button type="button" className="logo" onClick={handleLogoClick}>
@@ -119,22 +133,18 @@ export function TopBar() {
             </Link>
           </>
         )}
+
+        <div className="top-nav-tools">
+          <LanguageSelector />
+          {renderThemeToggle()}
+        </div>
       </nav>
 
       <div className="top-right">
-        <LanguageSelector />
-
-        <button
-          type="button"
-          className="theme-toggle"
-          onClick={toggleTheme}
-          aria-label={t('nav.toggleColorMode')}
-        >
-          <span className="theme-toggle-icon" aria-hidden="true">
-            ◐
-          </span>
-          <span className="theme-toggle-label">{t('nav.mode')}</span>
-        </button>
+        <div className="top-right-tools">
+          <LanguageSelector />
+          {renderThemeToggle()}
+        </div>
 
         {loading || !user ? null : (
           <div className="user-menu-wrap" ref={menuRef}>

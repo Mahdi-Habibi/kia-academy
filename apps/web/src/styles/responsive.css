@@ -41,11 +41,58 @@
     padding: var(--space-3);
     border-radius: var(--radius-sm);
   }
+
+  /* Language + theme live inside the mobile sheet; hide desktop copies */
+  .top-right-tools {
+    display: none;
+  }
+
+  .top-nav-tools {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    margin-top: var(--space-2);
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--border-soft);
+  }
+
+  .top-nav-tools .theme-toggle,
+  .top-nav-tools .lang-toggle {
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    justify-content: flex-start;
+    padding-inline: var(--space-3);
+    min-height: 44px;
+  }
+
+  .top-nav-tools .theme-toggle-label,
+  .top-nav-tools .lang-label,
+  .top-nav-tools .lang-code {
+    display: inline-flex;
+  }
+
+  .top-nav-tools .lang-menu {
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    inset-inline: 0;
+  }
 }
 
 @media (min-width: 901px) {
   .mobile-nav-toggle {
     display: none;
+  }
+
+  .top-nav-tools {
+    display: none;
+  }
+
+  .top-right-tools {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
   }
 }
 
@@ -190,8 +237,11 @@
     font-size: 1rem;
   }
 
-  .theme-toggle,
-  .topbar button.lang-toggle {
+  /* Compact icon-only controls only in the top-right strip (desktop tools;
+     on mobile those are hidden — kept for intermediate layouts / user chip). */
+  .top-right-tools .theme-toggle,
+  .top-right-tools .topbar button.lang-toggle,
+  .topbar .top-right-tools button.lang-toggle {
     width: 40px;
     min-width: 40px;
     max-width: 40px;
@@ -201,30 +251,48 @@
     overflow: hidden;
   }
 
-  /* Icon-only controls: hide labels + extra chips so content stays inside the 40px hit target */
-  .theme-toggle-label,
-  .lang-label,
-  .topbar button.lang-toggle .lang-code,
+  .top-right-tools .theme-toggle-label,
+  .top-right-tools .lang-label,
+  .top-right-tools .lang-code,
   .user-chip-name {
     display: none;
   }
 
-  .topbar button.lang-toggle svg {
+  .top-right-tools .lang-toggle svg {
     width: 18px;
     height: 18px;
     flex-shrink: 0;
   }
 
-  /* ◐ glyph reads tiny at --fs-micro inside a 40px control — bump for touch UI */
-  .theme-toggle-icon {
+  .top-right-tools .theme-toggle-icon,
+  .top-nav-tools .theme-toggle-icon {
     font-size: 1.375rem;
     line-height: 1;
   }
 
-  .lang-menu {
-    width: 12.75rem;
-    min-width: 12.75rem;
-    max-width: min(12.75rem, calc(100vw - 24px));
+  /* Sheet tools stay full-width with visible labels on phone */
+  .top-nav-tools .theme-toggle,
+  .top-nav-tools .lang-toggle,
+  .topbar .top-nav-tools button.lang-toggle {
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    padding-inline: var(--space-3);
+    justify-content: flex-start;
+    min-height: 44px;
+    overflow: visible;
+  }
+
+  .top-nav-tools .theme-toggle-label,
+  .top-nav-tools .lang-label,
+  .top-nav-tools .lang-code {
+    display: inline-flex;
+  }
+
+  .top-nav-tools .lang-menu {
+    width: 100%;
+    min-width: 0;
+    max-width: none;
     box-sizing: border-box;
     overflow: hidden;
   }
