@@ -10,6 +10,7 @@ import { useAuth } from '@/context/AuthProvider';
 
 /**
  * Site chrome only after registration. Admin uses its own full-bleed shell.
+ * Logged-in panel uses a desktop sidebar; mobile keeps the top bar sheet.
  */
 export function SiteChrome({ children }: { children: ReactNode }) {
   const pathname = usePathname();
@@ -18,17 +19,29 @@ export function SiteChrome({ children }: { children: ReactNode }) {
   const registered = Boolean(user?.profileComplete || learnerState?.profileComplete);
   const showChrome = !loading && registered && !isAdminRoute;
 
+  const main = (
+    <main
+      className={`site-main${showChrome ? '' : ' site-main--guest'}${isAdminRoute ? ' site-main--admin' : ''}`}
+    >
+      {children}
+    </main>
+  );
+
   return (
     <>
       {!isAdminRoute ? <SiteAurora /> : null}
       {!isAdminRoute ? <DemoBanner /> : null}
-      {showChrome ? <TopBar /> : null}
-      <main
-        className={`site-main${showChrome ? '' : ' site-main--guest'}${isAdminRoute ? ' site-main--admin' : ''}`}
-      >
-        {children}
-      </main>
-      {showChrome ? <Footer /> : null}
+      {showChrome ? (
+        <div className="panel-shell">
+          <TopBar />
+          <div className="panel-content">
+            {main}
+            <Footer />
+          </div>
+        </div>
+      ) : (
+        main
+      )}
     </>
   );
 }
