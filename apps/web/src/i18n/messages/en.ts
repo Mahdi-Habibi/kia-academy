@@ -122,11 +122,10 @@ export const en = {
     doors: {
       heading: 'Two ways in',
       materialTitle: 'Material Studio',
-      materialDesc: 'Palettes, icons, motion presets and type pairings. Open it now — no account, no email.',
+      materialDesc: 'Material',
       materialAction: 'Open the studio',
       educationTitle: 'Learning path',
-      educationDesc:
-        'Sign up with your Iranian phone number, take the free assessment, and get a roadmap built around your goal.',
+      educationDesc: 'Education',
       educationAction: 'Start free',
       educationBadge: 'Assessment is free',
     },

@@ -122,11 +122,10 @@ export const fa = {
     doors: {
       heading: 'دو راه ورود',
       materialTitle: 'استودیوی متریال',
-      materialDesc: 'پالت رنگ، آیکون، انیمیشن و ترکیب فونت. همین حالا بازش کن — بدون حساب کاربری و بدون ایمیل.',
+      materialDesc: 'متریال',
       materialAction: 'ورود به استودیو',
       educationTitle: 'مسیر یادگیری',
-      educationDesc:
-        'با شماره موبایل ایرانی ثبت‌نام کن، ارزیابی رایگان را انجام بده و نقشه راهی متناسب با هدفت بگیر.',
+      educationDesc: 'آموزش',
       educationAction: 'شروع رایگان',
       educationBadge: 'ارزیابی رایگان است',
     },

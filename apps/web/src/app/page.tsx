@@ -1,17 +1,19 @@
 'use client';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import {
   ArrowRight,
   ClipboardCheck,
   Gauge,
   Map as MapIcon,
-  Palette,
   PlayCircle,
   Sparkles,
   Trophy,
 } from 'lucide-react';
 import type { ComponentType } from 'react';
+import { useEffect } from 'react';
+import { useAuth } from '@/context/AuthProvider';
 import { useLanguage } from '@/context/LanguageProvider';
 
 const journeySteps: { key: string; Icon: ComponentType<{ size?: number }> }[] = [
@@ -24,17 +26,30 @@ const journeySteps: { key: string; Icon: ComponentType<{ size?: number }> }[] = 
 
 const featureKeys = ['goal', 'readiness', 'courses', 'bootcamp'] as const;
 
+function panelHomeForRole(role?: string) {
+  if (role === 'SUPER_ADMIN' || role === 'ADMIN') return '/admin';
+  return '/dashboard';
+}
+
 export default function HomePage() {
+  const router = useRouter();
   const { t } = useLanguage();
+  const { user, learnerState, loading, isAuthenticated } = useAuth();
+  const registered = Boolean(user?.profileComplete || learnerState?.profileComplete);
+
+  useEffect(() => {
+    if (loading) return;
+    if (isAuthenticated && registered) {
+      router.replace(panelHomeForRole(user?.role));
+    }
+  }, [loading, isAuthenticated, registered, user?.role, router]);
+
+  if (loading || (isAuthenticated && registered)) {
+    return <div className="page-content landing auth-loading" aria-busy="true" />;
+  }
 
   return (
     <div className="page-content landing">
-      <div className="landing-aurora" aria-hidden="true">
-        <span className="landing-aurora-a" />
-        <span className="landing-aurora-b" />
-        <span className="landing-aurora-c" />
-      </div>
-
       {/* ---------- hero ---------- */}
       <header className="app landing-hero">
         <span className="landing-brand">
@@ -70,32 +85,18 @@ export default function HomePage() {
       <section className="app landing-doors" aria-label={t('landing.doors.heading')}>
         <Link href="/education" className="door door--primary">
           <span className="door-top">
-            <span className="door-icon door-icon--brand" aria-hidden="true">
-              <MapIcon size={20} />
-            </span>
             <span className="chip chip--mint">{t('landing.doors.educationBadge')}</span>
           </span>
           <h2 className="door-title">{t('landing.doors.educationTitle')}</h2>
           <p className="door-desc">{t('landing.doors.educationDesc')}</p>
-          <span className="door-action">
-            {t('landing.doors.educationAction')}
-            <ArrowRight className="nav-arrow" size={16} aria-hidden="true" />
-          </span>
         </Link>
 
         <Link href="/material" className="door door--material">
           <span className="door-top">
-            <span className="door-icon door-icon--amber" aria-hidden="true">
-              <Palette size={20} />
-            </span>
             <span className="chip chip--amber">{t('landing.materialBadge')}</span>
           </span>
           <h2 className="door-title">{t('landing.doors.materialTitle')}</h2>
           <p className="door-desc">{t('landing.doors.materialDesc')}</p>
-          <span className="door-action">
-            {t('landing.doors.materialAction')}
-            <ArrowRight className="nav-arrow" size={16} aria-hidden="true" />
-          </span>
         </Link>
       </section>
 

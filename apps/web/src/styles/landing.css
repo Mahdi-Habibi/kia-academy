@@ -5,57 +5,6 @@
 .landing {
   position: relative;
   padding-bottom: var(--space-section);
-  overflow: clip;
-}
-
-/* --- aurora wash (the only place the brand gradient is animated) --------- */
-.landing-aurora {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: var(--z-base);
-}
-
-.landing-aurora > span {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(60px);
-  will-change: transform;
-}
-
-.landing-aurora-a {
-  width: min(560px, 82vw);
-  height: min(560px, 82vw);
-  top: -180px;
-  inset-inline-end: -140px;
-  background: radial-gradient(circle, rgba(100, 100, 255, 0.34), transparent 68%);
-  animation: auroraDrift 16s var(--ease-out) infinite;
-}
-
-.landing-aurora-b {
-  width: min(440px, 70vw);
-  height: min(440px, 70vw);
-  top: 6vh;
-  inset-inline-start: -160px;
-  background: radial-gradient(circle, rgba(196, 238, 217, 0.55), transparent 68%);
-  animation: auroraDrift 18s var(--ease-out) infinite reverse;
-}
-
-.landing-aurora-c {
-  width: min(380px, 62vw);
-  height: min(380px, 62vw);
-  top: 62vh;
-  inset-inline-end: 8vw;
-  background: radial-gradient(circle, rgba(255, 200, 100, 0.32), transparent 68%);
-  animation: auroraDrift 14s var(--ease-out) infinite;
-}
-
-[data-theme='dark'] .landing-aurora-b {
-  background: radial-gradient(circle, rgba(46, 146, 105, 0.34), transparent 68%);
-}
-
-[data-theme='dark'] .landing-aurora-c {
-  background: radial-gradient(circle, rgba(255, 200, 100, 0.16), transparent 68%);
 }
 
 /* --- hero ---------------------------------------------------------------- */
@@ -185,6 +134,24 @@
   gap: var(--bento-gap);
 }
 
+/* Desktop only: keep the door pair within the hero title measure */
+@media (min-width: 721px) {
+  .landing-doors {
+    max-width: 22ch;
+    width: 100%;
+    margin-inline: auto;
+  }
+
+  .landing-doors .door {
+    padding: var(--space-4);
+    gap: var(--space-2);
+  }
+
+  .landing-doors .door-title {
+    font-size: var(--fs-h3);
+  }
+}
+
 .door {
   display: flex;
   flex-direction: column;
@@ -233,7 +200,7 @@
 .door-top {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: var(--space-3);
 }
 
