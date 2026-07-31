@@ -21,6 +21,7 @@ export function TopBar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [navOpen, setNavOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const topbarRef = useRef<HTMLDivElement>(null);
 
   const isSuperAdmin = user?.role === 'SUPER_ADMIN';
   const isAdmin = user?.role === 'ADMIN';
@@ -43,14 +44,50 @@ export function TopBar() {
     return () => document.removeEventListener('click', close);
   }, []);
 
+  useEffect(() => {
+    if (!navOpen) return;
+
+    const onPointerDown = (e: MouseEvent | PointerEvent) => {
+      const target = e.target as Node;
+      if (topbarRef.current && !topbarRef.current.contains(target)) {
+        setNavOpen(false);
+      }
+    };
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setNavOpen(false);
+    };
+
+    document.addEventListener('pointerdown', onPointerDown);
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.removeEventListener('pointerdown', onPointerDown);
+      document.removeEventListener('keydown', onKeyDown);
+    };
+  }, [navOpen]);
+
   const handleLogout = async () => {
     setMenuOpen(false);
     await logout();
     router.push('/');
   };
 
+  const renderThemeToggle = () => (
+    <button
+      type="button"
+      className="theme-toggle"
+      onClick={toggleTheme}
+      aria-label={t('nav.toggleColorMode')}
+    >
+      <span className="theme-toggle-icon" aria-hidden="true">
+        ◐
+      </span>
+      <span className="theme-toggle-label">{t('nav.mode')}</span>
+    </button>
+  );
+
   return (
-    <div className="topbar">
+    <div className="topbar" ref={topbarRef}>
       <button type="button" className="logo" onClick={handleLogoClick}>
         <span className="logo-mark" aria-hidden="true" />
         <span className="logo-text">{settings.general.siteName || t('common.brand')}</span>
@@ -61,14 +98,15 @@ export function TopBar() {
         className="mobile-nav-toggle"
         aria-label={t('nav.menu')}
         aria-expanded={navOpen}
+        aria-controls="site-top-nav"
         onClick={() => setNavOpen((o) => !o)}
       >
         {navOpen ? <X size={20} /> : <Menu size={20} />}
       </button>
 
-      <nav className={`top-nav${navOpen ? ' top-nav--open' : ''}`}>
+      <nav id="site-top-nav" className={`top-nav${navOpen ? ' top-nav--open' : ''}`}>
         {isSuperAdmin ? (
-          <Link href="/admin" className="top-nav-link">
+          <Link href="/admin" className="top-nav-link" onClick={() => setNavOpen(false)}>
             <Shield size={14} /> {t('nav.admin')}
           </Link>
         ) : (
@@ -95,20 +133,18 @@ export function TopBar() {
             </Link>
           </>
         )}
+
+        <div className="top-nav-tools">
+          <LanguageSelector />
+          {renderThemeToggle()}
+        </div>
       </nav>
 
       <div className="top-right">
-        <LanguageSelector />
-
-        <button
-          type="button"
-          className="theme-toggle"
-          onClick={toggleTheme}
-          aria-label={t('nav.toggleColorMode')}
-        >
-          <span aria-hidden="true">◐</span>
-          <span className="theme-toggle-label">{t('nav.mode')}</span>
-        </button>
+        <div className="top-right-tools">
+          <LanguageSelector />
+          {renderThemeToggle()}
+        </div>
 
         {loading || !user ? null : (
           <div className="user-menu-wrap" ref={menuRef}>
