@@ -23,6 +23,11 @@
     direction: ltr;
   }
 
+  /* Flatten wrappers so logo/burger/nav still participate in the topbar grid */
+  .topbar-primary {
+    display: contents;
+  }
+
   .topbar .top-right {
     grid-column: 1;
     justify-self: start;
