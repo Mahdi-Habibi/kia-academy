@@ -30,7 +30,7 @@ export default function ReadinessGatePage() {
 
   return (
     <div className="page-content">
-      <div className="app gate exam-gate">
+      <div className="container gate exam-gate">
         <PageBackButton href="/assessment" label={t('readiness.gate.backAssessment')} />
         <span className="eyebrow amber">{t('exam.gate.eyebrow')}</span>
         <h1>{t('exam.gate.title')}</h1>

@@ -56,7 +56,7 @@ function SuccessContent() {
 
   return (
     <div className="page-content">
-      <div className="app checkout-result">
+      <div className="container checkout-result">
         {status === 'ok' ? (
           <>
             <CheckCircle size={48} className="checkout-result-icon ok" />

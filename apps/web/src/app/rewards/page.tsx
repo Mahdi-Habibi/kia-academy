@@ -22,7 +22,7 @@ export default function RewardsPage() {
   return (
     <RequireAuth nextPath="/rewards">
       <div className="page-content">
-        <div className="app rewards">
+        <div className="container rewards">
           <PageBackButton href="/dashboard" />
           <h2>{t('rewards.title')}</h2>
           <p className="sub">{t('rewards.sub')}</p>

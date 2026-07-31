@@ -123,7 +123,7 @@ function ReadinessResultsContent() {
   if (testId && loadError) {
     return (
       <div className="page-content">
-        <div className="app results">
+        <div className="container results">
           <p className="form-error">{loadError}</p>
           <button type="button" className="cta-secondary" onClick={() => router.push('/dashboard')}>
             {t('readiness.results.backDashboard')}
@@ -136,7 +136,7 @@ function ReadinessResultsContent() {
   if (!result) {
     return (
       <div className="page-content">
-        <div className="app results">
+        <div className="container results">
           <p className="sub">{t('common.loading')}</p>
         </div>
       </div>
@@ -167,7 +167,7 @@ function ReadinessResultsContent() {
 
   return (
     <div className="page-content">
-      <div className="app results exam-results">
+      <div className="container results exam-results">
         <PageBackButton
           href={testId ? '/dashboard' : '/readiness'}
           label={testId ? t('readiness.results.backDashboard') : t('readiness.results.backTest')}

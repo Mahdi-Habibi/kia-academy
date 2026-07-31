@@ -68,7 +68,7 @@ function ChallengeContent() {
 
   return (
     <div className="page-content">
-      <div className="app challenge-shell">
+      <div className="container challenge-shell">
         <div className="ch-top">
           <PageBackButton href="/bootcamp" label={t('bootcamp.solver.back')} />
           <div

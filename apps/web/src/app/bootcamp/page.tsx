@@ -16,7 +16,7 @@ export default function BootcampPage() {
   return (
     <RequireAuth nextPath="/bootcamp">
       <div className="page-content">
-        <div className="app dash">
+        <div className="container dash">
           <PageBackButton href="/dashboard" label={t('bootcamp.backDashboard')} />
           <div className="dash-head">
             <div>

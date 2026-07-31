@@ -9,7 +9,7 @@ export default function CheckoutCancelPage() {
 
   return (
     <div className="page-content">
-      <div className="app checkout-result">
+      <div className="container checkout-result">
         <XCircle size={48} className="checkout-result-icon cancel" />
         <h1>{t('checkout.cancel.title')}</h1>
         <p className="auth-sub">{t('checkout.cancel.sub')}</p>

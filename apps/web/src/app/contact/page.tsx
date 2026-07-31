@@ -66,7 +66,7 @@ export default function ContactPage() {
 
   return (
     <div className="page-content">
-      <div className="app contact-shell">
+      <div className="container contact-shell">
         <PageBackButton href="/" label={t('contact.backHome')} />
 
         <span className="eyebrow">

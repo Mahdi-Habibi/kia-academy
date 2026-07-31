@@ -119,7 +119,7 @@ function LessonPlayerContent({
   if (error || !lesson) {
     return (
       <div className="page-content">
-        <div className="app lesson-shell kia-lesson-shell">
+        <div className="container lesson-shell kia-lesson-shell">
           <p className="form-error">{error || t('lesson.notFound')}</p>
           <Link href="/courses" className="back-link">
             {t('lesson.backToCourses')}
@@ -133,7 +133,7 @@ function LessonPlayerContent({
 
   return (
     <div className="page-content">
-      <div className="app lesson-shell kia-lesson-shell">
+      <div className="container lesson-shell kia-lesson-shell">
         <div className="learn-layout">
           <aside className="learn-sidebar glass-panel" aria-label={t('lesson.lessonsNav')}>
             <div className="sidebar-head">

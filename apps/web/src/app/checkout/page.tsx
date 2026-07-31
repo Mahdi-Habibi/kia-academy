@@ -161,7 +161,7 @@ function CheckoutContent() {
 
   return (
     <div className="page-content">
-      <div className="app checkout-shell">
+      <div className="container checkout-shell">
         <PageBackButton href={backHref} />
         <span className="eyebrow amber">
           <CreditCard size={14} className="inline-leading-icon" />

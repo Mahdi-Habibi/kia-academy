@@ -8,7 +8,7 @@ export default function ReadinessTestPage() {
   return (
     <RequireAuth nextPath="/readiness/test" learnerFlow>
       <div className="page-content">
-        <div className="app test-shell">
+        <div className="container test-shell">
           <PageBackButton href="/readiness" />
           <UnifiedTestFlow readinessOnly backHref="/readiness" />
         </div>

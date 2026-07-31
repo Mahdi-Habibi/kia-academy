@@ -50,58 +50,59 @@ export default function HomePage() {
 
   return (
     <div className="page-content landing">
-      {/* ---------- hero ---------- */}
-      <header className="app landing-hero">
-        <span className="landing-brand">
-          <span className="landing-brand-mark" aria-hidden="true" />
-          {t('common.brand')}
-        </span>
-
-        <p className="eyebrow landing-eyebrow">
-          <Sparkles size={13} aria-hidden="true" />
-          {t('landing.eyebrow')}
-        </p>
-
-        <h1 className="landing-title">{t('landing.heroTitle')}</h1>
-        <p className="landing-body">{t('landing.heroBody')}</p>
-
-        <dl className="landing-trust">
-          <div className="landing-trust-item">
-            <dt>{t('landing.trust.free')}</dt>
-            <dd className="text-progress">{t('landing.trust.freeValue')}</dd>
-          </div>
-          <div className="landing-trust-item">
-            <dt>{t('landing.trust.stages')}</dt>
-            <dd>{t('landing.trust.stagesValue')}</dd>
-          </div>
-          <div className="landing-trust-item">
-            <dt>{t('landing.trust.domains')}</dt>
-            <dd>{t('landing.trust.domainsValue')}</dd>
-          </div>
-        </dl>
-      </header>
-
-      {/* ---------- the two doors ---------- */}
-      <section className="app landing-doors" aria-label={t('landing.doors.heading')}>
-        <Link href="/education" className="door door--primary">
-          <span className="door-top">
-            <span className="chip chip--mint">{t('landing.doors.educationBadge')}</span>
+      {/* ---------- hero + doors (first viewport) ---------- */}
+      <div className="landing-intro container">
+        <header className="landing-hero">
+          <span className="landing-brand">
+            <span className="landing-brand-mark" aria-hidden="true" />
+            {t('common.brand')}
           </span>
-          <h2 className="door-title">{t('landing.doors.educationTitle')}</h2>
-          <p className="door-desc">{t('landing.doors.educationDesc')}</p>
-        </Link>
 
-        <Link href="/material" className="door door--material">
-          <span className="door-top">
-            <span className="chip chip--amber">{t('landing.materialBadge')}</span>
-          </span>
-          <h2 className="door-title">{t('landing.doors.materialTitle')}</h2>
-          <p className="door-desc">{t('landing.doors.materialDesc')}</p>
-        </Link>
-      </section>
+          <p className="eyebrow landing-eyebrow">
+            <Sparkles size={13} aria-hidden="true" />
+            {t('landing.eyebrow')}
+          </p>
+
+          <h1 className="landing-title">{t('landing.heroTitle')}</h1>
+          <p className="landing-body">{t('landing.heroBody')}</p>
+
+          <dl className="landing-trust">
+            <div className="landing-trust-item">
+              <dt>{t('landing.trust.free')}</dt>
+              <dd className="text-progress">{t('landing.trust.freeValue')}</dd>
+            </div>
+            <div className="landing-trust-item">
+              <dt>{t('landing.trust.stages')}</dt>
+              <dd>{t('landing.trust.stagesValue')}</dd>
+            </div>
+            <div className="landing-trust-item">
+              <dt>{t('landing.trust.domains')}</dt>
+              <dd>{t('landing.trust.domainsValue')}</dd>
+            </div>
+          </dl>
+        </header>
+
+        <section className="landing-doors" aria-label={t('landing.doors.heading')}>
+          <Link href="/education" className="door door--primary">
+            <span className="door-top">
+              <span className="chip chip--mint">{t('landing.doors.educationBadge')}</span>
+            </span>
+            <h2 className="door-title">{t('landing.doors.educationTitle')}</h2>
+            <p className="door-desc">{t('landing.doors.educationDesc')}</p>
+          </Link>
+
+          <Link href="/material" className="door door--material">
+            <span className="door-top">
+              <span className="chip chip--amber">{t('landing.materialBadge')}</span>
+            </span>
+            <h2 className="door-title">{t('landing.doors.materialTitle')}</h2>
+            <p className="door-desc">{t('landing.doors.materialDesc')}</p>
+          </Link>
+        </section>
+      </div>
 
       {/* ---------- learner journey ---------- */}
-      <section className="app landing-journey">
+      <section className="container landing-journey">
         <h2 className="section-heading">{t('landing.journey.heading')}</h2>
         <p className="section-sub">{t('landing.journey.sub')}</p>
 
@@ -122,7 +123,7 @@ export default function HomePage() {
       </section>
 
       {/* ---------- what you get ---------- */}
-      <section className="app features-section">
+      <section className="container features-section">
         <h2 className="section-heading">{t('landing.howHeading')}</h2>
         <p className="section-sub">{t('landing.howSub')}</p>
 
@@ -145,7 +146,7 @@ export default function HomePage() {
       </section>
 
       {/* ---------- closing call ---------- */}
-      <section className="app landing-close">
+      <section className="container-fluid landing-close">
         <div className="landing-close-panel surface--ink">
           <h2>{t('landing.journey.heading')}</h2>
           <p>{t('landing.trust.note')}</p>
@@ -161,7 +162,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <footer className="app landing-guest-footer" aria-label={t('nav.footer.legal')}>
+      <footer className="container landing-guest-footer" aria-label={t('nav.footer.legal')}>
         <span className="landing-guest-brand">{t('common.brand')}</span>
         <nav>
           <Link href="/contact">{t('landing.ctaContact')}</Link>

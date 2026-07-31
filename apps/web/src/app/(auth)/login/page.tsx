@@ -51,7 +51,7 @@ function LoginForm() {
 
   return (
     <div className="page-content">
-      <div className="app auth-shell">
+      <div className="container auth-shell">
         <PageBackButton href="/" />
         <div className="auth-card">
           <span className="eyebrow">

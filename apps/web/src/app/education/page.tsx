@@ -21,7 +21,7 @@ export default function EducationPage() {
   return (
     <div className="page-content education-page">
       <PageBackButton href="/" />
-      <Suspense fallback={<div className="app auth-shell auth-loading" />}>
+      <Suspense fallback={<div className="container auth-shell auth-loading" />}>
         <EducationFlow />
       </Suspense>
     </div>
@@ -157,7 +157,7 @@ function EducationFlow() {
 
   if (authLoading) {
     return (
-      <div className="app auth-shell">
+      <div className="container auth-shell">
         <div className="auth-card education-card">
           <p className="auth-loading-inline">{t('common.loading')}</p>
         </div>
@@ -176,7 +176,7 @@ function EducationFlow() {
   if (step === 'start') {
     return (
       <RequireAuth nextPath="/education">
-        <div className="app auth-shell">
+        <div className="container auth-shell">
           <div className="auth-card education-card">
             <span className="auth-step-badge">{t('education.start.title')}</span>
             <h1>{t('education.start.title')}</h1>
@@ -196,7 +196,7 @@ function EducationFlow() {
   if (step === 'profile') {
     return (
       <RequireAuth nextPath="/education">
-        <div className="app auth-shell">
+        <div className="container auth-shell">
           <div className="auth-card education-card">
             <span className="auth-step-badge">{t('education.stepBadge', { current: 3, total: 3 })}</span>
             <h1>{t('education.profile.title')}</h1>
@@ -264,7 +264,7 @@ function EducationFlow() {
 
   if (step === 'otp') {
     return (
-      <div className="app auth-shell">
+      <div className="container auth-shell">
         <div className="auth-card education-card">
           <span className="auth-step-badge">{t('education.stepBadge', { current: 2, total: 3 })}</span>
           <h1>{t('education.otp.title')}</h1>
@@ -330,7 +330,7 @@ function EducationFlow() {
   }
 
   return (
-    <div className="app auth-shell">
+    <div className="container auth-shell">
       <div className="auth-card education-card">
         <Link href="/" className="education-brand">
           {t('common.brand')}

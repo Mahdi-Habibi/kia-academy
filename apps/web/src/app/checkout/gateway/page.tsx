@@ -69,7 +69,7 @@ function GatewayContent() {
 
   return (
     <div className="page-content">
-      <div className="app checkout-shell checkout-gateway">
+      <div className="container checkout-shell checkout-gateway">
         <span className="eyebrow amber">
           <CreditCard size={14} className="inline-leading-icon" />
           {t('checkout.gateway.eyebrow')}

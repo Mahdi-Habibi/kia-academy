@@ -51,7 +51,7 @@ export default function RoadmapPage() {
 
   return (
     <div className="page-content">
-      <div className="app result-shell">
+      <div className="container result-shell">
         <PageBackButton
           href={testCompleted ? '/readiness/results' : '/readiness'}
           label={t('roadmap.backResults')}
