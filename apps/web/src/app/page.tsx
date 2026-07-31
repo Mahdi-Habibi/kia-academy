@@ -28,12 +28,6 @@ export default function HomePage() {
 
   return (
     <div className="page-content landing">
-      <div className="landing-aurora" aria-hidden="true">
-        <span className="landing-aurora-a" />
-        <span className="landing-aurora-b" />
-        <span className="landing-aurora-c" />
-      </div>
-
       {/* ---------- hero ---------- */}
       <header className="app landing-hero">
         <span className="landing-brand">

@@ -619,10 +619,64 @@ input[type='tel'],
 .site-main {
   flex: 1 0 auto;
   width: 100%;
+  position: relative;
+  z-index: var(--z-raised);
+  background: transparent;
 }
 
 .site-main--guest {
   min-height: 100vh;
+}
+
+/* Fixed aurora wash — animations sit on the body plane behind transparent chrome */
+.site-aurora {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: var(--z-base);
+  overflow: hidden;
+}
+
+.site-aurora > span {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  will-change: transform;
+}
+
+.site-aurora-a {
+  width: min(560px, 82vw);
+  height: min(560px, 82vw);
+  top: -180px;
+  inset-inline-end: -140px;
+  background: radial-gradient(circle, rgba(100, 100, 255, 0.34), transparent 68%);
+  animation: auroraDrift 16s var(--ease-out) infinite;
+}
+
+.site-aurora-b {
+  width: min(440px, 70vw);
+  height: min(440px, 70vw);
+  top: 6vh;
+  inset-inline-start: -160px;
+  background: radial-gradient(circle, rgba(196, 238, 217, 0.55), transparent 68%);
+  animation: auroraDrift 18s var(--ease-out) infinite reverse;
+}
+
+.site-aurora-c {
+  width: min(380px, 62vw);
+  height: min(380px, 62vw);
+  top: 62vh;
+  inset-inline-end: 8vw;
+  background: radial-gradient(circle, rgba(255, 200, 100, 0.32), transparent 68%);
+  animation: auroraDrift 14s var(--ease-out) infinite;
+}
+
+[data-theme='dark'] .site-aurora-b {
+  background: radial-gradient(circle, rgba(46, 146, 105, 0.34), transparent 68%);
+}
+
+[data-theme='dark'] .site-aurora-c {
+  background: radial-gradient(circle, rgba(255, 200, 100, 0.16), transparent 68%);
 }
 
 .app {
