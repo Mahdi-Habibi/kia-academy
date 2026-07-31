@@ -94,7 +94,7 @@ export default function DashboardPage() {
     return (
       <div className="page-content">
         <div className="app hub">
-          <PageBackButton href="/" />
+          <PageBackButton href="/dashboard" />
           <header className="page-head">
             <div>
               <h1>
@@ -143,7 +143,7 @@ export default function DashboardPage() {
   return (
     <div className="page-content">
       <div className="app hub">
-        <PageBackButton href="/" />
+        <PageBackButton href="/dashboard" />
         <header className="page-head">
           <div>
             <h1>{t('dashboard.welcomeBack', { name: firstName })}</h1>

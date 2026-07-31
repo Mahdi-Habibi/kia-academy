@@ -13,7 +13,7 @@ export function Footer() {
       <div className="app footer-inner">
         <div className="footer-main">
           <div className="footer-brand">
-            <Link href="/" className="footer-logo" aria-label={t('nav.homeAria')}>
+            <Link href="/dashboard" className="footer-logo" aria-label={t('nav.homeAria')}>
               <span className="footer-logo-mark" aria-hidden="true" />
               {t('common.brand')}
             </Link>

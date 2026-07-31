@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import {
   ArrowRight,
   ClipboardCheck,
@@ -11,6 +12,8 @@ import {
   Trophy,
 } from 'lucide-react';
 import type { ComponentType } from 'react';
+import { useEffect } from 'react';
+import { useAuth } from '@/context/AuthProvider';
 import { useLanguage } from '@/context/LanguageProvider';
 
 const journeySteps: { key: string; Icon: ComponentType<{ size?: number }> }[] = [
@@ -23,8 +26,27 @@ const journeySteps: { key: string; Icon: ComponentType<{ size?: number }> }[] = 
 
 const featureKeys = ['goal', 'readiness', 'courses', 'bootcamp'] as const;
 
+function panelHomeForRole(role?: string) {
+  if (role === 'SUPER_ADMIN' || role === 'ADMIN') return '/admin';
+  return '/dashboard';
+}
+
 export default function HomePage() {
+  const router = useRouter();
   const { t } = useLanguage();
+  const { user, learnerState, loading, isAuthenticated } = useAuth();
+  const registered = Boolean(user?.profileComplete || learnerState?.profileComplete);
+
+  useEffect(() => {
+    if (loading) return;
+    if (isAuthenticated && registered) {
+      router.replace(panelHomeForRole(user?.role));
+    }
+  }, [loading, isAuthenticated, registered, user?.role, router]);
+
+  if (loading || (isAuthenticated && registered)) {
+    return <div className="page-content landing auth-loading" aria-busy="true" />;
+  }
 
   return (
     <div className="page-content landing">
