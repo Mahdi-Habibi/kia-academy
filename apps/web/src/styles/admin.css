@@ -506,8 +506,10 @@
 
 .admin-stat-card b,
 .admin-stat-value {
-  /* Currency totals grow unpredictably, so the value scales with its column. */
-  font-family: var(--font-mono);
+  /* Currency totals grow unpredictably, so the value scales with its column.
+     Fall back to Vazirmatn — JetBrains Mono (next/font) is latin-only, so FA
+     currency words like تومان looked blank / like "no font applied". */
+  font-family: var(--font-mono), var(--font-fa), Tahoma, sans-serif;
   font-size: 1.375rem;
   font-size: clamp(1rem, 9cqi, 1.625rem);
   font-weight: 700;
@@ -517,6 +519,13 @@
   /* break-word, not anywhere: wraps before the currency word rather than
      splitting the digits of an amount. */
   overflow-wrap: break-word;
+}
+
+[dir='rtl'] .admin-stat-card b,
+[dir='rtl'] .admin-stat-value,
+[lang='fa'] .admin-stat-card b,
+[lang='fa'] .admin-stat-value {
+  font-family: var(--font-fa);
 }
 
 .admin-stat-card.highlight b,

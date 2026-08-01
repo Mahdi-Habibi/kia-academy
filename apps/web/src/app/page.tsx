@@ -26,9 +26,10 @@ const journeySteps: { key: string; Icon: ComponentType<{ size?: number }> }[] = 
 
 const featureKeys = ['goal', 'readiness', 'courses', 'bootcamp'] as const;
 
-function panelHomeForRole(role?: string) {
-  if (role === 'SUPER_ADMIN' || role === 'ADMIN') return '/admin';
-  return '/dashboard';
+/** Learners skip the marketing landing; staff must be able to open `/` via
+ *  Admin → «بازگشت به سایت» (login already sends them to `/admin`). */
+function shouldAutoEnterPanel(role?: string) {
+  return role !== 'SUPER_ADMIN' && role !== 'ADMIN';
 }
 
 export default function HomePage() {
@@ -36,15 +37,15 @@ export default function HomePage() {
   const { t } = useLanguage();
   const { user, learnerState, loading, isAuthenticated } = useAuth();
   const registered = Boolean(user?.profileComplete || learnerState?.profileComplete);
+  const autoEnterPanel =
+    isAuthenticated && registered && shouldAutoEnterPanel(user?.role);
 
   useEffect(() => {
-    if (loading) return;
-    if (isAuthenticated && registered) {
-      router.replace(panelHomeForRole(user?.role));
-    }
-  }, [loading, isAuthenticated, registered, user?.role, router]);
+    if (loading || !autoEnterPanel) return;
+    router.replace('/dashboard');
+  }, [loading, autoEnterPanel, router]);
 
-  if (loading || (isAuthenticated && registered)) {
+  if (loading || autoEnterPanel) {
     return <div className="page-content landing auth-loading" aria-busy="true" />;
   }
 

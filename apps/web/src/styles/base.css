@@ -476,10 +476,14 @@ canvas {
 [dir='rtl'] .label-micro,
 [dir='rtl'] .tile .t-status,
 [dir='rtl'] .tile .t-eyebrow,
+[dir='rtl'] .admin-stat-value,
+[dir='rtl'] .admin-stat-card b,
 [lang='fa'] .eyebrow,
 [lang='fa'] .label-micro,
 [lang='fa'] .tile .t-status,
-[lang='fa'] .tile .t-eyebrow {
+[lang='fa'] .tile .t-eyebrow,
+[lang='fa'] .admin-stat-value,
+[lang='fa'] .admin-stat-card b {
   font-family: var(--font-fa);
 }
 
