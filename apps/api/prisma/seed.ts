@@ -1,6 +1,13 @@
 import { PrismaClient, Prisma } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
-import { createDefaultSiteSettings, createSectionPermission } from '@kia-academy/shared';
+import {
+  DEFAULT_ASSESSMENT_BANK,
+  EXAM_QUESTION_BANK,
+  MINI_IPIP_CITATION,
+  MINI_IPIP_ITEMS,
+  createDefaultSiteSettings,
+  createSectionPermission,
+} from '@kia-academy/shared';
 
 const prisma = new PrismaClient();
 
@@ -396,6 +403,34 @@ Use STAR (Situation, Task, Action, Result) to answer behavioral questions.
     },
   });
   console.log('Seeded site settings');
+
+  const testBanks = [
+    {
+      id: 'personality',
+      payload: {
+        version: 1,
+        citation: MINI_IPIP_CITATION,
+        items: MINI_IPIP_ITEMS.map((item) => ({ ...item })),
+      },
+    },
+    {
+      id: 'assessment',
+      payload: structuredClone(DEFAULT_ASSESSMENT_BANK),
+    },
+    {
+      id: 'readiness',
+      payload: { version: 1, questions: structuredClone(EXAM_QUESTION_BANK) },
+    },
+  ] as const;
+
+  for (const bank of testBanks) {
+    await prisma.testBank.upsert({
+      where: { id: bank.id },
+      create: { id: bank.id, payload: JSON.stringify(bank.payload) },
+      update: { payload: JSON.stringify(bank.payload) },
+    });
+  }
+  console.log('Seeded test banks: personality, assessment, readiness');
 }
 
 main()

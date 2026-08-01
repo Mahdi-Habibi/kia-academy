@@ -1,6 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import {
-  MINI_IPIP_CITATION,
   missingMiniIpipAnswers,
   scoreMiniIpip,
   type MiniIpipAnswers,
@@ -8,21 +7,27 @@ import {
   type PersonalityResult,
 } from '@kia-academy/shared';
 import { PrismaService } from '../prisma/prisma.service';
+import { TestBanksService } from '../test-banks/test-banks.service';
 
 @Injectable()
 export class PersonalityService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly testBanks: TestBanksService,
+  ) {}
 
   async submit(userId: string, rawAnswers: Record<string, number>): Promise<PersonalityResult> {
+    const items = await this.testBanks.getPersonalityItems();
     const answers = this.normalizeAnswers(rawAnswers);
-    const missing = missingMiniIpipAnswers(answers);
+    const missing = missingMiniIpipAnswers(answers, items);
     if (missing.length) {
       throw new BadRequestException(`Incomplete answers: ${missing.join(', ')}`);
     }
 
+    const bank = await this.testBanks.getPersonalityBank();
     let scored: PersonalityResult;
     try {
-      scored = scoreMiniIpip(answers);
+      scored = scoreMiniIpip(answers, { items });
     } catch (err) {
       throw new BadRequestException(err instanceof Error ? err.message : 'Invalid answers');
     }
@@ -39,7 +44,7 @@ export class PersonalityService {
     return {
       ...scored,
       id: record.id,
-      citation: MINI_IPIP_CITATION,
+      citation: bank.citation,
       createdAt: record.createdAt.toISOString(),
     };
   }
@@ -50,10 +55,11 @@ export class PersonalityService {
       orderBy: { createdAt: 'desc' },
     });
     if (!record) return null;
+    const bank = await this.testBanks.getPersonalityBank();
     return {
       id: record.id,
       instrument: 'mini-ipip',
-      citation: MINI_IPIP_CITATION,
+      citation: bank.citation,
       answers: JSON.parse(record.answers) as MiniIpipAnswers,
       scores: JSON.parse(record.scores) as PersonalityResult['scores'],
       createdAt: record.createdAt.toISOString(),

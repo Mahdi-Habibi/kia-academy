@@ -77,6 +77,7 @@ export function createDefaultSiteSettings(): SiteSettings {
       challenges: createSectionPermission(true, true, false),
       users: createSectionPermission(false, false, false),
       payments: createSectionPermission(true, false, false),
+      tests: createSectionPermission(true, true, true),
     },
   };
 }
@@ -116,6 +117,7 @@ export function mergeSiteSettings(
           challenges: { ...base.adminAccess.challenges, ...patch.adminAccess.challenges },
           users: { ...base.adminAccess.users, ...patch.adminAccess.users },
           payments: { ...base.adminAccess.payments, ...patch.adminAccess.payments },
+          tests: { ...base.adminAccess.tests, ...patch.adminAccess.tests },
         }
       : base.adminAccess,
   };

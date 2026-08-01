@@ -46,6 +46,12 @@ import type {
   AdminCreateUserDto,
   AdminUser,
   AdminPayment,
+  AssessmentBank,
+  PersonalityBank,
+  ReadinessBank,
+  TestBankId,
+  TestBankMeta,
+  TestBankPayload,
 } from '@kia-academy/shared';
 import { clearTokens, getAccessToken, setAccessToken } from '@/lib/auth';
 import { ApiError } from '@/lib/apiError';
@@ -501,6 +507,35 @@ const liveApi = {
     return request<SiteSettings>('/admin/settings', {
       method: 'PUT',
       body: JSON.stringify(dto),
+    });
+  },
+
+  getPersonalityBank(): Promise<PersonalityBank> {
+    return request<PersonalityBank>('/tests/personality', { skipAuth: true });
+  },
+
+  getAssessmentBank(): Promise<AssessmentBank> {
+    return request<AssessmentBank>('/tests/assessment', { skipAuth: true });
+  },
+
+  adminListTestBanks(): Promise<TestBankMeta[]> {
+    return request<TestBankMeta[]>('/admin/tests');
+  },
+
+  adminGetTestBank(id: TestBankId): Promise<TestBankPayload> {
+    return request<TestBankPayload>(`/admin/tests/${id}`);
+  },
+
+  adminSaveTestBank(id: TestBankId, bank: unknown): Promise<TestBankPayload> {
+    return request<TestBankPayload>(`/admin/tests/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify({ bank }),
+    });
+  },
+
+  adminResetTestBank(id: TestBankId): Promise<TestBankPayload> {
+    return request<TestBankPayload>(`/admin/tests/${id}/reset`, {
+      method: 'POST',
     });
   },
 };

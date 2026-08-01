@@ -19,6 +19,7 @@ import { EmailModule } from './email/email.module';
 import { AdminModule } from './admin/admin.module';
 import { SiteSettingsModule } from './site-settings/site-settings.module';
 import { ContactModule } from './contact/contact.module';
+import { TestBanksModule } from './test-banks/test-banks.module';
 
 @Module({
   imports: [
@@ -48,6 +49,7 @@ import { ContactModule } from './contact/contact.module';
     AdminModule,
     SiteSettingsModule,
     ContactModule,
+    TestBanksModule,
   ],
   providers: [
     {

@@ -9,6 +9,7 @@ import {
   Coins,
   CreditCard,
   Crown,
+  ClipboardList,
   LineChart,
   Menu,
   Settings,
@@ -158,6 +159,13 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         key: 'challenges',
       },
       {
+        id: 'tests',
+        href: '/admin/tests',
+        label: t('admin.nav.tests'),
+        icon: ClipboardList,
+        key: 'tests',
+      },
+      {
         id: 'finance',
         label: t('admin.nav.finance'),
         icon: Coins,
@@ -240,6 +248,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
       path.startsWith('/admin/analytics') ||
       path.startsWith('/admin/payments') ||
       path.startsWith('/admin/challenges') ||
+      path.startsWith('/admin/tests') ||
       path.startsWith('/admin/contact') ||
       path.startsWith('/admin/settings');
     if (!allowed && path.startsWith('/admin')) {

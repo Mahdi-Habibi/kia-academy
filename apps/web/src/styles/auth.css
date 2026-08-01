@@ -134,6 +134,16 @@
 .form-field textarea::placeholder {
   color: var(--text-faint);
   font-weight: 400;
+  /* Explicit FA stack — placeholders don't always inherit reliably, and
+     mono OTP inputs otherwise fall back off Vazirmatn for Persian digits. */
+  font-family: var(--font-body), var(--font-fa), Tahoma, sans-serif;
+}
+
+[dir='rtl'] .form-field input::placeholder,
+[dir='rtl'] .form-field textarea::placeholder,
+[lang='fa'] .form-field input::placeholder,
+[lang='fa'] .form-field textarea::placeholder {
+  font-family: var(--font-fa);
 }
 
 .form-field input:hover,
@@ -286,10 +296,22 @@
 
 .otp-input {
   letter-spacing: 0.4em;
-  font-family: var(--font-mono) !important;
+  /* Mono for Latin digits typed by the learner; FA fallback for placeholders. */
+  font-family: var(--font-mono), var(--font-fa), Tahoma, sans-serif !important;
   font-size: 1.5rem !important;
   font-weight: 700 !important;
   text-align: center;
+}
+
+.otp-input::placeholder {
+  letter-spacing: normal;
+  font-family: var(--font-fa), var(--font-body), Tahoma, sans-serif !important;
+  font-weight: 500 !important;
+}
+
+.education-page .form-field input[type='tel']::placeholder,
+.education-page .ltr-isolate::placeholder {
+  font-family: var(--font-fa), var(--font-body), Tahoma, sans-serif;
 }
 
 .education-page .back-link {

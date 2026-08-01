@@ -294,6 +294,14 @@ model SiteSetting {
   updatedAt DateTime @updatedAt
 }
 
+/** Editable learner test banks (personality / assessment / readiness). */
+model TestBank {
+  id        String   @id
+  payload   String
+  updatedAt DateTime @updatedAt
+  updatedBy String?
+}
+
 model ContactMessage {
   id        String    @id @default(cuid())
   name      String

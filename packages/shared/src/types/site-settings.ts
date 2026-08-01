@@ -70,7 +70,8 @@ export type AdminAccessSection =
   | 'courses'
   | 'challenges'
   | 'users'
-  | 'payments';
+  | 'payments'
+  | 'tests';
 
 /** What regular ADMIN users may access. SUPER_ADMIN always has full access. */
 export type SiteAdminAccessSettings = Record<AdminAccessSection, AdminSectionPermission>;
@@ -108,6 +109,7 @@ export function normalizeAdminAccess(raw: unknown): SiteAdminAccessSettings {
     challenges: normalizeAdminSectionPermission(source.challenges),
     users: normalizeAdminSectionPermission(source.users),
     payments: normalizeAdminSectionPermission(source.payments),
+    tests: normalizeAdminSectionPermission(source.tests),
   };
 }
 

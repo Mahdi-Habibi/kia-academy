@@ -41,6 +41,12 @@ import type {
   AdminUser,
   AdminPayment,
   SiteAdminAccessSettings,
+  AssessmentBank,
+  PersonalityBank,
+  ReadinessBank,
+  TestBankId,
+  TestBankMeta,
+  TestBankPayload,
 } from '@kia-academy/shared';
 import {
   buildRoadmapFromAnswers,
@@ -48,6 +54,9 @@ import {
   buildChallengeResult,
   createDefaultSiteSettings,
   mergeSiteSettings,
+  DEFAULT_ASSESSMENT_BANK,
+  MINI_IPIP_CITATION,
+  MINI_IPIP_ITEMS,
   normalizeAdminAccess,
   EXAM_BLUEPRINT_VERSION,
   EXAM_DURATION_SEC,
@@ -64,6 +73,7 @@ import { clearTokens, setAccessToken } from '@/lib/auth';
 const DEMO_SESSION_KEY = 'kia-academy-demo-session';
 const DEMO_STATE_KEY = 'kia-academy-demo-state';
 const DEMO_SETTINGS_KEY = 'kia-academy-demo-settings';
+const DEMO_TEST_BANKS_KEY = 'kia-academy-demo-test-banks';
 
 const DEMO_LEARNER: AuthUser = {
   id: 'demo-learner',
@@ -604,14 +614,16 @@ export const demoApi = {
 
   async submitPersonality(answers: MiniIpipAnswers): Promise<PersonalityResult> {
     requireUser();
+    const bank = readDemoTestBank('personality').bank as PersonalityBank;
     const scored = scoreMiniIpip(answers, {
       id: `personality-${Date.now()}`,
       createdAt: new Date().toISOString(),
+      items: bank.items,
     });
     const state = readState();
-    state.personalityResult = scored;
+    state.personalityResult = { ...scored, citation: bank.citation };
     writeState(state);
-    return delay(scored);
+    return delay(state.personalityResult);
   },
 
   async latestPersonality(): Promise<PersonalityResult | null> {
@@ -669,6 +681,7 @@ export const demoApi = {
     requireUser();
     const state = readState();
     const now = Date.now();
+    const bankQuestions = (readDemoTestBank('readiness').bank as ReadinessBank).questions;
     if (
       state.examAttempt &&
       state.examAttempt.status === 'IN_PROGRESS' &&
@@ -681,7 +694,7 @@ export const demoApi = {
         startedAt: state.examAttempt.startedAt,
         endsAt: state.examAttempt.endsAt,
         roadmapId: roadmapId ?? state.roadmapId,
-        questions: toPublicExamQuestions(EXAM_QUESTION_BANK),
+        questions: toPublicExamQuestions(bankQuestions),
         savedAnswers: state.examAttempt.answers,
         status: 'IN_PROGRESS',
       });
@@ -706,7 +719,7 @@ export const demoApi = {
       startedAt: startedAt.toISOString(),
       endsAt: endsAt.toISOString(),
       roadmapId: roadmapId ?? state.roadmapId,
-      questions: toPublicExamQuestions(EXAM_QUESTION_BANK),
+      questions: toPublicExamQuestions(bankQuestions),
       savedAnswers: {},
       status: 'IN_PROGRESS',
     });
@@ -744,7 +757,8 @@ export const demoApi = {
     }
 
     const merged = { ...state.examAttempt.answers, ...(answers ?? {}) };
-    const graded = gradeAttempt(EXAM_QUESTION_BANK, merged);
+    const bankQuestions = (readDemoTestBank('readiness').bank as ReadinessBank).questions;
+    const graded = gradeAttempt(bankQuestions, merged);
     const modules =
       state.roadmapModules ??
       buildRoadmapFromAnswers(
@@ -807,7 +821,9 @@ export const demoApi = {
       startedAt: state.examAttempt.startedAt,
       endsAt: state.examAttempt.endsAt,
       roadmapId: state.roadmapId,
-      questions: toPublicExamQuestions(EXAM_QUESTION_BANK),
+      questions: toPublicExamQuestions(
+        (readDemoTestBank('readiness').bank as ReadinessBank).questions,
+      ),
       savedAnswers: state.examAttempt.answers,
       status: state.examAttempt.status,
     });
@@ -1235,7 +1251,96 @@ export const demoApi = {
     writeDemoSettings(next);
     return delay(next);
   },
+
+  async getPersonalityBank(): Promise<PersonalityBank> {
+    return delay(readDemoTestBank('personality').bank as PersonalityBank);
+  },
+
+  async getAssessmentBank(): Promise<AssessmentBank> {
+    return delay(readDemoTestBank('assessment').bank as AssessmentBank);
+  },
+
+  async adminListTestBanks(): Promise<TestBankMeta[]> {
+    requireUser();
+    return delay(
+      (['personality', 'assessment', 'readiness'] as TestBankId[]).map((id) => {
+        const payload = readDemoTestBank(id);
+        const count =
+          id === 'personality'
+            ? (payload.bank as PersonalityBank).items.length
+            : id === 'assessment'
+              ? (payload.bank as AssessmentBank).questions.length
+              : (payload.bank as ReadinessBank).questions.length;
+        return { id, updatedAt: new Date().toISOString(), questionCount: count };
+      }),
+    );
+  },
+
+  async adminGetTestBank(id: TestBankId): Promise<TestBankPayload> {
+    requireUser();
+    return delay(readDemoTestBank(id));
+  },
+
+  async adminSaveTestBank(id: TestBankId, bank: unknown): Promise<TestBankPayload> {
+    requireUser();
+    const payload = { id, bank } as TestBankPayload;
+    writeDemoTestBank(payload);
+    return delay(payload);
+  },
+
+  async adminResetTestBank(id: TestBankId): Promise<TestBankPayload> {
+    requireUser();
+    const payload = defaultDemoTestBank(id);
+    writeDemoTestBank(payload);
+    return delay(payload);
+  },
 };
+
+function defaultDemoTestBank(id: TestBankId): TestBankPayload {
+  if (id === 'personality') {
+    return {
+      id,
+      bank: {
+        version: 1,
+        citation: MINI_IPIP_CITATION,
+        items: MINI_IPIP_ITEMS.map((item) => ({ ...item })),
+      },
+    };
+  }
+  if (id === 'assessment') {
+    return { id, bank: structuredClone(DEFAULT_ASSESSMENT_BANK) };
+  }
+  return {
+    id,
+    bank: { version: 1, questions: structuredClone(EXAM_QUESTION_BANK) },
+  };
+}
+
+function readDemoTestBank(id: TestBankId): TestBankPayload {
+  if (typeof window === 'undefined') return defaultDemoTestBank(id);
+  try {
+    const raw = localStorage.getItem(DEMO_TEST_BANKS_KEY);
+    if (!raw) return defaultDemoTestBank(id);
+    const all = JSON.parse(raw) as Partial<Record<TestBankId, TestBankPayload>>;
+    return all[id] ?? defaultDemoTestBank(id);
+  } catch {
+    return defaultDemoTestBank(id);
+  }
+}
+
+function writeDemoTestBank(payload: TestBankPayload): void {
+  if (typeof window === 'undefined') return;
+  try {
+    const raw = localStorage.getItem(DEMO_TEST_BANKS_KEY);
+    const all = raw
+      ? (JSON.parse(raw) as Partial<Record<TestBankId, TestBankPayload>>)
+      : {};
+    all[payload.id] = payload;
+    localStorage.setItem(DEMO_TEST_BANKS_KEY, JSON.stringify(all));
+  } catch {
+    /* ignore */
+  }
+}
 
 function readDemoSettings(): SiteSettings {
   if (typeof window === 'undefined') return createDefaultSiteSettings();
