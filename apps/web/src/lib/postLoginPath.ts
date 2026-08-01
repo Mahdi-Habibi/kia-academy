@@ -1,6 +1,7 @@
 /**
- * Resolve where to send a user after login / when already authenticated on /login.
- * Prevents learner ↔ admin redirect loops when `next` points at `/admin`.
+ * Resolve where to send a user after a successful login submit.
+ * - Staff always prefer the admin panel (honor /admin* next paths).
+ * - Learners must not enter /admin (admin shell will send them back to login).
  */
 export function resolvePostLoginPath(
   role: string | undefined,
@@ -15,7 +16,8 @@ export function resolvePostLoginPath(
     return target.startsWith('/admin') ? target : '/admin';
   }
 
-  // Non-staff must never enter /admin — admin layout would bounce them to login.
+  // After a learner signs in with next=/admin, send them to the learner home.
+  // (The login page itself clears learner sessions when opening the admin gate.)
   if (target === '/' || target.startsWith('/admin')) {
     return '/dashboard';
   }

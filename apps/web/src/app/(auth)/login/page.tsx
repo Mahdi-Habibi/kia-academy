@@ -12,7 +12,7 @@ import { resolvePostLoginPath } from '@/lib/postLoginPath';
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { login, user, loading, isAuthenticated } = useAuth();
+  const { login, logout, user, loading, isAuthenticated } = useAuth();
   const { t } = useLanguage();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -20,13 +20,21 @@ function LoginForm() {
   const [submitting, setSubmitting] = useState(false);
 
   const next = searchParams.get('next') ?? '/dashboard';
+  const nextNeedsAdmin = next.startsWith('/admin');
 
   useEffect(() => {
     if (loading) return;
-    if (isAuthenticated && user?.profileComplete) {
-      router.replace(resolvePostLoginPath(user.role, next));
+    if (!isAuthenticated || !user?.profileComplete) return;
+
+    const isStaff = user.role === 'SUPER_ADMIN' || user.role === 'ADMIN';
+    // /admin gate: keep the login form so a learner session can be replaced by admin creds.
+    if (nextNeedsAdmin && !isStaff) {
+      void logout();
+      return;
     }
-  }, [loading, isAuthenticated, user, next, router]);
+
+    router.replace(resolvePostLoginPath(user.role, next));
+  }, [loading, isAuthenticated, user, next, nextNeedsAdmin, router, logout]);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -34,7 +42,9 @@ function LoginForm() {
     setSubmitting(true);
     try {
       const loggedIn = await login({ email, password });
-      router.push(resolvePostLoginPath(loggedIn.role, next));
+      const dest = resolvePostLoginPath(loggedIn.role, next);
+      // Staff signing in for /admin must land on the admin panel, never the learner dashboard.
+      router.push(dest);
     } catch {
       setError(t('auth.login.error'));
     } finally {
