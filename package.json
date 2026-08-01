@@ -7,16 +7,16 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Mahdi-Habibi/kia-academy.git"
+    "url": "https://github.com/Mahdi-Habibi/pathwise.git"
   },
-  "homepage": "https://mahdi-habibi.github.io/kia-academy/",
+  "homepage": "https://mahdi-habibi.github.io/pathwise/",
   "bugs": {
-    "url": "https://github.com/Mahdi-Habibi/kia-academy/issues"
+    "url": "https://github.com/Mahdi-Habibi/pathwise/issues"
   },
   "scripts": {
     "dev": "concurrently -n web,api -c blue,green \"pnpm --filter @kia-academy/web dev\" \"pnpm --filter @kia-academy/api dev\"",
     "build": "pnpm --filter @kia-academy/shared build && pnpm --filter @kia-academy/api build && pnpm --filter @kia-academy/web build",
-    "build:pages": "pnpm --filter @kia-academy/shared build && GITHUB_PAGES=true NEXT_BASE_PATH=/kia-academy NEXT_PUBLIC_APP_URL=https://mahdi-habibi.github.io/kia-academy NEXT_PUBLIC_DEMO_MODE=true pnpm --filter @kia-academy/web build",
+    "build:pages": "pnpm --filter @kia-academy/shared build && GITHUB_PAGES=true NEXT_BASE_PATH=/${PAGES_REPO_NAME:-pathwise} NEXT_PUBLIC_APP_URL=https://mahdi-habibi.github.io/${PAGES_REPO_NAME:-pathwise} NEXT_PUBLIC_DEMO_MODE=true pnpm --filter @kia-academy/web build",
     "start": "concurrently -n web,api -c blue,green \"pnpm --filter @kia-academy/web start\" \"pnpm --filter @kia-academy/api start:prod\"",
     "lint": "pnpm -r lint",
     "typecheck": "pnpm -r typecheck",

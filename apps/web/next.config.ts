@@ -19,8 +19,8 @@ const isDockerBuild = process.env.DOCKER_BUILD === 'true';
 const isGitHubPages = process.env.GITHUB_PAGES === 'true';
 const apiProxyTarget = (process.env.API_PROXY_TARGET ?? 'http://localhost:3001').replace(/\/$/, '');
 
-/** Project-site path for https://mahdi-habibi.github.io/kia-academy/ */
-const githubPagesBasePath = (process.env.NEXT_BASE_PATH ?? '/kia-academy').replace(/\/$/, '') || '';
+/** Project-site path — must match the GitHub repo name (Pages URL /<repo>/). */
+const githubPagesBasePath = (process.env.NEXT_BASE_PATH ?? '/pathwise').replace(/\/$/, '') || '';
 
 const nextConfig: NextConfig = {
   transpilePackages: ['@kia-academy/shared'],
