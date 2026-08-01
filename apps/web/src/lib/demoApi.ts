@@ -19,6 +19,8 @@ import type {
   ExamAttemptSession,
   ExamResponse,
   ExamSubmitResult,
+  MiniIpipAnswers,
+  PersonalityResult,
   ReadinessResult,
   ReadinessScores,
   ReadinessTestSummary,
@@ -53,6 +55,7 @@ import {
   buildExamOutcome,
   buildExamVerdict,
   gradeAttempt,
+  scoreMiniIpip,
   toPublicExamQuestions,
 } from '@kia-academy/shared';
 import { ApiError } from '@/lib/apiError';
@@ -142,6 +145,7 @@ interface DemoPersistedState {
     status: 'IN_PROGRESS' | 'SUBMITTED' | 'EXPIRED';
     result?: ExamSubmitResult;
   } | null;
+  personalityResult: PersonalityResult | null;
   roadmapModules: string[] | null;
   roadmapLevel: string | null;
 }
@@ -325,6 +329,7 @@ function defaultState(): DemoPersistedState {
     },
     payments: [],
     examAttempt: null,
+    personalityResult: null,
     roadmapModules: null,
     roadmapLevel: null,
   };
@@ -595,6 +600,23 @@ export const demoApi = {
       writeState(state);
     }
     await delay(undefined);
+  },
+
+  async submitPersonality(answers: MiniIpipAnswers): Promise<PersonalityResult> {
+    requireUser();
+    const scored = scoreMiniIpip(answers, {
+      id: `personality-${Date.now()}`,
+      createdAt: new Date().toISOString(),
+    });
+    const state = readState();
+    state.personalityResult = scored;
+    writeState(state);
+    return delay(scored);
+  },
+
+  async latestPersonality(): Promise<PersonalityResult | null> {
+    requireUser();
+    return delay(readState().personalityResult);
   },
 
   async saveRoadmap(answers: AssessmentAnswers): Promise<RoadmapResponse> {

@@ -9,6 +9,7 @@ import { HealthModule } from './health/health.module';
 import { PaymentsModule } from './payments/payments.module';
 import { CoursesModule } from './courses/courses.module';
 import { AssessmentsModule } from './assessments/assessments.module';
+import { PersonalityModule } from './personality/personality.module';
 import { RoadmapsModule } from './roadmaps/roadmaps.module';
 import { ReadinessModule } from './readiness/readiness.module';
 import { BootcampModule } from './bootcamp/bootcamp.module';
@@ -37,6 +38,7 @@ import { ContactModule } from './contact/contact.module';
     PaymentsModule,
     CoursesModule,
     AssessmentsModule,
+    PersonalityModule,
     RoadmapsModule,
     ReadinessModule,
     BootcampModule,

@@ -56,6 +56,7 @@ model User {
   roadmaps             Roadmap[]
   readinessTests       ReadinessTest[]
   examAttempts         ExamAttempt[]
+  personalityResults   PersonalityResult[]
   bootcampProfile      BootcampProfile?
   challengeSubmissions ChallengeSubmission[]
   payments             Payment[]
@@ -123,6 +124,19 @@ model ReadinessTest {
   verdict     String
   paymentId   String?
   createdAt   DateTime @default(now())
+}
+
+/** Mini-IPIP Big Five personality result (Donnellan et al., 2006). */
+model PersonalityResult {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  instrument String   @default("mini-ipip")
+  answers    String
+  scores     String
+  createdAt  DateTime @default(now())
+
+  @@index([userId, createdAt])
 }
 
 /** Server-graded timed digital readiness exam attempt. */
