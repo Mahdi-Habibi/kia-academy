@@ -58,11 +58,6 @@ export default function HomePage() {
             {t('common.brand')}
           </span>
 
-          <p className="eyebrow landing-eyebrow">
-            <Sparkles size={13} aria-hidden="true" />
-            {t('landing.eyebrow')}
-          </p>
-
           <h1 className="landing-title">{t('landing.heroTitle')}</h1>
           <p className="landing-body">{t('landing.heroBody')}</p>
 
