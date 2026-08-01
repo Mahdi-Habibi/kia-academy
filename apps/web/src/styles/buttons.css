@@ -269,7 +269,8 @@
    ========================================================================== */
 
 .features-section {
-  padding: var(--space-section) 0;
+  /* Vertical only — horizontal padding comes from .container / landing media queries */
+  padding-block: var(--space-section);
 }
 
 .features-grid {
