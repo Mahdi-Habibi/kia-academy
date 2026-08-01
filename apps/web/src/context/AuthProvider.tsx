@@ -20,8 +20,8 @@ interface AuthContextValue {
   learnerState: LearnerState | null;
   loading: boolean;
   isAuthenticated: boolean;
-  login: (dto: LoginDto) => Promise<void>;
-  register: (dto: RegisterDto) => Promise<void>;
+  login: (dto: LoginDto) => Promise<AuthUser>;
+  register: (dto: RegisterDto) => Promise<AuthUser>;
   logout: () => Promise<void>;
   refreshSession: () => Promise<void>;
 }
@@ -89,6 +89,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(res.user);
       const state = await api.me();
       applyLearnerState(state);
+      return state.user;
     },
     [applyLearnerState],
   );
@@ -99,6 +100,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(res.user);
       const state = await api.me();
       applyLearnerState(state);
+      return state.user;
     },
     [applyLearnerState],
   );

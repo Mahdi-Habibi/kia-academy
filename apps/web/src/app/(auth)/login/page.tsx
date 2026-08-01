@@ -7,6 +7,7 @@ import { FormEvent, Suspense, useEffect, useState } from 'react';
 import { PageBackButton } from '@/components/layout/PageBackButton';
 import { useAuth } from '@/context/AuthProvider';
 import { useLanguage } from '@/context/LanguageProvider';
+import { resolvePostLoginPath } from '@/lib/postLoginPath';
 
 function LoginForm() {
   const router = useRouter();
@@ -23,15 +24,7 @@ function LoginForm() {
   useEffect(() => {
     if (loading) return;
     if (isAuthenticated && user?.profileComplete) {
-      const dest =
-        user.role === 'SUPER_ADMIN' || user.role === 'ADMIN'
-          ? next.startsWith('/admin')
-            ? next
-            : '/admin'
-          : next === '/'
-            ? '/dashboard'
-            : next;
-      router.replace(dest);
+      router.replace(resolvePostLoginPath(user.role, next));
     }
   }, [loading, isAuthenticated, user, next, router]);
 
@@ -40,8 +33,8 @@ function LoginForm() {
     setError('');
     setSubmitting(true);
     try {
-      await login({ email, password });
-      router.push(next === '/' ? '/dashboard' : next);
+      const loggedIn = await login({ email, password });
+      router.push(resolvePostLoginPath(loggedIn.role, next));
     } catch {
       setError(t('auth.login.error'));
     } finally {
