@@ -7,7 +7,6 @@ import {
   EXAM_BLUEPRINT_VERSION,
   EXAM_DURATION_SEC,
   EXAM_PASS_THRESHOLD,
-  EXAM_QUESTION_BANK,
   LEGACY_READINESS_TO_DOMAIN,
   READINESS_MODULES,
   buildExamOutcome,
@@ -28,6 +27,7 @@ import {
 import { EmailService } from '../email/email.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { SiteSettingsService } from '../site-settings/site-settings.service';
+import { TestBanksService } from '../test-banks/test-banks.service';
 import { CreateReadinessTestDto } from './dto/create-readiness-test.dto';
 
 export interface ReadinessTestResponse extends ReadinessResult {
@@ -42,6 +42,7 @@ export class ReadinessService {
     private readonly prisma: PrismaService,
     private readonly emailService: EmailService,
     private readonly siteSettings: SiteSettingsService,
+    private readonly testBanks: TestBanksService,
   ) {}
 
   /** Legacy client-scored path — kept for older clients; prefer exam endpoints. */
@@ -91,11 +92,11 @@ export class ReadinessService {
       if (existing.endsAt.getTime() <= Date.now()) {
         await this.expireAttempt(existing.id);
       } else {
-        return this.toSession(existing);
+        return await this.toSession(existing);
       }
     }
 
-    const questions = [...EXAM_QUESTION_BANK];
+    const questions = await this.testBanks.getExamQuestions();
     const startedAt = new Date();
     const endsAt = new Date(startedAt.getTime() + EXAM_DURATION_SEC * 1000);
 
@@ -112,7 +113,7 @@ export class ReadinessService {
       },
     });
 
-    return this.toSession(record);
+    return await this.toSession(record);
   }
 
   async saveAnswers(
@@ -165,7 +166,7 @@ export class ReadinessService {
       ...(finalAnswers ? this.sanitizeAnswers(finalAnswers) : {}),
     };
 
-    const questions = this.questionsForAttempt(attempt.questionIds);
+    const questions = await this.questionsForAttempt(attempt.questionIds);
     const graded = gradeAttempt(questions, answers);
     const settings = await this.siteSettings.get();
     const passThreshold = settings.readiness.passThreshold ?? EXAM_PASS_THRESHOLD;
@@ -291,14 +292,14 @@ export class ReadinessService {
       const expired = await this.prisma.examAttempt.findUniqueOrThrow({
         where: { id: attempt.id },
       });
-      return this.toSession(expired);
+      return await this.toSession(expired);
     }
 
     if (attempt.status === 'SUBMITTED') {
       return this.toSubmitResult(attempt);
     }
 
-    return this.toSession(attempt);
+    return await this.toSession(attempt);
   }
 
   async findOne(id: string, userId: string): Promise<ReadinessTestResponse> {
@@ -435,9 +436,10 @@ export class ReadinessService {
     });
   }
 
-  private questionsForAttempt(questionIdsJson: string): ExamQuestion[] {
+  private async questionsForAttempt(questionIdsJson: string): Promise<ExamQuestion[]> {
     const ids = JSON.parse(questionIdsJson) as string[];
-    const byId = new Map(EXAM_QUESTION_BANK.map((q) => [q.id, q]));
+    const bank = await this.testBanks.getExamQuestions();
+    const byId = new Map(bank.map((q) => [q.id, q]));
     return ids.map((id) => {
       const q = byId.get(id);
       if (!q) {
@@ -447,7 +449,7 @@ export class ReadinessService {
     });
   }
 
-  private toSession(attempt: {
+  private async toSession(attempt: {
     id: string;
     blueprintVersion: string;
     startedAt: Date;
@@ -456,8 +458,8 @@ export class ReadinessService {
     questionIds: string;
     answers: string;
     status: string;
-  }): ExamAttemptSession {
-    const questions = this.questionsForAttempt(attempt.questionIds);
+  }): Promise<ExamAttemptSession> {
+    const questions = await this.questionsForAttempt(attempt.questionIds);
     // Deterministic shuffle seed from attempt id so refresh keeps same option order.
     const rng = this.rngFromSeed(attempt.id);
     return {

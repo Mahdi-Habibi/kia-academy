@@ -24,6 +24,8 @@
     /* Keep logo / chip / burger off the pill edges */
     padding-inline: var(--space-4);
     box-sizing: border-box;
+    /* Shared midline for user chip / logo / burger */
+    min-height: 56px;
   }
 
   /* Flatten wrappers so logo/burger/nav still participate in the topbar grid */
@@ -33,10 +35,15 @@
 
   .topbar .top-right {
     grid-column: 1;
+    grid-row: 1;
     justify-self: start;
+    align-self: center;
     direction: inherit;
     min-width: 0;
     max-width: 100%;
+    display: flex;
+    align-items: center;
+    height: 40px;
   }
 
   [dir='rtl'] .topbar .top-right {
@@ -45,10 +52,17 @@
 
   .topbar .logo {
     grid-column: 2;
+    grid-row: 1;
     justify-self: center;
+    align-self: center;
     min-width: 0;
     max-width: 100%;
+    height: 40px;
+    padding-block: 0;
     padding-inline: var(--space-2);
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
   }
 
   [dir='rtl'] .topbar .logo {
@@ -57,12 +71,26 @@
 
   .topbar .mobile-nav-toggle {
     grid-column: 3;
+    grid-row: 1;
     justify-self: end;
+    align-self: center;
   }
 
   .topbar .user-chip {
     max-width: 100%;
     overflow: hidden;
+    height: 40px;
+    min-height: 40px;
+    padding-block: 0;
+    box-sizing: border-box;
+  }
+
+  .topbar .user-chip-name {
+    line-height: 1;
+  }
+
+  .topbar .logo-text {
+    line-height: 1;
   }
 
   .topbar .top-nav {

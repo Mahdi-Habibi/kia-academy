@@ -17,3 +17,5 @@ export * from './utils/entitlements';
 export * from './utils/escape';
 export * from './exam';
 export * from './personality';
+export * from './assessment';
+export * from './types/test-banks';

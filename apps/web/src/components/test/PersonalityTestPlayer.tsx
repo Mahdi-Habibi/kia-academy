@@ -4,11 +4,13 @@ import {
   MINI_IPIP_ITEMS,
   missingMiniIpipAnswers,
   type MiniIpipAnswers,
+  type PersonalityItem,
   type PersonalityLikert,
 } from '@kia-academy/shared';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { ProgressTrack } from '@/components/ui/ProgressTrack';
 import { useLanguage } from '@/context/LanguageProvider';
+import { api } from '@/lib/api';
 
 const LIKERT: PersonalityLikert[] = [1, 2, 3, 4, 5];
 
@@ -24,12 +26,30 @@ export function PersonalityTestPlayer({
   submitting = false,
 }: PersonalityTestPlayerProps) {
   const { t, locale } = useLanguage();
+  const [items, setItems] = useState<PersonalityItem[]>([...MINI_IPIP_ITEMS]);
   const [answers, setAnswers] = useState<MiniIpipAnswers>({});
   const [index, setIndex] = useState(0);
 
-  const item = MINI_IPIP_ITEMS[index]!;
-  const total = MINI_IPIP_ITEMS.length;
-  const answeredCount = total - missingMiniIpipAnswers(answers).length;
+  useEffect(() => {
+    let cancelled = false;
+    void api
+      .getPersonalityBank()
+      .then((bank) => {
+        if (!cancelled && bank?.items?.length) {
+          setItems([...bank.items].sort((a, b) => a.order - b.order));
+        }
+      })
+      .catch(() => {
+        /* keep shared defaults */
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const item = items[index]!;
+  const total = items.length;
+  const answeredCount = total - missingMiniIpipAnswers(answers, items).length;
   const currentValue = answers[item.id];
   const isLast = index >= total - 1;
   const canContinue = currentValue !== undefined;
@@ -49,9 +69,13 @@ export function PersonalityTestPlayer({
       setIndex((i) => i + 1);
       return;
     }
-    if (missingMiniIpipAnswers(answers).length) return;
+    if (missingMiniIpipAnswers(answers, items).length) return;
     await onSubmit(answers);
   };
+
+  if (!items.length) {
+    return <p className="form-error">{t('common.errorFallback')}</p>;
+  }
 
   return (
     <div className="personality-test">

@@ -1,4 +1,4 @@
-import type { Goal, Interest, LearningStyle, SkillLevel } from '@kia-academy/shared';
+import type { AssessmentAnswers, Goal, Interest, LearningStyle, SkillLevel } from '@kia-academy/shared';
 
 export const SKILL_TOPIC_KEYS = [
   ['HTML/CSS', 'htmlCss'],
@@ -41,10 +41,21 @@ export function isWizardStageValid(
     interests: Interest[];
     style: LearningStyle | null;
   },
+  stageId?: string,
 ): boolean {
-  if (stageIndex === 0) return !!answers.goal;
-  if (stageIndex === 1) return Object.keys(answers.skills).length === 3;
-  if (stageIndex === 3) return answers.interests.length >= 1;
-  if (stageIndex === 4) return !!answers.style;
+  const id = stageId ?? ['goal', 'skill', 'personality', 'interest', 'learningStyle', 'time'][stageIndex];
+  if (id === 'goal') return !!answers.goal;
+  if (id === 'skill') return Object.keys(answers.skills).length >= 3;
+  if (id === 'interest') return answers.interests.length >= 1;
+  if (id === 'learningStyle') return !!answers.style;
   return true;
+}
+
+export function isWizardAnswersValid(answers: AssessmentAnswers): boolean {
+  return (
+    !!answers.goal &&
+    Object.keys(answers.skills).length >= 3 &&
+    answers.interests.length >= 1 &&
+    !!answers.style
+  );
 }
