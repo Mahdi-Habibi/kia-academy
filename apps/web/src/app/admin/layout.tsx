@@ -71,8 +71,14 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
   }, [isStaff, isSuper, user]);
 
   useEffect(() => {
-    if (!loading && (!user || !isStaff)) {
+    if (loading) return;
+    if (!user) {
       router.replace('/login?next=/admin');
+      return;
+    }
+    // Authenticated learners must not bounce through /login?next=/admin (redirect loop).
+    if (!isStaff) {
+      router.replace('/dashboard');
     }
   }, [user, loading, router, isStaff]);
 
