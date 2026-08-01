@@ -5,7 +5,7 @@ cd /app/apps/api
 
 DB_HOST="${DB_HOST:-postgres}"
 DB_PORT="${DB_PORT:-5432}"
-DB_USER="${DB_USER:-pathwise}"
+DB_USER="${DB_USER:-kia-academy}"
 
 echo "Waiting for PostgreSQL at ${DB_HOST}:${DB_PORT}..."
 attempt=0
@@ -28,5 +28,5 @@ if [ "${SEED_DATABASE:-false}" = "true" ]; then
   npx prisma db seed
 fi
 
-echo "Starting Pathwise API..."
+echo "Starting Kia Academy API..."
 exec node dist/main.js

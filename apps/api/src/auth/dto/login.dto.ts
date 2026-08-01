@@ -1,5 +1,5 @@
 import { IsEmail, IsString, Matches } from 'class-validator';
-import type { LoginDto as LoginDtoType } from '@pathwise/shared';
+import type { LoginDto as LoginDtoType } from '@kia-academy/shared';
 
 const PASSWORD_PATTERN = /^(?=.*[A-Za-z])(?=.*\d).{8,}$/;
 

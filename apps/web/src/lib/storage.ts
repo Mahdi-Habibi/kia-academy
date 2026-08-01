@@ -1,4 +1,4 @@
-import type { AssessmentAnswers, ReadinessScores, RoadmapResponse } from '@pathwise/shared';
+import type { AssessmentAnswers, ReadinessScores, RoadmapResponse } from '@kia-academy/shared';
 
 export interface CourseItem {
   id: string;
@@ -28,7 +28,7 @@ export interface PersistedAppState {
   readinessModuleIndex: number;
 }
 
-const STORAGE_KEY = 'pathwise-app-state';
+const STORAGE_KEY = 'kia-academy-app-state';
 
 export const defaultAnswers: AssessmentAnswers = {
   goal: null,

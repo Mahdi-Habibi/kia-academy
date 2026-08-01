@@ -1,6 +1,6 @@
 'use client';
 
-import type { CourseSummary } from '@pathwise/shared';
+import type { CourseSummary } from '@kia-academy/shared';
 import { BookOpen, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';

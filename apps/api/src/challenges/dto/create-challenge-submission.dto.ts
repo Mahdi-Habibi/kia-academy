@@ -1,5 +1,5 @@
 import { IsString, MinLength } from 'class-validator';
-import type { ChallengeSubmissionDto } from '@pathwise/shared';
+import type { ChallengeSubmissionDto } from '@kia-academy/shared';
 
 export class CreateChallengeSubmissionDto implements ChallengeSubmissionDto {
   @IsString()

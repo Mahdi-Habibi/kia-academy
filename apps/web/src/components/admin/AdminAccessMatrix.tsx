@@ -1,6 +1,6 @@
 'use client';
 
-import type { SiteAdminAccessSettings } from '@pathwise/shared';
+import type { SiteAdminAccessSettings } from '@kia-academy/shared';
 import { useLanguage } from '@/context/LanguageProvider';
 
 export function AdminAccessMatrix({

@@ -1,9 +1,9 @@
-# Pathwise — reset Docker Desktop WSL engine (run AFTER closing Docker Desktop)
+# Kia Academy — reset Docker Desktop WSL engine (run AFTER closing Docker Desktop)
 # Run in PowerShell. If errors persist, reboot Windows once, then run again.
 
 $ErrorActionPreference = 'Continue'
 
-Write-Host "`nPathwise Docker reset`n" -ForegroundColor Cyan
+Write-Host "`nKia Academy Docker reset`n" -ForegroundColor Cyan
 
 Write-Host "1. Stopping Docker processes..."
 Get-Process 'Docker Desktop','com.docker.backend','com.docker.build','docker-agent','docker' -ErrorAction SilentlyContinue |
@@ -51,5 +51,5 @@ if ($distros -notmatch 'Ubuntu') {
 Write-Host "`nDone. Next steps:"
 Write-Host "  A) Reboot Windows (recommended if Docker was stuck on 'Starting the Docker Engine')"
 Write-Host "  B) Open Docker Desktop and wait until the whale icon is steady/green"
-Write-Host "  C) In pathwise: pnpm docker:db && pnpm db:migrate && pnpm db:seed && pnpm dev"
+Write-Host "  C) In kia-academy: pnpm docker:db && pnpm db:migrate && pnpm db:seed && pnpm dev"
 Write-Host ""

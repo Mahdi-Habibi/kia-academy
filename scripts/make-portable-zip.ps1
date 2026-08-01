@@ -1,5 +1,5 @@
-# Create Pathwise portable zip on D: (does not use C: temp)
-# Double-click or run: powershell -ExecutionPolicy Bypass -File "D:\Mahdi\code\project M\pathwise\scripts\make-portable-zip.ps1"
+# Create Kia Academy portable zip on D: (does not use C: temp)
+# Double-click or run: powershell -ExecutionPolicy Bypass -File "D:\Mahdi\code\project M\kia-academy\scripts\make-portable-zip.ps1"
 
 $ErrorActionPreference = 'Stop'
 
@@ -8,15 +8,15 @@ $env:TMP  = 'D:\Mahdi\tmp'
 New-Item -ItemType Directory -Force -Path $env:TEMP | Out-Null
 
 $root  = 'D:\Mahdi\code\project M'
-$src   = Join-Path $root 'pathwise'
-$stage = Join-Path $root '_pathwise_zip_stage'
-$zip   = Join-Path $root 'pathwise-portable.zip'
+$src   = Join-Path $root 'kia-academy'
+$stage = Join-Path $root '_kia_academy_zip_stage'
+$zip   = Join-Path $root 'kia-academy-portable.zip'
 
 Write-Host "Freeing old stage/zip..."
 if (Test-Path $stage) { Remove-Item $stage -Recurse -Force }
 if (Test-Path $zip)   { Remove-Item $zip -Force }
 
-$dest = Join-Path $stage 'pathwise'
+$dest = Join-Path $stage 'kia-academy'
 New-Item -ItemType Directory -Force -Path $dest | Out-Null
 
 Write-Host "Copying source (excluding node_modules / build artifacts)..."
@@ -31,7 +31,7 @@ Get-ChildItem $dest -Recurse -Force -File -ErrorAction SilentlyContinue |
   Where-Object { $_.Name -in @('.env','.env.local','.env.docker') } |
   Remove-Item -Force
 
-foreach ($extra in @('pathwise-unified.html', 'education tech Prompt.docx')) {
+foreach ($extra in @('kia-academy-unified.html', 'education tech Prompt.docx')) {
   $p = Join-Path $root $extra
   if (Test-Path $p) {
     Copy-Item $p (Join-Path $stage $extra) -Force
@@ -50,4 +50,4 @@ Write-Host "READY FOR USB:" -ForegroundColor Green
 Write-Host ("  {0}" -f $info.FullName)
 Write-Host ("  {0:N1} MB" -f ($info.Length / 1MB))
 Write-Host ""
-Write-Host "On the other device: unzip, open pathwise\PORTABLE.md, then pnpm install + migrate + seed."
+Write-Host "On the other device: unzip, open kia-academy\PORTABLE.md, then pnpm install + migrate + seed."

@@ -9,8 +9,8 @@ import type {
   AdminUser,
   AuthUser,
   SiteAdminAccessSettings,
-} from '@pathwise/shared';
-import { normalizeAdminAccess, normalizeIranianPhone } from '@pathwise/shared';
+} from '@kia-academy/shared';
+import { normalizeAdminAccess, normalizeIranianPhone } from '@kia-academy/shared';
 import * as bcrypt from 'bcrypt';
 import { MediaStorageService } from '../media/media-storage.service';
 import { PrismaService } from '../prisma/prisma.service';

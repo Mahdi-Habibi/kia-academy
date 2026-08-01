@@ -24,7 +24,7 @@ import {
   type ReadinessResult,
   type ReadinessScores,
   type ReadinessTestSummary,
-} from '@pathwise/shared';
+} from '@kia-academy/shared';
 import { EmailService } from '../email/email.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { SiteSettingsService } from '../site-settings/site-settings.service';

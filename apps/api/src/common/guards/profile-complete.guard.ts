@@ -4,7 +4,7 @@ import {
   ForbiddenException,
   Injectable,
 } from '@nestjs/common';
-import type { AuthUser } from '@pathwise/shared';
+import type { AuthUser } from '@kia-academy/shared';
 
 @Injectable()
 export class ProfileCompleteGuard implements CanActivate {

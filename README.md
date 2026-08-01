@@ -4,11 +4,11 @@
 
 Full-stack monorepo: **Next.js 15** (frontend) + **NestJS 11** (backend) + **Prisma** (PostgreSQL).
 
-**Live frontend (GitHub Pages):** https://mahdi-habibi.github.io/pathwise/
+**Live frontend (GitHub Pages):** https://mahdi-habibi.github.io/kia-academy/
 
 ## GitHub Pages
 
-The web app is statically exported to https://mahdi-habibi.github.io/pathwise/ (`basePath` `/pathwise`).
+The web app is statically exported to https://mahdi-habibi.github.io/kia-academy/ (`basePath` `/kia-academy`).
 By default the Pages build enables **demo mode** (`NEXT_PUBLIC_DEMO_MODE=true`): courses, lessons,
 assessment, checkout, bootcamp, and admin use in-browser mock data so visitors can explore the full UI
 without a hosted Nest API. Progress is stored in the browser only.
@@ -26,7 +26,7 @@ Point Pages at the built app instead:
 1. Open **Settings → Pages**
 2. Under **Build and deployment → Source**, choose **Deploy from a branch**
 3. Branch: **`gh-pages`** · Folder: **`/ (root)`**
-4. Save, wait ~1 minute, then open https://mahdi-habibi.github.io/pathwise/
+4. Save, wait ~1 minute, then open https://mahdi-habibi.github.io/kia-academy/
 
 **Option B — GitHub Actions:**
 
@@ -42,7 +42,7 @@ Optional — use a real hosted API instead of demo mode:
 
 ```bash
 pnpm build:pages
-# Output: apps/web/out  (asset URLs expect /pathwise/)
+# Output: apps/web/out  (asset URLs expect /kia-academy/)
 ```
 
 ### Local full stack (recommended for development)
@@ -70,7 +70,7 @@ After cloning from GitHub:
 
 ```bash
 git clone <your-github-repository-url>
-cd pathwise
+cd kia-academy
 corepack enable
 corepack prepare pnpm@11.13.0 --activate
 pnpm install --frozen-lockfile
@@ -92,7 +92,7 @@ pnpm dev
 For browser tests on a new device, install the browser once:
 
 ```bash
-pnpm --filter @pathwise/web exec playwright install chromium
+pnpm --filter @kia-academy/web exec playwright install chromium
 pnpm test:e2e
 ```
 
@@ -108,28 +108,28 @@ This monorepo is set up for GitHub-native CI and container deployment:
 | Piece | What it does |
 | ----- | ------------ |
 | `.github/workflows/ci.yml` | On every push/PR to `main`: install, migrate against Postgres, lint, typecheck, test, and build |
-| `.github/workflows/docker-publish.yml` | On push to `main` (and version tags): build and push `pathwise-api` / `pathwise-web` images to **GitHub Container Registry** (`ghcr.io`) |
+| `.github/workflows/docker-publish.yml` | On push to `main` (and version tags): build and push `kia-academy-api` / `kia-academy-web` images to **GitHub Container Registry** (`ghcr.io`) |
 | `docker-compose.ghcr.yml` | Run the published images on any host with Docker (no local build required) |
 | Dependabot | Weekly npm / Actions / Docker update PRs |
 
 ### 1. Enable package writes (one-time)
 
-After the first successful `Docker publish` run, open **GitHub → Packages** for this repo and confirm `pathwise-api` and `pathwise-web` appear. If packages are private, grant read access to deploy machines (or make them public under package settings).
+After the first successful `Docker publish` run, open **GitHub → Packages** for this repo and confirm `kia-academy-api` and `kia-academy-web` appear. If packages are private, grant read access to deploy machines (or make them public under package settings).
 
 ### 2. Deploy with GHCR images
 
 On the server:
 
 ```bash
-git clone https://github.com/Mahdi-Habibi/pathwise.git
-cd pathwise
+git clone https://github.com/Mahdi-Habibi/kia-academy.git
+cd kia-academy
 cp .env.docker.example .env.docker
 # Edit .env.docker: set strong JWT_* secrets, CORS_ORIGIN, APP_URL, NEXT_PUBLIC_APP_URL,
 # and production POSTGRES_PASSWORD / DATABASE_URL credentials.
 
 # Lowercase GitHub username or org that owns the packages:
 export GHCR_OWNER=mahdi-habibi
-# Optional pin: export PATHWISE_TAG=latest   # or a semver / sha-* tag from Actions
+# Optional pin: export KIA_ACADEMY_TAG=latest   # or a semver / sha-* tag from Actions
 
 # Authenticate to pull private packages (skip if packages are public):
 echo "$GITHUB_TOKEN" | docker login ghcr.io -u YOUR_GITHUB_USERNAME --password-stdin
@@ -166,11 +166,11 @@ pnpm docker:up
 If PostgreSQL is already installed on Windows (e.g. on `D:\Program Files\PostgreSQL\18`):
 
 ```bash
-cd pathwise
+cd kia-academy
 pnpm install
-pnpm --filter @pathwise/shared build
+pnpm --filter @kia-academy/shared build
 # apps/api/.env should use:
-# DATABASE_URL=postgresql://pathwise:pathwise@localhost:5432/pathwise?schema=public
+# DATABASE_URL=postgresql://kia_academy:kia_academy@localhost:5432/kia_academy?schema=public
 pnpm db:migrate
 pnpm db:seed
 pnpm dev
@@ -181,13 +181,13 @@ pnpm dev
 Uses Docker for PostgreSQL only; run web + API with hot reload via pnpm.
 
 ```bash
-cd pathwise
+cd kia-academy
 pnpm install
 pnpm approve-builds bcrypt @prisma/client prisma esbuild sharp   # if prompted
 pnpm docker:db                # start PostgreSQL container
 cp .env.example apps/api/.env # DATABASE_URL uses localhost:5432
 cp apps/web/.env.example apps/web/.env.local
-pnpm --filter @pathwise/shared build
+pnpm --filter @kia-academy/shared build
 pnpm db:migrate
 pnpm db:seed
 pnpm dev
@@ -198,7 +198,7 @@ pnpm dev
 Runs PostgreSQL, API, and web entirely in containers (production-like).
 
 ```bash
-cd pathwise
+cd kia-academy
 pnpm docker:setup             # creates .env.docker from .env.docker.example
 pnpm docker:up                # build images + start all services
 ```
@@ -209,8 +209,8 @@ pnpm docker:up                # build images + start all services
 
 > **Schema reset:** `pnpm docker:db:reset` then `pnpm db:migrate && pnpm db:seed` (local dev), or `pnpm docker:down && pnpm docker:up` with `SEED_DATABASE=true` (full stack).
 
-**Demo account:** `alex@pathwise.dev` / `Pathwise123!`  
-**Admin account:** `admin@pathwise.dev` / `Pathwise123!`  
+**Demo account:** `alex@kia.academy` / `KiaAcademy123!`  
+**Admin account:** `admin@kia.academy` / `KiaAcademy123!`  
 **Site settings:** `/admin/settings` — see [`docs/ADMIN_SETTINGS_CATALOG.md`](docs/ADMIN_SETTINGS_CATALOG.md) for the full controllable inventory.
 
 ## Docker
@@ -290,7 +290,7 @@ pnpm db:seed
 pnpm dev
 ```
 
-## Pathwise v2
+## Kia Academy v2
 
 | Feature     | Description                                                                          |
 | ----------- | ------------------------------------------------------------------------------------ |

@@ -1,6 +1,6 @@
 'use client';
 
-import { EXAM_DOMAINS } from '@pathwise/shared';
+import { EXAM_DOMAINS } from '@kia-academy/shared';
 import { useLanguage } from '@/context/LanguageProvider';
 
 interface RadarChartProps {

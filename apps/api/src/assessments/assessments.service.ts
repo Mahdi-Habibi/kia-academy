@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import type { AssessmentAnswers, AssessmentResponse } from '@pathwise/shared';
+import type { AssessmentAnswers, AssessmentResponse } from '@kia-academy/shared';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateAssessmentDto } from './dto/create-assessment.dto';
 

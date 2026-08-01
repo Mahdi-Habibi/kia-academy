@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
-import type { AuthUser, ReadinessTestSummary } from '@pathwise/shared';
+import type { AuthUser, ReadinessTestSummary } from '@kia-academy/shared';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { ProfileCompleteGuard } from '../common/guards/profile-complete.guard';

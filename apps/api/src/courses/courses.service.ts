@@ -4,7 +4,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import type { CourseSummary, LessonDetail, LessonSummary } from '@pathwise/shared';
+import type { CourseSummary, LessonDetail, LessonSummary } from '@kia-academy/shared';
 import { MediaService } from '../media/media.service';
 import { PrismaService } from '../prisma/prisma.service';
 

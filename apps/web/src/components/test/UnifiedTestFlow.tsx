@@ -1,6 +1,6 @@
 'use client';
 
-import { WIZARD_STAGES, type AssessmentAnswers, type ExamSubmitResult } from '@pathwise/shared';
+import { WIZARD_STAGES, type AssessmentAnswers, type ExamSubmitResult } from '@kia-academy/shared';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ExamPlayer } from '@/components/exam/ExamPlayer';
@@ -15,7 +15,7 @@ import { isWizardStageValid } from '@/components/wizard/wizardOptions';
 import { useApp } from '@/context/AppProvider';
 import { useLanguage } from '@/context/LanguageProvider';
 import { api, ApiError } from '@/lib/api';
-import type { ExamAttemptSession, ExamResponse } from '@pathwise/shared';
+import type { ExamAttemptSession, ExamResponse } from '@kia-academy/shared';
 
 type FlowPhase = 'wizard' | 'exam';
 

@@ -1,5 +1,5 @@
 {
-  "name": "@pathwise/api",
+  "name": "@kia-academy/api",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -22,7 +22,7 @@
     "@nestjs/passport": "^11.0.5",
     "@nestjs/platform-express": "^11.0.12",
     "@nestjs/throttler": "^6.5.0",
-    "@pathwise/shared": "workspace:*",
+    "@kia-academy/shared": "workspace:*",
     "@prisma/client": "^6.19.3",
     "bcrypt": "^6.0.0",
     "class-transformer": "^0.5.1",

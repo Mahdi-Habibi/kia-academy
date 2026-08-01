@@ -15,7 +15,7 @@
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "incremental": true,
     "plugins": [
       {
@@ -26,7 +26,7 @@
       "@/*": [
         "./src/*"
       ],
-      "@pathwise/shared": [
+      "@kia-academy/shared": [
         "../../packages/shared/src/index.ts"
       ]
     }

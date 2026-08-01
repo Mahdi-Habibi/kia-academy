@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import type { BootcampState, LeaderboardEntry } from '@pathwise/shared';
+import type { BootcampState, LeaderboardEntry } from '@kia-academy/shared';
 import { PrismaService } from '../prisma/prisma.service';
 
 const STATIC_LEADERBOARD: LeaderboardEntry[] = [

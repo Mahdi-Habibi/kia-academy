@@ -5,7 +5,7 @@ import { Loader2, Plus } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useLanguage } from '@/context/LanguageProvider';
 import { api, ApiError } from '@/lib/api';
-import type { AdminCourse } from '@pathwise/shared';
+import type { AdminCourse } from '@kia-academy/shared';
 
 export default function AdminCoursesPage() {
   const { t } = useLanguage();

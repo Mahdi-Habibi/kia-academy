@@ -1,10 +1,10 @@
 import { PrismaClient, Prisma } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
-import { createDefaultSiteSettings, createSectionPermission } from '@pathwise/shared';
+import { createDefaultSiteSettings, createSectionPermission } from '@kia-academy/shared';
 
 const prisma = new PrismaClient();
 
-const SEED_PASSWORD = 'Pathwise123!';
+const SEED_PASSWORD = 'KiaAcademy123!';
 
 function moderatorAccess(
   stats: [boolean, boolean, boolean],
@@ -30,16 +30,16 @@ async function main() {
   const passwordHash = await bcrypt.hash(SEED_PASSWORD, 12);
 
   const admin = await prisma.user.upsert({
-    where: { email: 'admin@pathwise.dev' },
+    where: { email: 'admin@kia.academy' },
     update: {
-      name: 'Pathwise Super Admin',
+      name: 'Kia Academy Super Admin',
       passwordHash,
       role: 'SUPER_ADMIN',
       profileComplete: true,
     },
     create: {
-      name: 'Pathwise Super Admin',
-      email: 'admin@pathwise.dev',
+      name: 'Kia Academy Super Admin',
+      email: 'admin@kia.academy',
       passwordHash,
       role: 'SUPER_ADMIN',
       profileComplete: true,
@@ -47,7 +47,7 @@ async function main() {
   });
 
   await prisma.user.upsert({
-    where: { email: 'moderator@pathwise.dev' },
+    where: { email: 'moderator@kia.academy' },
     update: {
       name: 'Sample Moderator (Courses)',
       passwordHash,
@@ -63,7 +63,7 @@ async function main() {
     },
     create: {
       name: 'Sample Moderator (Courses)',
-      email: 'moderator@pathwise.dev',
+      email: 'moderator@kia.academy',
       passwordHash,
       role: 'ADMIN',
       profileComplete: true,
@@ -78,7 +78,7 @@ async function main() {
   });
 
   await prisma.user.upsert({
-    where: { email: 'moderator2@pathwise.dev' },
+    where: { email: 'moderator2@kia.academy' },
     update: {
       name: 'Sample Moderator (Challenges)',
       passwordHash,
@@ -94,7 +94,7 @@ async function main() {
     },
     create: {
       name: 'Sample Moderator (Challenges)',
-      email: 'moderator2@pathwise.dev',
+      email: 'moderator2@kia.academy',
       passwordHash,
       role: 'ADMIN',
       profileComplete: true,
@@ -109,7 +109,7 @@ async function main() {
   });
 
   const user = await prisma.user.upsert({
-    where: { email: 'alex@pathwise.dev' },
+    where: { email: 'alex@kia.academy' },
     update: {
       name: 'Alex R.',
       passwordHash,
@@ -117,7 +117,7 @@ async function main() {
     },
     create: {
       name: 'Alex R.',
-      email: 'alex@pathwise.dev',
+      email: 'alex@kia.academy',
       passwordHash,
       profileComplete: true,
       bootcampProfile: {
@@ -380,8 +380,8 @@ Use STAR (Situation, Task, Action, Result) to answer behavioral questions.
 
   console.log(`Seeded admin user: ${admin.name} (${admin.email})`);
   console.log(`  Password: ${SEED_PASSWORD}`);
-  console.log('Seeded moderators: moderator@pathwise.dev (courses), moderator2@pathwise.dev (challenges)');
-  console.log(`Seeded learner: ${user.name} (${user.email ?? 'alex@pathwise.dev'})`);
+  console.log('Seeded moderators: moderator@kia.academy (courses), moderator2@kia.academy (challenges)');
+  console.log(`Seeded learner: ${user.name} (${user.email ?? 'alex@kia.academy'})`);
   console.log(`  Password: ${SEED_PASSWORD}`);
   console.log(`Seeded courses: javascript-core, interview-branding`);
   console.log(`Seeded challenge: fizzbuzz`);

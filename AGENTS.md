@@ -2,7 +2,7 @@
 
 ## Cursor Cloud specific instructions
 
-Pathwise is being rebuilt as **آکادمی کیا (Kia Academy)** — Persian-first. Architecture notes: `docs/REBUILD_ARCHITECTURE.md`.
+**آکادمی کیا (Kia Academy)** — Persian-first adaptive learning platform. Architecture notes: `docs/REBUILD_ARCHITECTURE.md`.
 
 Monorepo: Node `>=22.13`, pnpm `11.13.0` via Corepack. Standard commands live in root `package.json` and `README.md`.
 
@@ -39,7 +39,7 @@ Site `TopBar` / `Footer` render only after `profileComplete` (successful registr
 
 - `SUPER_ADMIN` — full admin panel; configures `settings.adminAccess` (what regular `ADMIN` may open).
 - `ADMIN` — limited by per-user `adminPanelAccess` (defaults from site settings template when promoted); configure under Admin → Users.
-- Seed: `admin@pathwise.dev` is `SUPER_ADMIN`; `moderator@pathwise.dev` and `moderator2@pathwise.dev` are `ADMIN` (moderators) with different per-user panel access; `alex@pathwise.dev` is `LEARNER` (password `Pathwise123!`).
+- Seed: `admin@kia.academy` is `SUPER_ADMIN`; `moderator@kia.academy` and `moderator2@kia.academy` are `ADMIN` (moderators) with different per-user panel access; `alex@kia.academy` is `LEARNER` (password `KiaAcademy123!`).
 - Super admin configures per-moderator access under **Admin → Users** (matrix always visible under each moderator). Site settings → Admin access is only the default template for newly promoted moderators.
 - Payments: checkout is a review step; confirming redirects to the configured third-party provider (`dev` / Zarinpal / IDPay / Stripe) under **Settings → Payment gateway**. Catalog amounts are stored in IRR and shown in **تومان** for Persian UI.
 
@@ -54,22 +54,22 @@ Site `TopBar` / `Footer` render only after `profileComplete` (successful registr
 - Phone-first OTP: `POST /api/auth/otp/request`, `POST /api/auth/otp/verify`, `POST /api/auth/profile`
 - Iranian phone normalized to `09xxxxxxxxx`
 - In non-production, OTP is returned as `devCode` and logged to the API console
-- Email+password login remains for seeded admin (`admin@pathwise.dev` / `Pathwise123!`) and learner (`alex@pathwise.dev` / `Pathwise123!`)
+- Email+password login remains for seeded admin (`admin@kia.academy` / `KiaAcademy123!`) and learner (`alex@kia.academy` / `KiaAcademy123!`)
 
 ### Commands
 
-Typical: `pnpm install`, `pnpm --filter @pathwise/shared build`, `pnpm db:migrate:deploy`, `pnpm db:seed`, `pnpm dev`.
+Typical: `pnpm install`, `pnpm --filter @kia-academy/shared build`, `pnpm db:migrate:deploy`, `pnpm db:seed`, `pnpm dev`.
 
 Lint / typecheck / test / build: `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
 
 ### Payments
 
-Default currency is **IRR**. Catalog prices live in `@pathwise/shared` `PRODUCT_PRICES`. Stripe remains optional; without it, checkout confirms in-dev as before. SMTP is also optional (emails log to console + `EmailLog`).
+Default currency is **IRR**. Catalog prices live in `@kia-academy/shared` `PRODUCT_PRICES`. Stripe remains optional; without it, checkout confirms in-dev as before. SMTP is also optional (emails log to console + `EmailLog`).
 
 ### Non-obvious Cloud VM caveats
 
-- PostgreSQL is **not** started by the update script or `pnpm dev`. Docker is typically unavailable in Cloud Agent VMs — use a local Postgres 16 cluster: `sudo pg_ctlcluster 16 main start` (ignore `pnpm docker:db`). Role/DB `pathwise`/`pathwise` match `apps/api/.env.example`.
-- The `pathwise` DB role needs `CREATEDB` because `pnpm db:migrate` (`prisma migrate dev`) creates a shadow database; without it you get Prisma `P3014`. Prefer `pnpm db:migrate:deploy` in non-interactive environments.
-- Build order: `packages/shared` must be built before `pnpm db:seed` / api build, or seed fails with `MODULE_NOT_FOUND` for `@pathwise/shared/dist`. `pnpm build` handles this order itself.
+- PostgreSQL is **not** started by the update script or `pnpm dev`. Docker is typically unavailable in Cloud Agent VMs — use a local Postgres 16 cluster: `sudo pg_ctlcluster 16 main start` (ignore `pnpm docker:db`). Role/DB `kia_academy`/`kia_academy` match `apps/api/.env.example`.
+- The `kia_academy` DB role needs `CREATEDB` because `pnpm db:migrate` (`prisma migrate dev`) creates a shadow database; without it you get Prisma `P3014`. Prefer `pnpm db:migrate:deploy` in non-interactive environments.
+- Build order: `packages/shared` must be built before `pnpm db:seed` / api build, or seed fails with `MODULE_NOT_FOUND` for `@kia-academy/shared/dist`. `pnpm build` handles this order itself.
 - Env files are git-ignored — create from examples: `cp apps/api/.env.example apps/api/.env` and `cp apps/web/.env.example apps/web/.env.local`.
-- E2E (`pnpm test:e2e`) needs a one-time browser install: `pnpm --filter @pathwise/web exec playwright install chromium`.
+- E2E (`pnpm test:e2e`) needs a one-time browser install: `pnpm --filter @kia-academy/web exec playwright install chromium`.

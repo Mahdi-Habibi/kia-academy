@@ -4,7 +4,7 @@ import { ArrowLeft, ArrowRight, CheckCircle, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
-import type { LessonDetail, LessonSummary } from '@pathwise/shared';
+import type { LessonDetail, LessonSummary } from '@kia-academy/shared';
 import { RequireAuth } from '@/components/auth/RequireAuth';
 import { LessonPlayground } from '@/components/lesson/LessonPlayground';
 import { LessonVideo } from '@/components/lesson/LessonVideo';

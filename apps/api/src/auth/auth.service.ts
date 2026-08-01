@@ -13,14 +13,14 @@ import type {
   CompleteProfileDto,
   LearnerState,
   RequestOtpResponse,
-} from '@pathwise/shared';
+} from '@kia-academy/shared';
 import {
   containsUnsafeText,
   isValidEmail,
   normalizeIranianPhone,
   resolveModeratorAdminAccess,
   sanitizeProfileText,
-} from '@pathwise/shared';
+} from '@kia-academy/shared';
 import * as bcrypt from 'bcrypt';
 import { createHash, randomBytes, randomInt } from 'crypto';
 import { EmailService } from '../email/email.service';

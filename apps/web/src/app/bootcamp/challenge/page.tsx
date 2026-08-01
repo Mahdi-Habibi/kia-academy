@@ -1,6 +1,6 @@
 'use client';
 
-import { scoreFizzBuzz } from '@pathwise/shared';
+import { scoreFizzBuzz } from '@kia-academy/shared';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { RequireAuth } from '@/components/auth/RequireAuth';

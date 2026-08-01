@@ -10,7 +10,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import type { Request } from 'express';
-import type { AuthUser, PaymentResponse } from '@pathwise/shared';
+import type { AuthUser, PaymentResponse } from '@kia-academy/shared';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { CheckoutBodyDto } from './dto/checkout.dto';

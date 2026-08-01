@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import type { ReadinessResult } from '@pathwise/shared';
-import { escapeHtml } from '@pathwise/shared';
+import type { ReadinessResult } from '@kia-academy/shared';
+import { escapeHtml } from '@kia-academy/shared';
 import * as nodemailer from 'nodemailer';
 import type { Transporter } from 'nodemailer';
 import { PrismaService } from '../prisma/prisma.service';
@@ -30,7 +30,7 @@ export class EmailService {
     private readonly prisma: PrismaService,
   ) {
     const smtpHost = this.configService.get<string>('SMTP_HOST');
-    this.fromAddress = this.configService.get<string>('SMTP_FROM') ?? 'noreply@pathwise.dev';
+    this.fromAddress = this.configService.get<string>('SMTP_FROM') ?? 'noreply@kia.academy';
 
     if (smtpHost) {
       this.transporter = nodemailer.createTransport({
@@ -48,12 +48,12 @@ export class EmailService {
   }
 
   async sendWelcome(user: EmailUser): Promise<void> {
-    const subject = 'Welcome to Pathwise';
+    const subject = 'Welcome to Kia Academy';
     const html = `
       <div style="font-family: Arial, sans-serif; max-width: 560px; margin: 0 auto; color: #1a1a1a;">
-        <h1 style="color: #2563eb;">Welcome to Pathwise, ${escapeHtml(user.name)}!</h1>
+        <h1 style="color: #2563eb;">Welcome to Kia Academy, ${escapeHtml(user.name)}!</h1>
         <p>Your account is ready. Explore courses, take the readiness assessment, and start building your career path.</p>
-        <p style="margin-top: 24px;">— The Pathwise Team</p>
+        <p style="margin-top: 24px;">— The Kia Academy Team</p>
       </div>
     `;
 
@@ -62,7 +62,7 @@ export class EmailService {
 
   async sendPaymentReceipt(user: EmailUser, payment: EmailPayment): Promise<void> {
     const amount = (payment.amountCents / 100).toFixed(2);
-    const subject = 'Your Pathwise payment receipt';
+    const subject = 'Your Kia Academy payment receipt';
     const html = `
       <div style="font-family: Arial, sans-serif; max-width: 560px; margin: 0 auto; color: #1a1a1a;">
         <h1 style="color: #2563eb;">Payment confirmed</h1>
@@ -73,7 +73,7 @@ export class EmailService {
           <tr><td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb;"><strong>Amount</strong></td><td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb;">${amount.toUpperCase()} ${payment.currency.toUpperCase()}</td></tr>
           <tr><td style="padding: 8px 0;"><strong>Payment ID</strong></td><td style="padding: 8px 0;">${escapeHtml(payment.id)}</td></tr>
         </table>
-        <p style="margin-top: 24px;">— The Pathwise Team</p>
+        <p style="margin-top: 24px;">— The Kia Academy Team</p>
       </div>
     `;
 
@@ -137,7 +137,7 @@ export class EmailService {
   }
 
   async sendReadinessResults(user: EmailUser, result: ReadinessResult): Promise<void> {
-    const subject = 'Your Pathwise readiness results';
+    const subject = 'Your Kia Academy readiness results';
     const verdictTitle = escapeHtml(result.verdict.title);
     const verdictMessage = escapeHtml(result.verdict.message);
     const html = `
@@ -149,7 +149,7 @@ export class EmailService {
           <h2 style="margin: 0 0 8px; font-size: 18px;">${verdictTitle}</h2>
           <p style="margin: 0;">${verdictMessage}</p>
         </div>
-        <p style="margin-top: 24px;">— The Pathwise Team</p>
+        <p style="margin-top: 24px;">— The Kia Academy Team</p>
       </div>
     `;
 

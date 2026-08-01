@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { memoryStorage } from 'multer';
-import type { AuthUser } from '@pathwise/shared';
+import type { AuthUser } from '@kia-academy/shared';
 import { AdminAccess } from '../common/decorators/admin-access.decorator';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 import { Roles } from '../common/decorators/roles.decorator';

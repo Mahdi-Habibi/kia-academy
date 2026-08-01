@@ -16,7 +16,7 @@ import type {
   Interest,
   LearningStyle,
   SkillLevel,
-} from '@pathwise/shared';
+} from '@kia-academy/shared';
 
 const GOALS = ['job', 'startup', 'freelance', 'fun'] as const;
 const STYLES = ['video', 'reading', 'building'] as const;

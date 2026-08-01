@@ -1,6 +1,6 @@
 'use client';
 
-import type { AssessmentAnswers, LearningStyle } from '@pathwise/shared';
+import type { AssessmentAnswers, LearningStyle } from '@kia-academy/shared';
 import { useLanguage } from '@/context/LanguageProvider';
 import { OptCard } from '../OptCard';
 import { STYLE_OPTIONS } from '../wizardOptions';

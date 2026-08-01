@@ -1,19 +1,19 @@
-name: pathwise
+name: kia-academy
 
 services:
   postgres:
     image: postgres:16-alpine
     restart: unless-stopped
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-pathwise}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-pathwise}
-      POSTGRES_DB: ${POSTGRES_DB:-pathwise}
+      POSTGRES_USER: ${POSTGRES_USER:-kia_academy}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-kia_academy}
+      POSTGRES_DB: ${POSTGRES_DB:-kia_academy}
     ports:
       - "${POSTGRES_PORT:-5432}:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-pathwise} -d ${POSTGRES_DB:-pathwise}"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-kia_academy} -d ${POSTGRES_DB:-kia_academy}"]
       interval: 5s
       timeout: 5s
       retries: 10
@@ -30,7 +30,7 @@ services:
       - path: .env.docker
         required: false
     environment:
-      DATABASE_URL: ${DATABASE_URL:-postgresql://pathwise:pathwise@postgres:5432/pathwise?schema=public}
+      DATABASE_URL: ${DATABASE_URL:-postgresql://kia_academy:kia_academy@postgres:5432/kia_academy?schema=public}
       PORT: ${PORT:-3001}
       CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:3000}
       APP_URL: ${APP_URL:-http://localhost:3000}
@@ -42,7 +42,7 @@ services:
       SEED_DATABASE: ${SEED_DATABASE:-true}
       DB_HOST: postgres
       DB_PORT: "5432"
-      DB_USER: ${POSTGRES_USER:-pathwise}
+      DB_USER: ${POSTGRES_USER:-kia_academy}
       STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:-}
       STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET:-}
       SMTP_HOST: ${SMTP_HOST:-}

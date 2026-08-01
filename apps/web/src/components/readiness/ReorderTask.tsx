@@ -1,6 +1,6 @@
 'use client';
 
-import { SWAP_STEPS } from '@pathwise/shared';
+import { SWAP_STEPS } from '@kia-academy/shared';
 import { useCallback, useEffect, useState } from 'react';
 import { useLanguage } from '@/context/LanguageProvider';
 import { usePointerReorder } from '@/lib/pointerDrag';

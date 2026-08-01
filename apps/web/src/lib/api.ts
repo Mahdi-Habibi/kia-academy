@@ -44,7 +44,7 @@ import type {
   AdminCreateUserDto,
   AdminUser,
   AdminPayment,
-} from '@pathwise/shared';
+} from '@kia-academy/shared';
 import { clearTokens, getAccessToken, setAccessToken } from '@/lib/auth';
 import { ApiError } from '@/lib/apiError';
 import { demoApi } from '@/lib/demoApi';

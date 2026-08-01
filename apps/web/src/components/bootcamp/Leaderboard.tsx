@@ -1,6 +1,6 @@
 'use client';
 
-import type { LeaderboardEntry } from '@pathwise/shared';
+import type { LeaderboardEntry } from '@kia-academy/shared';
 import { useLanguage } from '@/context/LanguageProvider';
 
 const DEFAULT_LEADERBOARD: LeaderboardEntry[] = [

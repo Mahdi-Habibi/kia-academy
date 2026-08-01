@@ -1,4 +1,4 @@
-import { escapeHtml } from '@pathwise/shared';
+import { escapeHtml } from '@kia-academy/shared';
 
 export function markdownToHtml(markdown: string): string {
   const blocks: string[] = [];

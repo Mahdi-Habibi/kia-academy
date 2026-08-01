@@ -1,6 +1,6 @@
 'use client';
 
-import type { AssessmentAnswers, Goal } from '@pathwise/shared';
+import type { AssessmentAnswers, Goal } from '@kia-academy/shared';
 import { useLanguage } from '@/context/LanguageProvider';
 import { OptCard } from '../OptCard';
 import { GOAL_OPTIONS } from '../wizardOptions';

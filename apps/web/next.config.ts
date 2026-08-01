@@ -19,11 +19,11 @@ const isDockerBuild = process.env.DOCKER_BUILD === 'true';
 const isGitHubPages = process.env.GITHUB_PAGES === 'true';
 const apiProxyTarget = (process.env.API_PROXY_TARGET ?? 'http://localhost:3001').replace(/\/$/, '');
 
-/** Project-site path for https://mahdi-habibi.github.io/pathwise/ */
-const githubPagesBasePath = (process.env.NEXT_BASE_PATH ?? '/pathwise').replace(/\/$/, '') || '';
+/** Project-site path for https://mahdi-habibi.github.io/kia-academy/ */
+const githubPagesBasePath = (process.env.NEXT_BASE_PATH ?? '/kia-academy').replace(/\/$/, '') || '';
 
 const nextConfig: NextConfig = {
-  transpilePackages: ['@pathwise/shared'],
+  transpilePackages: ['@kia-academy/shared'],
   ...(isGitHubPages
     ? {
         output: 'export' as const,

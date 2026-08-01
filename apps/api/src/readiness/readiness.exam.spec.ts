@@ -3,7 +3,7 @@ import {
   EXAM_QUESTION_BANK,
   gradeAttempt,
   buildExamOutcome,
-} from '@pathwise/shared';
+} from '@kia-academy/shared';
 
 describe('ReadinessService exam helpers', () => {
   it('grades bank questions server-side without trusting client scores', () => {

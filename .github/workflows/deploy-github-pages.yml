@@ -50,16 +50,16 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build shared package
-        run: pnpm --filter @pathwise/shared build
+        run: pnpm --filter @kia-academy/shared build
 
       - name: Export static web app
         env:
           GITHUB_PAGES: 'true'
-          NEXT_BASE_PATH: /pathwise
-          NEXT_PUBLIC_APP_URL: https://mahdi-habibi.github.io/pathwise
+          NEXT_BASE_PATH: /kia-academy
+          NEXT_PUBLIC_APP_URL: https://mahdi-habibi.github.io/kia-academy
           NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL }}
           NEXT_PUBLIC_DEMO_MODE: ${{ vars.NEXT_PUBLIC_API_URL == '' && 'true' || 'false' }}
-        run: pnpm --filter @pathwise/web build
+        run: pnpm --filter @kia-academy/web build
 
       - name: Ensure .nojekyll (GitHub Pages must not ignore _next)
         run: touch apps/web/out/.nojekyll

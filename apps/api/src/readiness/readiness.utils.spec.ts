@@ -1,7 +1,7 @@
-import { computeReadinessResult } from '@pathwise/shared';
+import { computeReadinessResult } from '@kia-academy/shared';
 
 describe('computeReadinessResult', () => {
-  it('re-exports computeReadinessResult from @pathwise/shared', () => {
+  it('re-exports computeReadinessResult from @kia-academy/shared', () => {
     const result = computeReadinessResult({
       'Computer Literacy': { correct: 4, total: 5 },
       'English Readiness': { correct: 4, total: 5 },

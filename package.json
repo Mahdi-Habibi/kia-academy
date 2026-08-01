@@ -1,33 +1,33 @@
 {
-  "name": "pathwise",
+  "name": "kia-academy",
   "version": "1.0.0",
   "private": true,
   "packageManager": "pnpm@11.13.0",
-  "description": "Pathwise — Adaptive Learning Platform",
+  "description": "Kia Academy — Adaptive Learning Platform",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Mahdi-Habibi/pathwise.git"
+    "url": "https://github.com/Mahdi-Habibi/kia-academy.git"
   },
-  "homepage": "https://mahdi-habibi.github.io/pathwise/",
+  "homepage": "https://mahdi-habibi.github.io/kia-academy/",
   "bugs": {
-    "url": "https://github.com/Mahdi-Habibi/pathwise/issues"
+    "url": "https://github.com/Mahdi-Habibi/kia-academy/issues"
   },
   "scripts": {
-    "dev": "concurrently -n web,api -c blue,green \"pnpm --filter @pathwise/web dev\" \"pnpm --filter @pathwise/api dev\"",
-    "build": "pnpm --filter @pathwise/shared build && pnpm --filter @pathwise/api build && pnpm --filter @pathwise/web build",
-    "build:pages": "pnpm --filter @pathwise/shared build && GITHUB_PAGES=true NEXT_BASE_PATH=/pathwise NEXT_PUBLIC_APP_URL=https://mahdi-habibi.github.io/pathwise NEXT_PUBLIC_DEMO_MODE=true pnpm --filter @pathwise/web build",
-    "start": "concurrently -n web,api -c blue,green \"pnpm --filter @pathwise/web start\" \"pnpm --filter @pathwise/api start:prod\"",
+    "dev": "concurrently -n web,api -c blue,green \"pnpm --filter @kia-academy/web dev\" \"pnpm --filter @kia-academy/api dev\"",
+    "build": "pnpm --filter @kia-academy/shared build && pnpm --filter @kia-academy/api build && pnpm --filter @kia-academy/web build",
+    "build:pages": "pnpm --filter @kia-academy/shared build && GITHUB_PAGES=true NEXT_BASE_PATH=/kia-academy NEXT_PUBLIC_APP_URL=https://mahdi-habibi.github.io/kia-academy NEXT_PUBLIC_DEMO_MODE=true pnpm --filter @kia-academy/web build",
+    "start": "concurrently -n web,api -c blue,green \"pnpm --filter @kia-academy/web start\" \"pnpm --filter @kia-academy/api start:prod\"",
     "lint": "pnpm -r lint",
     "typecheck": "pnpm -r typecheck",
     "format": "prettier --write \"**/*.{ts,tsx,js,mjs,json,md,css}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,mjs,json,md,css}\"",
     "test": "pnpm -r test",
-    "test:e2e": "pnpm --filter @pathwise/web test:e2e",
-    "db:generate": "pnpm --filter @pathwise/api prisma:generate",
-    "db:migrate": "pnpm --filter @pathwise/api prisma:migrate",
-    "db:migrate:deploy": "pnpm --filter @pathwise/api prisma:migrate:deploy",
-    "db:seed": "pnpm --filter @pathwise/api prisma:seed",
+    "test:e2e": "pnpm --filter @kia-academy/web test:e2e",
+    "db:generate": "pnpm --filter @kia-academy/api prisma:generate",
+    "db:migrate": "pnpm --filter @kia-academy/api prisma:migrate",
+    "db:migrate:deploy": "pnpm --filter @kia-academy/api prisma:migrate:deploy",
+    "db:seed": "pnpm --filter @kia-academy/api prisma:seed",
     "docker:db": "docker compose up -d postgres",
     "docker:db:down": "docker compose down",
     "docker:db:reset": "docker compose down -v && docker compose up -d postgres",

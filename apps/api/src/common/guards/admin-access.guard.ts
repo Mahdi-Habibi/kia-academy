@@ -1,6 +1,6 @@
 import { CanActivate, ExecutionContext, ForbiddenException, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import type { AuthUser } from '@pathwise/shared';
+import type { AuthUser } from '@kia-academy/shared';
 import {
   ADMIN_ACCESS_KEY,
   type AdminAccessRequirement,

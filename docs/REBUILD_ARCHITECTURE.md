@@ -1,6 +1,6 @@
 # Kia Academy rebuild — architecture (Step 0)
 
-Pathwise is being rebuilt as **آکادمی کیا (Kia Academy)**: a Persian-first learning platform for Iran.
+Kia Academy is being rebuilt as **آکادمی کیا (Kia Academy)**: a Persian-first learning platform for Iran.
 
 ## Product shape
 

@@ -4,7 +4,7 @@ import { Loader2, Plus } from 'lucide-react';
 import { FormEvent, useEffect, useState } from 'react';
 import { useLanguage } from '@/context/LanguageProvider';
 import { api, ApiError } from '@/lib/api';
-import type { AdminChallenge } from '@pathwise/shared';
+import type { AdminChallenge } from '@kia-academy/shared';
 
 const emptyForm = {
   slug: '',

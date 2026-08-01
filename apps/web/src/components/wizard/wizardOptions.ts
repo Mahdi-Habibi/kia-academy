@@ -1,4 +1,4 @@
-import type { Goal, Interest, LearningStyle, SkillLevel } from '@pathwise/shared';
+import type { Goal, Interest, LearningStyle, SkillLevel } from '@kia-academy/shared';
 
 export const SKILL_TOPIC_KEYS = [
   ['HTML/CSS', 'htmlCss'],

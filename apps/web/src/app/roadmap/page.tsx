@@ -1,9 +1,9 @@
 'use client';
 
-import { hasRoadmapEntitlement } from '@pathwise/shared';
+import { hasRoadmapEntitlement } from '@kia-academy/shared';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-import { buildRoadmapFromAnswers } from '@pathwise/shared';
+import { buildRoadmapFromAnswers } from '@kia-academy/shared';
 import { PageBackButton } from '@/components/layout/PageBackButton';
 import { PurchaseSection } from '@/components/roadmap/PurchaseSection';
 import { RoadmapTree } from '@/components/roadmap/RoadmapTree';
