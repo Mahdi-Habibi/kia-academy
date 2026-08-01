@@ -469,7 +469,16 @@ canvas {
   letter-spacing: 0;
 }
 
-/* Persian shaping breaks under uppercase and positive tracking. */
+/* Persian shaping breaks under uppercase and positive tracking.
+   Eyebrows also need Vazirmatn — JetBrains Mono has no FA glyphs, so the
+   font-family looked like it "wasn't applying" on auth cards and elsewhere. */
+[dir='rtl'] .eyebrow,
+[dir='rtl'] .label-micro,
+[lang='fa'] .eyebrow,
+[lang='fa'] .label-micro {
+  font-family: var(--font-fa);
+}
+
 [dir='rtl'] .eyebrow,
 [dir='rtl'] .label-micro,
 [dir='rtl'] .footer-tagline,

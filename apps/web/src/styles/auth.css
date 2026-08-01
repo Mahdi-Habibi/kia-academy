@@ -28,6 +28,12 @@
   background: var(--gradient-brand);
 }
 
+/* Persian eyebrow labels must use Vazirmatn (mono stack has no FA glyphs). */
+[dir='rtl'] .auth-card .eyebrow,
+[lang='fa'] .auth-card .eyebrow {
+  font-family: var(--font-fa);
+}
+
 .auth-card h1 {
   font-size: var(--fs-h2);
   font-weight: 800;
