@@ -16,7 +16,7 @@ import {
   Users,
   X,
 } from 'lucide-react';
-import { useEffect, useMemo, useState, type ReactNode } from 'react';
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import {
   adminSectionAllowed,
   createDefaultSiteSettings,
@@ -55,9 +55,11 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
   const { t } = useLanguage();
-  const { user, loading } = useAuth();
+  const { user, loading, logout } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({});
+  /** Skip the login gate while logging out via «بازگشت به سایت». */
+  const leavingToSiteRef = useRef(false);
 
   const isSuper = user?.role === 'SUPER_ADMIN';
   const isStaff = user?.role === 'ADMIN' || isSuper;
@@ -71,12 +73,18 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
   }, [isStaff, isSuper, user]);
 
   useEffect(() => {
-    if (loading) return;
+    if (loading || leavingToSiteRef.current) return;
     // Guests and learners both get the admin login gate (not the learner dashboard).
     if (!user || !isStaff) {
       router.replace('/login?next=/admin');
     }
   }, [user, loading, router, isStaff]);
+
+  const handleBackToSite = async () => {
+    leavingToSiteRef.current = true;
+    await logout();
+    router.replace('/');
+  };
 
   const nav = useMemo((): NavItem[] => {
     const can = (key: AdminSection) => {
@@ -383,9 +391,9 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
             <p>{pageMeta.subtitle}</p>
           </div>
           <div style={{ display: 'flex', gap: '0.65rem', alignItems: 'center' }}>
-            <Link href="/" className="admin-link">
+            <button type="button" className="admin-link" onClick={() => void handleBackToSite()}>
               {t('admin.backToSite')}
-            </Link>
+            </button>
             <span className="admin-badge info">
               <CreditCard size={12} />
               {roleLabel}
