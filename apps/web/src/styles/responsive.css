@@ -240,8 +240,11 @@
   }
 
   .modal {
-    max-width: calc(100vw - 32px);
+    /* Overlay already pads the viewport — avoid 100vw (scrollbar gutter). */
+    width: 100%;
+    max-width: min(420px, 100%);
     padding: var(--space-6) var(--space-5);
+    box-sizing: border-box;
   }
 
   .flow-slot {

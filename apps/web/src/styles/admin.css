@@ -35,7 +35,8 @@
   display: flex;
   min-height: 100vh;
   width: 100%;
-  max-width: none;
+  max-width: 100%;
+  min-width: 0;
   margin: 0;
   padding: 0;
   color: var(--admin-text);
@@ -44,6 +45,7 @@
     radial-gradient(ellipse 55% 40% at 0% 100%, rgba(46, 146, 105, 0.14), transparent 52%),
     var(--admin-bg);
   font-family: var(--admin-font);
+  overflow-x: clip;
 }
 
 /* =============================================================================
@@ -283,8 +285,10 @@
 .admin-main {
   flex: 1;
   min-width: 0;
+  max-width: 100%;
   display: flex;
   flex-direction: column;
+  overflow-x: clip;
 }
 
 .admin-header {
@@ -337,9 +341,12 @@
 
 .admin-content {
   width: 100%;
-  max-width: 1600px;
+  max-width: min(1600px, 100%);
+  min-width: 0;
   margin-inline: auto;
   padding: var(--space-6) var(--space-6) var(--space-section);
+  box-sizing: border-box;
+  overflow-x: clip;
 }
 
 .admin-content h1 {
@@ -567,6 +574,15 @@
   display: grid;
   gap: var(--space-4);
   margin-bottom: var(--space-6);
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* Grid items default to min-width:auto, so a 640px table forces the page wide.
+   Zero the floor so .admin-table-wrap can scroll inside the track. */
+.admin-grid > * {
+  min-width: 0;
+  max-width: 100%;
 }
 
 .admin-grid-2 {
@@ -591,6 +607,9 @@
   border-radius: var(--admin-radius);
   padding: var(--space-5);
   box-shadow: var(--admin-shadow);
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .admin-card h2,
@@ -766,12 +785,17 @@
    ========================================================================== */
 
 .admin-table-wrap {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   border: 1px solid var(--admin-line);
   border-radius: var(--admin-radius);
   margin-block: var(--space-4) var(--space-6);
   background: var(--admin-surface);
   box-shadow: var(--admin-shadow);
+  box-sizing: border-box;
 }
 
 .admin-table {
@@ -1178,6 +1202,9 @@
 .admin-moderator-access {
   padding: var(--space-4);
   margin: var(--space-1) 0 var(--space-3);
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 /* =============================================================================
@@ -1210,11 +1237,17 @@
     inset-inline-start: 0;
     z-index: var(--z-modal);
     width: min(var(--admin-sidebar-width), 86vw);
+    max-width: 100%;
     min-height: 100vh;
     transform: translateX(-105%);
-    transition: transform var(--dur-slow) var(--ease-out);
+    transition:
+      transform var(--dur-slow) var(--ease-out),
+      visibility var(--dur-slow) var(--ease-out);
     box-shadow: var(--shadow-xl);
     background: var(--ink-900);
+    /* Keep the closed drawer out of the scrollable overflow area. */
+    visibility: hidden;
+    pointer-events: none;
   }
 
   [dir='rtl'] .admin-sidebar {
@@ -1223,10 +1256,13 @@
 
   .admin-shell.sidebar-open .admin-sidebar {
     transform: translateX(0);
+    visibility: visible;
+    pointer-events: auto;
   }
 
   .admin-main {
     width: 100%;
+    max-width: 100%;
   }
 
   .admin-content {
@@ -1236,15 +1272,30 @@
   .admin-grid-2,
   .admin-grid-3,
   .admin-grid-4 {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .admin-span-2 {
     grid-column: auto;
   }
 
-  .admin-table {
+  /* Wide tables scroll inside .admin-table-wrap — never grow the page. */
+  .admin-table,
+  .admin-perm-table {
     min-width: 640px;
+  }
+
+  .admin-header {
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+
+  .admin-section-head,
+  .admin-quick-links,
+  .admin-toolbar {
+    max-width: 100%;
+    min-width: 0;
   }
 
   .admin-form {
