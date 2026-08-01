@@ -315,6 +315,9 @@
 
 html {
   -webkit-text-size-adjust: 100%;
+  /* clip both roots — body-only overflow-x:hidden still lets html scroll
+     when descendants (admin tables, wide grids) expand past the viewport. */
+  overflow-x: clip;
 }
 
 body {
@@ -328,9 +331,10 @@ body {
   font-size: var(--fs-body);
   line-height: 1.7;
   min-height: 100vh;
+  max-width: 100%;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
+  overflow-x: clip;
   transition:
     background-color var(--dur-slow) var(--ease-out),
     color var(--dur-slow) var(--ease-out);
@@ -637,9 +641,12 @@ input[type='tel'],
 .site-main {
   flex: 1 0 auto;
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
   position: relative;
   z-index: var(--z-raised);
   background: transparent;
+  overflow-x: clip;
 }
 
 .site-main--guest {
