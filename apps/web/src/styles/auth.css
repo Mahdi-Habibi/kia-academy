@@ -259,7 +259,8 @@
 }
 
 .education-brand {
-  display: inline-flex;
+  display: flex;
+  width: fit-content;
   align-items: center;
   gap: var(--space-2);
   font-family: var(--font-display);
@@ -267,8 +268,12 @@
   font-weight: 800;
   color: var(--text);
   text-decoration: none;
-  margin-bottom: var(--space-4);
+  margin-bottom: var(--space-5);
   letter-spacing: -0.02em;
+}
+
+.education-brand + .auth-step-badge {
+  margin-top: var(--space-1);
 }
 
 [dir='rtl'] .education-brand {
