@@ -16,7 +16,6 @@ import {
 } from 'lucide-react';
 import type { ReadinessTestSummary } from '@kia-academy/shared';
 import { buildRoadmapFromAnswers } from '@kia-academy/shared';
-import { PageBackButton } from '@/components/layout/PageBackButton';
 import { useApp } from '@/context/AppProvider';
 import { useAuth } from '@/context/AuthProvider';
 import { useLanguage } from '@/context/LanguageProvider';
@@ -94,7 +93,6 @@ export default function DashboardPage() {
     return (
       <div className="page-content">
         <div className="container hub">
-          <PageBackButton href="/dashboard" />
           <header className="page-head">
             <div>
               <h1>
@@ -143,7 +141,6 @@ export default function DashboardPage() {
   return (
     <div className="page-content">
       <div className="container hub">
-        <PageBackButton href="/dashboard" />
         <header className="page-head">
           <div>
             <h1>{t('dashboard.welcomeBack', { name: firstName })}</h1>

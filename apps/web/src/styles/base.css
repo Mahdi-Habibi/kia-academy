@@ -470,12 +470,16 @@ canvas {
 }
 
 /* Persian shaping breaks under uppercase and positive tracking.
-   Eyebrows also need Vazirmatn — JetBrains Mono has no FA glyphs, so the
-   font-family looked like it "wasn't applying" on auth cards and elsewhere. */
+   Eyebrows / tile micro-labels need Vazirmatn — JetBrains Mono (next/font)
+   is latin-only, so FA glyphs looked blank / like "no font applied". */
 [dir='rtl'] .eyebrow,
 [dir='rtl'] .label-micro,
+[dir='rtl'] .tile .t-status,
+[dir='rtl'] .tile .t-eyebrow,
 [lang='fa'] .eyebrow,
-[lang='fa'] .label-micro {
+[lang='fa'] .label-micro,
+[lang='fa'] .tile .t-status,
+[lang='fa'] .tile .t-eyebrow {
   font-family: var(--font-fa);
 }
 
@@ -485,6 +489,7 @@ canvas {
 [dir='rtl'] .footer-nav-group h2,
 [dir='rtl'] .stage-label,
 [dir='rtl'] .tile .t-status,
+[dir='rtl'] .tile .t-eyebrow,
 [dir='rtl'] .aha,
 [dir='rtl'] .roadmap-title,
 [dir='rtl'] .node-status,
@@ -794,7 +799,11 @@ input[type='tel'],
   .container,
   .container-fluid,
   .app {
-    padding-inline: var(--space-4);
+    padding-inline: var(--space-5);
+  }
+
+  .tile {
+    padding: var(--space-5) var(--space-4);
   }
 
   .tile--wide,

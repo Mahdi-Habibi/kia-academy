@@ -884,6 +884,7 @@
   border-spacing: 0;
   min-width: 820px;
   width: 100%;
+  table-layout: fixed;
   background: rgba(255, 255, 255, 0.6);
   /* Keep Color as the physical leftmost column even on RTL pages */
   direction: ltr;
@@ -891,31 +892,42 @@
 
 .palette-matrix th,
 .palette-matrix td {
-  padding: 0.5rem 0;
+  padding: 0.5rem 0.45rem;
   border-bottom: 1px solid rgba(13, 39, 52, 0.08);
   text-align: center;
   font-size: 0.88rem;
+  vertical-align: middle;
 }
 
 .palette-matrix th.sticky,
 .palette-matrix td.sticky {
   position: sticky;
   left: 0;
-  z-index: 2;
-  background: rgba(255, 255, 255, 0.655);
-  backdrop-filter: blur(5px);
+  z-index: 3;
+  /* Opaque so scrolling shade cells do not bleed through / overlap */
+  background: rgb(248, 250, 252);
+  backdrop-filter: none;
   text-align: left;
-  width: 180px;
-  min-width: 140px;
+  width: 168px;
+  min-width: 168px;
+  max-width: 168px;
+  padding-inline: 0.75rem;
+  box-sizing: border-box;
   box-shadow: 2px 0 8px rgba(128, 128, 128, 0.28);
+  overflow: hidden;
 }
 
-
+.palette-matrix thead th.sticky {
+  z-index: 4;
+}
 
 .color-name {
   display: inline-flex;
   align-items: center;
-  gap: 0.05rem;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
 
 .palette-empty-cell {
@@ -1301,9 +1313,15 @@
 }
 
 @media (max-width: 700px) {
+  .material-studio-root {
+    padding: 0.85rem 1rem 1.75rem;
+  }
+
   .material-studio-root .material-topbar {
     flex-wrap: wrap;
-    gap: 0.5rem;
+    align-items: center;
+    gap: 0.65rem;
+    padding-inline: 0.15rem;
   }
 
   .material-studio-root a.home-btn {
@@ -1405,12 +1423,15 @@
   .material-mode .palette-matrix th,
   .material-mode .palette-matrix td {
     font-size: 0.8rem;
-    padding: 0.2rem 0;
+    padding: 0.35rem 0.35rem;
   }
 
   .material-mode .palette-matrix th.sticky,
   .material-mode .palette-matrix td.sticky {
-    min-width: 140px;
+    width: 148px;
+    min-width: 148px;
+    max-width: 148px;
+    padding-inline: 0.6rem;
   }
 
   .home-btn {
