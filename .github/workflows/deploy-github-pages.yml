@@ -52,14 +52,30 @@ jobs:
       - name: Build shared package
         run: pnpm --filter @kia-academy/shared build
 
+      # Project Pages URL is always https://<owner>.github.io/<repository-name>/.
+      # Derive basePath from the repo name so asset URLs match the live site
+      # (e.g. pathwise → /pathwise, or kia-academy after the repo is renamed).
+      - name: Resolve Pages base path
+        id: pages
+        run: |
+          OWNER="$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')"
+          REPO='${{ github.event.repository.name }}'
+          echo "owner=${OWNER}" >> "$GITHUB_OUTPUT"
+          echo "repo=${REPO}" >> "$GITHUB_OUTPUT"
+          echo "base_path=/${REPO}" >> "$GITHUB_OUTPUT"
+          echo "app_url=https://${OWNER}.github.io/${REPO}" >> "$GITHUB_OUTPUT"
+
       - name: Export static web app
         env:
           GITHUB_PAGES: 'true'
-          NEXT_BASE_PATH: /kia-academy
-          NEXT_PUBLIC_APP_URL: https://mahdi-habibi.github.io/kia-academy
+          NEXT_BASE_PATH: ${{ steps.pages.outputs.base_path }}
+          NEXT_PUBLIC_APP_URL: ${{ steps.pages.outputs.app_url }}
           NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL }}
           NEXT_PUBLIC_DEMO_MODE: ${{ vars.NEXT_PUBLIC_API_URL == '' && 'true' || 'false' }}
-        run: pnpm --filter @kia-academy/web build
+        run: |
+          echo "Building Pages with basePath=$NEXT_BASE_PATH"
+          echo "Public app URL=$NEXT_PUBLIC_APP_URL"
+          pnpm --filter @kia-academy/web build
 
       - name: Ensure .nojekyll (GitHub Pages must not ignore _next)
         run: touch apps/web/out/.nojekyll

@@ -4,11 +4,19 @@
 
 Full-stack monorepo: **Next.js 15** (frontend) + **NestJS 11** (backend) + **Prisma** (PostgreSQL).
 
-**Live frontend (GitHub Pages):** https://mahdi-habibi.github.io/kia-academy/
+**Live frontend (GitHub Pages):** https://mahdi-habibi.github.io/pathwise/
+
+> GitHub project Pages always use `https://<user>.github.io/<repository-name>/`.
+> This GitHub repository is still named **`pathwise`**, so the live URL path is `/pathwise/`
+> (not `/kia-academy/`). To serve at https://mahdi-habibi.github.io/kia-academy/ instead,
+> rename the repository under **Settings → General → Repository name** to `kia-academy`,
+> then re-run **Deploy GitHub Pages**. The workflow sets `basePath` from the repo name
+> automatically. For local `pnpm build:pages`, pass `PAGES_REPO_NAME=kia-academy`.
 
 ## GitHub Pages
 
-The web app is statically exported to https://mahdi-habibi.github.io/kia-academy/ (`basePath` `/kia-academy`).
+The web app is statically exported with `basePath` matching the GitHub repository name
+(currently `/pathwise` → https://mahdi-habibi.github.io/pathwise/).
 By default the Pages build enables **demo mode** (`NEXT_PUBLIC_DEMO_MODE=true`): courses, lessons,
 assessment, checkout, bootcamp, and admin use in-browser mock data so visitors can explore the full UI
 without a hosted Nest API. Progress is stored in the browser only.
@@ -26,7 +34,7 @@ Point Pages at the built app instead:
 1. Open **Settings → Pages**
 2. Under **Build and deployment → Source**, choose **Deploy from a branch**
 3. Branch: **`gh-pages`** · Folder: **`/ (root)`**
-4. Save, wait ~1 minute, then open https://mahdi-habibi.github.io/kia-academy/
+4. Save, wait ~1 minute, then open https://mahdi-habibi.github.io/pathwise/
 
 **Option B — GitHub Actions:**
 
@@ -42,7 +50,7 @@ Optional — use a real hosted API instead of demo mode:
 
 ```bash
 pnpm build:pages
-# Output: apps/web/out  (asset URLs expect /kia-academy/)
+# Output: apps/web/out  (asset URLs expect /pathwise/ — or set PAGES_REPO_NAME=kia-academy after renaming the repo)
 ```
 
 ### Local full stack (recommended for development)
