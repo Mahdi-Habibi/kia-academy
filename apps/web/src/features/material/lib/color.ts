@@ -62,16 +62,18 @@ export function hslToRgb(h: number, s: number, l: number): Rgb {
   const c = (1 - Math.abs(2 * l - 1)) * s;
   const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
   const m = l - c / 2;
-  let r1 = 0;
-  let g1 = 0;
-  let b1 = 0;
-
-  if (h < 60) [r1, g1, b1] = [c, x, 0];
-  else if (h < 120) [r1, g1, b1] = [x, c, 0];
-  else if (h < 180) [r1, g1, b1] = [0, c, x];
-  else if (h < 240) [r1, g1, b1] = [0, x, c];
-  else if (h < 300) [r1, g1, b1] = [x, 0, c];
-  else [r1, g1, b1] = [c, 0, x];
+  const [r1, g1, b1] =
+    h < 60
+      ? [c, x, 0]
+      : h < 120
+        ? [x, c, 0]
+        : h < 180
+          ? [0, c, x]
+          : h < 240
+            ? [0, x, c]
+            : h < 300
+              ? [x, 0, c]
+              : [c, 0, x];
 
   return {
     r: Math.round((r1 + m) * 255),

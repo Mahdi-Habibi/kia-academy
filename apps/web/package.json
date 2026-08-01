@@ -20,11 +20,11 @@
     "react-dom": "^19.2.8"
   },
   "devDependencies": {
-    "@playwright/test": "^1.52.0",
-    "@types/node": "^22.15.21",
+    "@playwright/test": "^1.62.0",
+    "@types/node": "^26.1.2",
     "@types/react": "^19.1.4",
     "@types/react-dom": "^19.1.5",
     "typescript": "^5.8.3",
-    "vitest": "^3.1.2"
+    "vitest": "^4.1.10"
   }
 }
