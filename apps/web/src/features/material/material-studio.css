@@ -986,6 +986,47 @@
     border-color 0.18s ease;
 }
 
+.icon-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  box-sizing: border-box;
+}
+
+.icon-card small {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.78rem;
+  line-height: 1.25;
+}
+
+/* Keep Copy / favorite controls in a compact row — do not inherit the
+   mobile 2-col grid used by filter toolbars. */
+.icon-card .control-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.35rem;
+  width: 100%;
+  margin-top: 0.15rem;
+}
+
+.icon-card .control-chip-ghost {
+  margin-left: 0;
+  margin-inline: 0;
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 100%;
+  padding: 0.35rem 0.5rem;
+  font-size: 0.68rem;
+  white-space: nowrap;
+}
+
 .icon-card:hover,
 .anim-card:hover,
 .font-card:hover {
@@ -997,9 +1038,11 @@
 .icon-card svg {
   width: var(--icon-size, 28px);
   height: var(--icon-size, 28px);
+  max-width: 100%;
   display: block;
-  margin: 0 auto 0.45rem;
+  margin: 0 auto;
   stroke: var(--primary-accent);
+  flex: 0 0 auto;
 }
 
 .bezier-box {
@@ -1132,6 +1175,12 @@
   border-radius: 1rem;
   padding: 0.85rem;
   border: 1px dashed rgba(100, 100, 255, 0.25);
+}
+
+#contrast-result {
+  text-align: left;
+  direction: ltr;
+  margin: 0.55rem 0 0;
 }
 
 .animation-preview > div {
@@ -1294,10 +1343,20 @@
     width: 100%;
   }
 
+  .material-mode .icon-card .control-row {
+    display: flex;
+    grid-template-columns: unset;
+  }
+
+  .material-mode .icon-card .control-row > * {
+    width: auto;
+    flex: 1 1 calc(50% - 0.2rem);
+  }
+
   .material-mode .icon-grid,
   .material-mode .anim-grid,
   .material-mode .font-grid {
-    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
   }
 
   .palette-generator-grid,
@@ -1380,6 +1439,21 @@
 
   .material-mode .control-row {
     grid-template-columns: 1fr;
+  }
+
+  .material-mode .icon-card {
+    padding: 0.65rem 0.55rem;
+  }
+
+  .material-mode .icon-card .control-row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .material-mode .icon-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 0.55rem;
   }
 
   .palette-generator-grid,
