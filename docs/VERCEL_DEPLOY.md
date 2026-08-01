@@ -5,7 +5,7 @@ This monorepo’s Nest API + PostgreSQL are **not** hosted on Vercel. Deploy **`
 ## One-time setup (dashboard)
 
 1. Open [vercel.com/new](https://vercel.com/new) and sign in with GitHub.
-2. Import **`Mahdi-Habibi/pathwise`**.
+2. Import **`Mahdi-Habibi/kia-academy`**.
 3. Configure the project:
    - **Framework Preset:** Next.js
    - **Root Directory:** `apps/web` (click Edit → enable, select `apps/web`)
@@ -15,8 +15,8 @@ This monorepo’s Nest API + PostgreSQL are **not** hosted on Vercel. Deploy **`
    | Name | Value |
    | --- | --- |
    | `NEXT_PUBLIC_DEMO_MODE` | `true` |
-   | `NEXT_PUBLIC_APP_URL` | `https://YOUR_PROJECT.vercel.app` (update after first deploy if needed) |
-   | `DATABASE_URL` | `postgresql://build:build@127.0.0.1:5432/build` |
+   | `NEXT_PUBLIC_APP_URL` | `https://kia-academy.vercel.app` (update after first deploy if needed) |
+   | `DATABASE_URL` | `postgresql://build:build@127.0.0.1:5432/build` (dummy; only for `prisma generate` during install) |
 
    `DATABASE_URL` is only so root `postinstall` (`prisma generate`) succeeds during install. It is not used by the static demo frontend.
 

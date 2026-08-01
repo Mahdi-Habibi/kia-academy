@@ -2,5 +2,5 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "nextjs",
   "installCommand": "cd ../.. && corepack enable && corepack prepare pnpm@11.13.0 --activate && pnpm install",
-  "buildCommand": "cd ../.. && pnpm --filter @pathwise/shared build && pnpm --filter @pathwise/web build"
+  "buildCommand": "cd ../.. && pnpm --filter @kia-academy/shared build && pnpm --filter @kia-academy/web build"
 }
