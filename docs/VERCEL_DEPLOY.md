@@ -2,30 +2,31 @@
 
 This monorepo’s Nest API + PostgreSQL are **not** hosted on Vercel. Deploy **`apps/web`** in demo mode (same idea as GitHub Pages): the UI runs without a live API.
 
-## One-time setup (dashboard)
+## Project (already created)
 
-1. Open [vercel.com/new](https://vercel.com/new) and sign in with GitHub.
-2. Import **`Mahdi-Habibi/kia-academy`**.
-3. Configure the project:
-   - **Framework Preset:** Next.js
-   - **Root Directory:** `apps/web` (click Edit → enable, select `apps/web`)
-   - Leave Install/Build as defined in `apps/web/vercel.json` (or paste the same commands)
-4. **Environment Variables** (Production + Preview):
+- Vercel project: **kia-academy** (team `mahdis-projects-08734297`)
+- GitHub connected: https://github.com/Mahdi-Habibi/kia-academy
+- Env vars set: `NEXT_PUBLIC_DEMO_MODE`, `DATABASE_URL` (dummy for prisma generate), `NEXT_PUBLIC_APP_URL`
+- Install/build commands use `@kia-academy/*` filters (see `apps/web/vercel.json`)
 
-   | Name | Value |
-   | --- | --- |
-   | `NEXT_PUBLIC_DEMO_MODE` | `true` |
-   | `NEXT_PUBLIC_APP_URL` | `https://kia-academy.vercel.app` (update after first deploy if needed) |
-   | `DATABASE_URL` | `postgresql://build:build@127.0.0.1:5432/build` (dummy; only for `prisma generate` during install) |
+## Required: set Root Directory (one-time)
 
-   `DATABASE_URL` is only so root `postinstall` (`prisma generate`) succeeds during install. It is not used by the static demo frontend.
+CLI cannot set this. In the Vercel dashboard:
 
-5. Click **Deploy**. Wait for the build to finish and open the `.vercel.app` URL.
-6. (Optional) After you know the production URL, set `NEXT_PUBLIC_APP_URL` to that URL and redeploy.
+1. Open [Build & Deployment settings](https://vercel.com/mahdis-projects-08734297/kia-academy/settings/build-and-deployment)
+2. **Root Directory** → Edit → set to **`apps/web`** → Save
+3. Keep **Include source files outside of the Root Directory** enabled (default for new projects)
+4. Deployments → Redeploy the latest production deployment (or push any commit to `main`)
 
-## Git integration (auto-redeploy)
+Without `apps/web` as Root Directory, Next.js detection fails at the monorepo root.
 
-With the GitHub repo connected, every push to the production branch (usually `main`) triggers a new Vercel deployment.
+## Environment Variables (already applied; keep for reference)
+
+| Name | Value |
+| --- | --- |
+| `NEXT_PUBLIC_DEMO_MODE` | `true` |
+| `NEXT_PUBLIC_APP_URL` | `https://kia-academy.vercel.app` (update if domain differs) |
+| `DATABASE_URL` | `postgresql://build:build@127.0.0.1:5432/build` (dummy; only for `prisma generate` during install) |
 
 ## Hourly redeploy heartbeat
 
@@ -34,7 +35,7 @@ Workflow: `.github/workflows/vercel-hourly-redeploy.yml`
 - Runs on a schedule (`0 * * * *` UTC) and via **Actions → Vercel hourly redeploy heartbeat → Run workflow**
 - Appends one UTC ISO timestamp line to `logs/vercel-redeploy-heartbeat.txt`
 - Commits with `[skip ci]` so full CI does not run every hour
-- That push makes Vercel redeploy
+- That push makes Vercel redeploy once Git + Root Directory are configured
 - The log file is **not** imported by the Next.js app
 
-**Note:** Scheduled workflows only run on the default branch after this file exists on that branch. GitHub can delay cron jobs by several minutes.
+**Note:** Scheduled workflows only run on the default branch. GitHub can delay cron jobs by several minutes.
