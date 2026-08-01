@@ -88,59 +88,61 @@ export function TopBar() {
 
   return (
     <div className="topbar" ref={topbarRef}>
-      <button type="button" className="logo" onClick={handleLogoClick}>
-        <span className="logo-mark" aria-hidden="true" />
-        <span className="logo-text">{settings.general.siteName || t('common.brand')}</span>
-      </button>
+      <div className="topbar-primary">
+        <button type="button" className="logo" onClick={handleLogoClick}>
+          <span className="logo-mark" aria-hidden="true" />
+          <span className="logo-text">{settings.general.siteName || t('common.brand')}</span>
+        </button>
 
-      <button
-        type="button"
-        className="mobile-nav-toggle"
-        aria-label={t('nav.menu')}
-        aria-expanded={navOpen}
-        aria-controls="site-top-nav"
-        onClick={() => setNavOpen((o) => !o)}
-      >
-        {navOpen ? <X size={20} /> : <Menu size={20} />}
-      </button>
+        <button
+          type="button"
+          className="mobile-nav-toggle"
+          aria-label={t('nav.menu')}
+          aria-expanded={navOpen}
+          aria-controls="site-top-nav"
+          onClick={() => setNavOpen((o) => !o)}
+        >
+          {navOpen ? <X size={20} /> : <Menu size={20} />}
+        </button>
 
-      <nav id="site-top-nav" className={`top-nav${navOpen ? ' top-nav--open' : ''}`}>
-        {isSuperAdmin ? (
-          <Link href="/admin" className="top-nav-link" onClick={() => setNavOpen(false)}>
-            <Shield size={14} /> {t('nav.admin')}
-          </Link>
-        ) : (
-          <>
-            <Link href="/material" className="top-nav-link" onClick={() => setNavOpen(false)}>
-              {t('landing.ctaMaterial')}
+        <nav id="site-top-nav" className={`top-nav${navOpen ? ' top-nav--open' : ''}`}>
+          {isSuperAdmin ? (
+            <Link href="/admin" className="top-nav-link" onClick={() => setNavOpen(false)}>
+              <Shield size={14} /> {t('nav.admin')}
             </Link>
-            <Link href="/education" className="top-nav-link" onClick={() => setNavOpen(false)}>
-              {t('landing.ctaEducation')}
-            </Link>
-            <Link href="/contact" className="top-nav-link" onClick={() => setNavOpen(false)}>
-              {t('landing.ctaContact')}
-            </Link>
-            <Link href="/courses" className="top-nav-link" onClick={() => setNavOpen(false)}>
-              <BookOpen size={14} /> {t('nav.courses')}
-            </Link>
-            {isAdmin && (
-              <Link href="/admin" className="top-nav-link" onClick={() => setNavOpen(false)}>
-                <Shield size={14} /> {t('nav.admin')}
+          ) : (
+            <>
+              <Link href="/material" className="top-nav-link" onClick={() => setNavOpen(false)}>
+                {t('landing.ctaMaterial')}
               </Link>
-            )}
-            <Link href="/dashboard" className="top-nav-link" onClick={() => setNavOpen(false)}>
-              {t('nav.dashboard')}
-            </Link>
-          </>
-        )}
+              <Link href="/education" className="top-nav-link" onClick={() => setNavOpen(false)}>
+                {t('landing.ctaEducation')}
+              </Link>
+              <Link href="/contact" className="top-nav-link" onClick={() => setNavOpen(false)}>
+                {t('landing.ctaContact')}
+              </Link>
+              <Link href="/courses" className="top-nav-link" onClick={() => setNavOpen(false)}>
+                <BookOpen size={14} /> {t('nav.courses')}
+              </Link>
+              {isAdmin && (
+                <Link href="/admin" className="top-nav-link" onClick={() => setNavOpen(false)}>
+                  <Shield size={14} /> {t('nav.admin')}
+                </Link>
+              )}
+              <Link href="/dashboard" className="top-nav-link" onClick={() => setNavOpen(false)}>
+                {t('nav.dashboard')}
+              </Link>
+            </>
+          )}
 
-        <div className="top-nav-tools">
-          <LanguageSelector />
-          {renderThemeToggle()}
-        </div>
-      </nav>
+          <div className="top-nav-tools">
+            <LanguageSelector />
+            {renderThemeToggle()}
+          </div>
+        </nav>
+      </div>
 
-      <div className="top-right">
+      <div className="topbar-secondary top-right">
         <div className="top-right-tools">
           <LanguageSelector />
           {renderThemeToggle()}

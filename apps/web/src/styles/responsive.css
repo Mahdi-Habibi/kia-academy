@@ -23,6 +23,11 @@
     direction: ltr;
   }
 
+  /* Flatten wrappers so logo/burger/nav still participate in the topbar grid */
+  .topbar-primary {
+    display: contents;
+  }
+
   .topbar .top-right {
     grid-column: 1;
     justify-self: start;
@@ -74,9 +79,16 @@
     animation: fadeUp var(--dur-fast) var(--ease-out) both;
   }
 
-  .top-nav-link {
+  .topbar .top-nav-link {
+    display: flex;
+    width: 100%;
+    box-sizing: border-box;
+    align-items: center;
+    justify-content: flex-start;
+    gap: var(--space-2);
     padding: var(--space-3);
     border-radius: var(--radius-sm);
+    text-align: start;
   }
 
   /* Language + theme live inside the mobile sheet; hide desktop copies */
@@ -87,6 +99,7 @@
   .top-nav-tools {
     display: flex;
     flex-direction: column;
+    align-items: stretch;
     gap: var(--space-2);
     margin-top: var(--space-2);
     padding-top: var(--space-3);
@@ -94,11 +107,16 @@
   }
 
   .top-nav-tools .theme-toggle,
-  .top-nav-tools .lang-toggle {
+  .top-nav-tools .lang-toggle,
+  .topbar .top-nav-tools button.lang-toggle {
+    display: inline-flex;
     width: 100%;
     min-width: 0;
     max-width: none;
+    box-sizing: border-box;
+    align-items: center;
     justify-content: flex-start;
+    gap: var(--space-2);
     padding-inline: var(--space-3);
     min-height: 44px;
   }

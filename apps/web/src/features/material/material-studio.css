@@ -885,6 +885,8 @@
   min-width: 820px;
   width: 100%;
   background: rgba(255, 255, 255, 0.6);
+  /* Keep Color as the physical leftmost column even on RTL pages */
+  direction: ltr;
 }
 
 .palette-matrix th,
@@ -904,7 +906,8 @@
   backdrop-filter: blur(5px);
   text-align: left;
   width: 180px;
-  box-shadow: 2px 3px 10px 0 rgba(128, 128, 128, 0.458);
+  min-width: 140px;
+  box-shadow: 2px 0 8px rgba(128, 128, 128, 0.28);
 }
 
 
@@ -1369,6 +1372,11 @@
 
   .palette-chip-scroll {
     gap: 0.4rem;
+  }
+
+  /* First tab (palette): hide ghost chips/CSS actions on small screens only */
+  #panel-palette .control-chip-ghost {
+    display: none !important;
   }
 
   .editor-tabs {

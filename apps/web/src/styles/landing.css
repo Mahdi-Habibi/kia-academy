@@ -270,6 +270,21 @@
   padding-top: var(--space-section);
 }
 
+/* Desktop: strip horizontal container padding so the journey rail can breathe;
+   other landing sections keep standard .container inline padding. */
+@media (min-width: 721px) {
+  section.landing-journey.container {
+    padding-inline: 0;
+  }
+
+  .landing-intro.container,
+  section.features-section.container,
+  section.landing-close.container-fluid,
+  footer.landing-guest-footer.container {
+    padding-inline: var(--space-6);
+  }
+}
+
 .journey-rail {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -473,23 +488,12 @@
     max-width: 22rem;
   }
 
+  .landing-trust {
+    display: none;
+  }
+
   .journey-rail {
     grid-template-columns: 1fr;
-  }
-
-  .landing-trust {
-    width: 100%;
-  }
-
-  .landing-trust-item {
-    flex: 1 1 100%;
-    align-items: center;
-    text-align: center;
-  }
-
-  .landing-trust-item + .landing-trust-item {
-    border-inline-start: none;
-    border-top: 1px solid var(--border-soft);
   }
 
   .landing-guest-footer {
