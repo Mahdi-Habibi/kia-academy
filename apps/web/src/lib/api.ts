@@ -20,6 +20,8 @@ import type {
   ExamAttemptSession,
   ExamResponse,
   ExamSubmitResult,
+  MiniIpipAnswers,
+  PersonalityResult,
   ReadinessResult,
   ReadinessScores,
   ReadinessTestSummary,
@@ -271,6 +273,17 @@ const liveApi = {
     return request<RoadmapResponse>(`/roadmaps/${roadmapId}/enroll`, {
       method: 'POST',
     });
+  },
+
+  submitPersonality(answers: MiniIpipAnswers): Promise<PersonalityResult> {
+    return request<PersonalityResult>('/personality', {
+      method: 'POST',
+      body: JSON.stringify({ answers }),
+    });
+  },
+
+  latestPersonality(): Promise<PersonalityResult | null> {
+    return request<PersonalityResult | null>('/personality/latest');
   },
 
   startExam(roadmapId?: string): Promise<ExamAttemptSession> {

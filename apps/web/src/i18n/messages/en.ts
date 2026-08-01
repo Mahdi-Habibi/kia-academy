@@ -201,11 +201,58 @@ export const en = {
     },
     start: {
       title: 'You are ready',
-      body: 'Your profile is complete. Start the assessment to build your learning path.',
-      cta: 'Start assessment',
+      body: 'Your profile is complete. Next you will take three short tests that shape your learning path.',
+      cta: 'Continue to tests',
       continue: 'Continue',
     },
     stepBadge: '{current} / {total}',
+  },
+  tests: {
+    board: {
+      eyebrow: 'Learner path',
+      title: 'Your three tests',
+      sub: 'Complete them in order. After you finish one, the next starts automatically.',
+      start: 'Start tests',
+      starting: 'Starting…',
+      note: 'About 25–40 minutes total. You can pause between screens.',
+      items: {
+        personality: {
+          title: 'Big Five personality test',
+          desc: 'Mini-IPIP — 20 short statements about how you usually are (Donnellan et al., 2006).',
+        },
+        assessment: {
+          title: 'Goal assessment',
+          desc: 'Tell us your goal, skills, interests, and study time so we can build a roadmap.',
+        },
+        readiness: {
+          title: 'Digital readiness exam',
+          desc: 'A timed 20-question check across logic, reading, ops, and problem-solving.',
+        },
+      },
+    },
+    personality: {
+      title: 'Big Five personality test',
+      instruction:
+        'Describe yourself as you generally are now, compared with others of the same age. There are no right or wrong answers.',
+      progress: 'Statement {current} of {total}',
+      answered: '{count} of {total} answered',
+      finish: 'Finish personality test',
+      submitting: 'Saving…',
+      likert: {
+        '1': 'Very inaccurate',
+        '2': 'Moderately inaccurate',
+        '3': 'Neither',
+        '4': 'Moderately accurate',
+        '5': 'Very accurate',
+      },
+      traits: {
+        extraversion: 'Extraversion',
+        agreeableness: 'Agreeableness',
+        conscientiousness: 'Conscientiousness',
+        neuroticism: 'Neuroticism',
+        openness: 'Openness / Intellect',
+      },
+    },
   },
   auth: {
     login: {
@@ -360,7 +407,7 @@ export const en = {
     empty: {
       sub: 'Complete the free assessment to unlock your personalized dashboard and roadmap.',
       startAssessment: {
-        title: 'Start assessment',
+        title: 'Start the three tests',
         desc: 'Answer a few questions and get a custom learning path',
         status: 'Begin →',
       },
@@ -475,7 +522,7 @@ export const en = {
       title: "Prove you're ready. Unlock the next stage of your roadmap.",
       desc: "A short, interactive assessment across five practical skill areas — not trivia, actual tasks like the ones you'll do in your first real modules.",
       descFree:
-        'This second preparations test is free and starts right after your goal assessment. Finish it to unlock your personalized roadmap.',
+        'This digital readiness exam is free and starts automatically after the Big Five personality test and goal assessment. Finish it to unlock your personalized roadmap.',
       computer: {
         title: 'Computer Literacy',
         desc: 'Navigate files and folders like a real dev environment',
