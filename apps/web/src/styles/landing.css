@@ -270,15 +270,15 @@
   padding-top: var(--space-section);
 }
 
-/* Desktop: strip horizontal container padding so the journey rail can breathe;
-   other landing sections keep standard .container inline padding. */
+/* Desktop: strip horizontal container padding on journey + features;
+   mobile keeps standard .container inline padding. */
 @media (min-width: 721px) {
-  section.landing-journey.container {
+  section.landing-journey.container,
+  section.features-section.container {
     padding-inline: 0;
   }
 
   .landing-intro.container,
-  section.features-section.container,
   section.landing-close.container-fluid,
   footer.landing-guest-footer.container {
     padding-inline: var(--space-6);
