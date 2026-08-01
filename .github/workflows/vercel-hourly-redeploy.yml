@@ -1,0 +1,47 @@
+# Appends a UTC timestamp to logs/vercel-redeploy-heartbeat.txt every hour.
+# The commit triggers a Vercel Git integration redeploy without changing the app.
+# [skip ci] keeps the hourly push from running the full CI workflow.
+
+name: Vercel hourly redeploy heartbeat
+
+on:
+  schedule:
+    # Every hour at minute 0 (UTC). GitHub may delay scheduled jobs slightly.
+    - cron: '0 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: vercel-hourly-redeploy
+  cancel-in-progress: false
+
+jobs:
+  heartbeat:
+    name: Append heartbeat and push
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          # Need a token that can push; default GITHUB_TOKEN works for same-repo.
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Append UTC timestamp to heartbeat log
+        run: |
+          mkdir -p logs
+          printf '%s\n' "$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> logs/vercel-redeploy-heartbeat.txt
+
+      - name: Commit and push (triggers Vercel)
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add logs/vercel-redeploy-heartbeat.txt
+          if git diff --staged --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+          git commit -m "chore(ops): hourly vercel redeploy heartbeat [skip ci]"
+          git push

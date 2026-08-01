@@ -1,0 +1,5 @@
+# Vercel redeploy heartbeat log
+# Updated hourly by .github/workflows/vercel-hourly-redeploy.yml
+# Not imported by the app — safe to ignore for product/UI behavior.
+#
+# Format: ISO-8601 UTC timestamp per line (newest at bottom)

@@ -15,6 +15,7 @@ playwright-report/
 **/playwright-report/
 .playwright-browsers/
 .pnpm-store/
+.npm-cache/
 *.log
 
 # Local configuration and secrets. Commit templates only.
