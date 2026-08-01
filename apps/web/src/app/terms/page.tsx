@@ -60,8 +60,8 @@ export default function TermsPage() {
         <section>
           <h2>{t('legal.terms.contact.h')}</h2>
           <p>
-            {t('legal.terms.contact.p').replace('legal@pathwise.dev', '').trim()}{' '}
-            <a href="mailto:legal@pathwise.dev">legal@pathwise.dev</a>
+            {t('legal.terms.contact.p').replace('legal@kia.academy', '').trim()}{' '}
+            <a href="mailto:legal@kia.academy">legal@kia.academy</a>
           </p>
         </section>
       </div>

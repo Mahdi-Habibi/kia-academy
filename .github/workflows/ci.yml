@@ -23,19 +23,19 @@ jobs:
       postgres:
         image: postgres:16-alpine
         env:
-          POSTGRES_USER: pathwise
-          POSTGRES_PASSWORD: pathwise
-          POSTGRES_DB: pathwise
+          POSTGRES_USER: kia_academy
+          POSTGRES_PASSWORD: kia_academy
+          POSTGRES_DB: kia_academy
         ports:
           - 5432:5432
         options: >-
-          --health-cmd "pg_isready -U pathwise -d pathwise"
+          --health-cmd "pg_isready -U kia_academy -d kia_academy"
           --health-interval 5s
           --health-timeout 5s
           --health-retries 10
 
     env:
-      DATABASE_URL: postgresql://pathwise:pathwise@localhost:5432/pathwise?schema=public
+      DATABASE_URL: postgresql://kia_academy:kia_academy@localhost:5432/kia_academy?schema=public
       JWT_SECRET: ci-jwt-secret-change-me-use-at-least-32-chars
       JWT_REFRESH_SECRET: ci-refresh-secret-change-me-use-32-chars
       JWT_EXPIRES_IN: 15m
@@ -78,7 +78,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build shared package
-        run: pnpm --filter @pathwise/shared build
+        run: pnpm --filter @kia-academy/shared build
 
       - name: Apply database migrations
         run: pnpm db:migrate:deploy

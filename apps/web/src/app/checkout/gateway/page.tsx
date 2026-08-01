@@ -8,7 +8,7 @@ import { RequireAuth } from '@/components/auth/RequireAuth';
 import { api, ApiError } from '@/lib/api';
 import { useAuth } from '@/context/AuthProvider';
 import { useLanguage } from '@/context/LanguageProvider';
-import type { PaymentResponse } from '@pathwise/shared';
+import type { PaymentResponse } from '@kia-academy/shared';
 
 function GatewayContent() {
   const router = useRouter();

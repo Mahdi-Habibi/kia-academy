@@ -1,5 +1,5 @@
 import { Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
-import type { AuthUser, CourseSummary, LessonDetail, LessonSummary } from '@pathwise/shared';
+import type { AuthUser, CourseSummary, LessonDetail, LessonSummary } from '@kia-academy/shared';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { CoursesService } from './courses.service';

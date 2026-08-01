@@ -1,6 +1,6 @@
 import { IsOptional, IsString, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
-import type { RoadmapDto } from '@pathwise/shared';
+import type { RoadmapDto } from '@kia-academy/shared';
 import { AssessmentAnswersDto } from '../../assessments/dto/create-assessment.dto';
 
 export class CreateRoadmapDto implements RoadmapDto {

@@ -23,7 +23,7 @@ import {
   normalizeAdminAccess,
   type AdminAccessSection,
   type SiteAdminAccessSettings,
-} from '@pathwise/shared';
+} from '@kia-academy/shared';
 import { useAuth } from '@/context/AuthProvider';
 import { useLanguage } from '@/context/LanguageProvider';
 

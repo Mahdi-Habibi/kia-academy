@@ -1,6 +1,6 @@
 import { CanActivate, ExecutionContext, ForbiddenException, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import type { AuthUser, UserRole } from '@pathwise/shared';
+import type { AuthUser, UserRole } from '@kia-academy/shared';
 import { ROLES_KEY } from '../decorators/roles.decorator';
 
 function roleSatisfies(userRole: UserRole, required: UserRole): boolean {

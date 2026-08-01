@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
-import type { RoadmapResponse } from '@pathwise/shared';
-import { buildRoadmapFromAnswers } from '@pathwise/shared';
+import type { RoadmapResponse } from '@kia-academy/shared';
+import { buildRoadmapFromAnswers } from '@kia-academy/shared';
 import { AssessmentsService } from '../assessments/assessments.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { SiteSettingsService } from '../site-settings/site-settings.service';

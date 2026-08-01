@@ -1,4 +1,4 @@
-const ACCESS_TOKEN_KEY = 'pathwise_access_token';
+const ACCESS_TOKEN_KEY = 'kia_academy_access_token';
 
 export function getAccessToken(): string | null {
   if (typeof window === 'undefined') return null;

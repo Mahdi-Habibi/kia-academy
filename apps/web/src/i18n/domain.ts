@@ -1,5 +1,5 @@
-import type { Goal, LearningStyle, SkillLevel, TrackKey } from '@pathwise/shared';
-import { normalizeReadinessModuleKey, READINESS_MODULE_LEGACY_TO_KEY } from '@pathwise/shared';
+import type { Goal, LearningStyle, SkillLevel, TrackKey } from '@kia-academy/shared';
+import { normalizeReadinessModuleKey, READINESS_MODULE_LEGACY_TO_KEY } from '@kia-academy/shared';
 import type { MessageKey } from './translate';
 
 /** Stable readiness module keys used as score map keys and for lookup. */

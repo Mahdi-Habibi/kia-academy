@@ -1,5 +1,5 @@
 import { IsArray, IsEnum, IsOptional, IsString, ArrayMinSize } from 'class-validator';
-import type { CheckoutDto, ProductType } from '@pathwise/shared';
+import type { CheckoutDto, ProductType } from '@kia-academy/shared';
 
 const PRODUCT_TYPES = ['READINESS_TEST', 'ROADMAP_BUNDLE', 'COURSE'] as const;
 

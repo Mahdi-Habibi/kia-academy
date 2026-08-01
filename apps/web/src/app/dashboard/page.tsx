@@ -14,8 +14,8 @@ import {
   PlayCircle,
   Trophy,
 } from 'lucide-react';
-import type { ReadinessTestSummary } from '@pathwise/shared';
-import { buildRoadmapFromAnswers } from '@pathwise/shared';
+import type { ReadinessTestSummary } from '@kia-academy/shared';
+import { buildRoadmapFromAnswers } from '@kia-academy/shared';
 import { PageBackButton } from '@/components/layout/PageBackButton';
 import { useApp } from '@/context/AppProvider';
 import { useAuth } from '@/context/AuthProvider';

@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import type { ChallengeScoreResult } from '@pathwise/shared';
+import type { ChallengeScoreResult } from '@kia-academy/shared';
 import { PrismaService } from '../prisma/prisma.service';
 import { SiteSettingsService } from '../site-settings/site-settings.service';
-import { buildChallengeResult } from '@pathwise/shared';
+import { buildChallengeResult } from '@kia-academy/shared';
 import { CreateChallengeSubmissionDto } from './dto/create-challenge-submission.dto';
 
 export interface ChallengeSubmissionResponse extends ChallengeScoreResult {

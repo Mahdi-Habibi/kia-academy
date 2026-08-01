@@ -39,7 +39,7 @@ import type {
   AdminUser,
   AdminPayment,
   SiteAdminAccessSettings,
-} from '@pathwise/shared';
+} from '@kia-academy/shared';
 import {
   buildRoadmapFromAnswers,
   computeReadinessResult,
@@ -54,18 +54,18 @@ import {
   buildExamVerdict,
   gradeAttempt,
   toPublicExamQuestions,
-} from '@pathwise/shared';
+} from '@kia-academy/shared';
 import { ApiError } from '@/lib/apiError';
 import { clearTokens, setAccessToken } from '@/lib/auth';
 
-const DEMO_SESSION_KEY = 'pathwise-demo-session';
-const DEMO_STATE_KEY = 'pathwise-demo-state';
-const DEMO_SETTINGS_KEY = 'pathwise-demo-settings';
+const DEMO_SESSION_KEY = 'kia-academy-demo-session';
+const DEMO_STATE_KEY = 'kia-academy-demo-state';
+const DEMO_SETTINGS_KEY = 'kia-academy-demo-settings';
 
 const DEMO_LEARNER: AuthUser = {
   id: 'demo-learner',
   name: 'Alex R.',
-  email: 'alex@pathwise.dev',
+  email: 'alex@kia.academy',
   phone: '09120000001',
   role: 'LEARNER',
   profileComplete: true,
@@ -73,8 +73,8 @@ const DEMO_LEARNER: AuthUser = {
 
 const DEMO_ADMIN: AuthUser = {
   id: 'demo-admin',
-  name: 'Pathwise Super Admin',
-  email: 'admin@pathwise.dev',
+  name: 'Kia Academy Super Admin',
+  email: 'admin@kia.academy',
   phone: null,
   role: 'SUPER_ADMIN',
   profileComplete: true,

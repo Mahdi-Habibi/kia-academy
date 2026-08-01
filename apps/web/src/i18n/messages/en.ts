@@ -1337,7 +1337,7 @@ export const en = {
       },
       contact: {
         h: 'Contact',
-        p: 'Legal inquiries: legal@pathwise.dev',
+        p: 'Legal inquiries: legal@kia.academy',
       },
     },
     privacy: {
@@ -1375,7 +1375,7 @@ export const en = {
       },
       contact: {
         h: 'Contact',
-        p: 'Questions about this policy? Email privacy@pathwise.dev.',
+        p: 'Questions about this policy? Email privacy@kia.academy.',
       },
     },
   },

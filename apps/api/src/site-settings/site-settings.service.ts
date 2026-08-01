@@ -5,7 +5,7 @@ import {
   type SiteSettings,
   type SiteTrackSettings,
   type UpdateSiteSettingsDto,
-} from '@pathwise/shared';
+} from '@kia-academy/shared';
 import { PrismaService } from '../prisma/prisma.service';
 
 const SETTINGS_KEY = 'site';

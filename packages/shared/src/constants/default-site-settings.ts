@@ -33,7 +33,7 @@ export function createDefaultSiteSettings(): SiteSettings {
       heroMinutes: 6,
       heroRoadmapsCount: 12400,
       heroMatchPercent: 94,
-      supportEmail: 'support@pathwise.dev',
+      supportEmail: 'support@kia.academy',
     },
     pricing: {
       readinessTestCents: PRODUCT_PRICES.READINESS_TEST,

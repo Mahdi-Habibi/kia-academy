@@ -62,7 +62,7 @@ export default function ContactPage() {
     }
   };
 
-  const supportEmail = settings.general.supportEmail || 'support@pathwise.dev';
+  const supportEmail = settings.general.supportEmail || 'support@kia.academy';
 
   return (
     <div className="page-content">

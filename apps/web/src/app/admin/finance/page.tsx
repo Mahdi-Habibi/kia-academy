@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { ClipboardList, Hourglass, Loader2, Wallet } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
-import type { AdminPayment, AdminStats } from '@pathwise/shared';
+import type { AdminPayment, AdminStats } from '@kia-academy/shared';
 import { useLanguage } from '@/context/LanguageProvider';
 import { api, ApiError } from '@/lib/api';
 

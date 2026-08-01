@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 async function useLocale(page: import('@playwright/test').Page, locale: 'en' | 'fa') {
   await page.context().addCookies([
     {
-      name: 'pathwise-locale',
+      name: 'kia-academy-locale',
       value: locale,
       url: 'http://localhost:3000',
     },

@@ -9,7 +9,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
-import type { AuthResponse, AuthUser, LearnerState, RequestOtpResponse } from '@pathwise/shared';
+import type { AuthResponse, AuthUser, LearnerState, RequestOtpResponse } from '@kia-academy/shared';
 import type { Request, Response } from 'express';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';

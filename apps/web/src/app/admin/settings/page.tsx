@@ -9,11 +9,11 @@ import {
   normalizePaymentSettings,
   type SiteSettings,
   type SiteTrackSettings,
-} from '@pathwise/shared';
+} from '@kia-academy/shared';
 import { useAuth } from '@/context/AuthProvider';
 import { useLanguage } from '@/context/LanguageProvider';
 import { api, ApiError } from '@/lib/api';
-import type { AdminCourse } from '@pathwise/shared';
+import type { AdminCourse } from '@kia-academy/shared';
 import { AdminAccessMatrix } from '@/components/admin/AdminAccessMatrix';
 
 type Section =

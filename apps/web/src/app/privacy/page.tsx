@@ -51,8 +51,8 @@ export default function PrivacyPage() {
         <section>
           <h2>{t('legal.privacy.contact.h')}</h2>
           <p>
-            {t('legal.privacy.contact.p').replace('privacy@pathwise.dev.', '').trim()}{' '}
-            <a href="mailto:privacy@pathwise.dev">privacy@pathwise.dev</a>.
+            {t('legal.privacy.contact.p').replace('privacy@kia.academy.', '').trim()}{' '}
+            <a href="mailto:privacy@kia.academy">privacy@kia.academy</a>.
           </p>
         </section>
       </div>

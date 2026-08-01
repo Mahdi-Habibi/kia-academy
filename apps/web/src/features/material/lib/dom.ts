@@ -1,4 +1,4 @@
-import { escapeHtml } from '@pathwise/shared';
+import { escapeHtml } from '@kia-academy/shared';
 
 export function toFiniteNumber(value: unknown, fallback: number): number {
   const num = Number(value);

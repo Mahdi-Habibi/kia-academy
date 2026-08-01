@@ -5,7 +5,7 @@ import {
   type ExamAttemptSession,
   type ExamResponse,
   type PublicExamQuestion,
-} from '@pathwise/shared';
+} from '@kia-academy/shared';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useLanguage } from '@/context/LanguageProvider';
 

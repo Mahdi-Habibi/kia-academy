@@ -8,12 +8,12 @@ import {
   normalizeAdminAccess,
   type SiteAdminAccessSettings,
   type UserRole,
-} from '@pathwise/shared';
+} from '@kia-academy/shared';
 import { AdminAccessMatrix } from '@/components/admin/AdminAccessMatrix';
 import { useAuth } from '@/context/AuthProvider';
 import { useLanguage } from '@/context/LanguageProvider';
 import { api, ApiError } from '@/lib/api';
-import type { AdminUser } from '@pathwise/shared';
+import type { AdminUser } from '@kia-academy/shared';
 
 function roleLabel(role: UserRole, t: (key: string) => string): string {
   if (role === 'SUPER_ADMIN') return t('domain.roles.superAdmin');

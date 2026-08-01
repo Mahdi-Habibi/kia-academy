@@ -1335,7 +1335,7 @@ export const fa = {
       },
       contact: {
         h: 'تماس',
-        p: 'پیگیری حقوقی: legal@pathwise.dev',
+        p: 'پیگیری حقوقی: legal@kia.academy',
       },
     },
     privacy: {
@@ -1373,7 +1373,7 @@ export const fa = {
       },
       contact: {
         h: 'تماس',
-        p: 'سؤالی درباره این سیاست داری؟ به privacy@pathwise.dev ایمیل بزن.',
+        p: 'سؤالی درباره این سیاست داری؟ به privacy@kia.academy ایمیل بزن.',
       },
     },
   },

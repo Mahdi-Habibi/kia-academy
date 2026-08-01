@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState, type SetStateAction } from 'react';
 import { getDefaultState, loadAppState, saveAppState, type PersistedAppState } from '@/lib/storage';
-import type { LearnerState } from '@pathwise/shared';
+import type { LearnerState } from '@kia-academy/shared';
 
 export function usePersistedAppState(learnerState: LearnerState | null) {
   const [state, setState] = useState<PersistedAppState>(getDefaultState);

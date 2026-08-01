@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate Kia Academy / Pathwise comprehensive developer guidebook (.docx)."""
+"""Generate Kia Academy / Kia Academy comprehensive developer guidebook (.docx)."""
 
 from __future__ import annotations
 
@@ -117,7 +117,7 @@ def build():
     meta = doc.add_paragraph()
     meta.alignment = WD_ALIGN_PARAGRAPH.CENTER
     r = meta.add_run(
-        "Monorepo: Pathwise → Kia Academy rebuild\n"
+        "Monorepo: Kia Academy (Persian-first rebuild)\n"
         "Stack: Next.js 15 · NestJS 11 · Prisma · PostgreSQL 16\n"
         "Audience: engineers onboarding to apps/web, apps/api, packages/shared"
     )
@@ -168,7 +168,7 @@ def build():
     add_p(
         doc,
         "آکادمی کیا (Kia Academy) is a Persian-first adaptive learning platform aimed at learners in Iran. "
-        "The repository historically branded as Pathwise is being rebuilt around this product shape "
+        "The repository is organized around this product shape "
         "(see docs/REBUILD_ARCHITECTURE.md).",
     )
     add_heading(doc, "1.1 Main purpose", 2)
@@ -197,7 +197,7 @@ def build():
         [
             "Full local stack: Next.js (3000) proxies /api → NestJS (3001) + PostgreSQL 16.",
             "GitHub Pages static export can run in NEXT_PUBLIC_DEMO_MODE with in-browser mocks (no hosted API).",
-            "Homepage (Pages): https://mahdi-habibi.github.io/pathwise/",
+            "Homepage (Pages): https://mahdi-habibi.github.io/kia-academy/",
         ],
     )
 
@@ -277,10 +277,10 @@ def build():
         doc,
         ["Package", "Path", "Role"],
         [
-            ["pathwise (root)", "/", "Scripts, shared lint/format deps, engines"],
-            ["@pathwise/web", "apps/web", "Next.js frontend (port 3000)"],
-            ["@pathwise/api", "apps/api", "NestJS API (port 3001, prefix /api)"],
-            ["@pathwise/shared", "packages/shared", "Shared domain types & algorithms"],
+            ["kia-academy (root)", "/", "Scripts, shared lint/format deps, engines"],
+            ["@kia-academy/web", "apps/web", "Next.js frontend (port 3000)"],
+            ["@kia-academy/api", "apps/api", "NestJS API (port 3001, prefix /api)"],
+            ["@kia-academy/shared", "packages/shared", "Shared domain types & algorithms"],
         ],
     )
     add_heading(doc, "3.3 Key directories", 2)
@@ -302,8 +302,8 @@ def build():
     add_heading(doc, "3.4 Build order", 2)
     add_p(
         doc,
-        "Always build @pathwise/shared before api seed/build or you hit MODULE_NOT_FOUND for "
-        "@pathwise/shared/dist. Root `pnpm build` runs shared → api → web.",
+        "Always build @kia-academy/shared before api seed/build or you hit MODULE_NOT_FOUND for "
+        "@kia-academy/shared/dist. Root `pnpm build` runs shared → api → web.",
     )
 
     # ── 4. Languages ───────────────────────────────────────────────────────
@@ -345,7 +345,7 @@ def build():
             "No Turbo/Nx — root scripts orchestrate builds",
         ],
     )
-    add_heading(doc, "5.2 Frontend libraries (@pathwise/web)", 2)
+    add_heading(doc, "5.2 Frontend libraries (@kia-academy/web)", 2)
     add_table(
         doc,
         ["Library", "Purpose"],
@@ -353,13 +353,13 @@ def build():
             ["next", "App Router, routing, rewrite proxy, static export / standalone"],
             ["react / react-dom", "UI runtime"],
             ["lucide-react", "Icon set across learner + admin UI"],
-            ["@pathwise/shared", "Domain types, exam grading helpers, tracks, prices"],
+            ["@kia-academy/shared", "Domain types, exam grading helpers, tracks, prices"],
             ["@playwright/test (dev)", "End-to-end browser tests"],
             ["vitest (dev)", "Unit tests for web"],
             ["typescript (dev)", "Typechecking"],
         ],
     )
-    add_heading(doc, "5.3 Backend libraries (@pathwise/api)", 2)
+    add_heading(doc, "5.3 Backend libraries (@kia-academy/api)", 2)
     add_table(
         doc,
         ["Library", "Purpose"],
@@ -385,7 +385,7 @@ def build():
     add_heading(doc, "5.4 Shared package", 2)
     add_p(
         doc,
-        "@pathwise/shared is pure TypeScript (no runtime deps). It owns exam question bank, grading, "
+        "@kia-academy/shared is pure TypeScript (no runtime deps). It owns exam question bank, grading, "
         "outcome mutation, track catalog, PRODUCT_PRICES / MODULE_PRICES, auth helpers (phone normalize, "
         "unsafe text checks), entitlements key helpers, and site-settings types. Tested with Vitest.",
     )
@@ -415,7 +415,7 @@ def build():
         doc,
         "The repo does not ship .vscode/extensions.json, Cursor skills, or husky/pre-commit hooks. "
         "Recommended locally: Node 22+, pnpm via Corepack, PostgreSQL 16 client tools, "
-        "Playwright Chromium for e2e (`pnpm --filter @pathwise/web exec playwright install chromium`).",
+        "Playwright Chromium for e2e (`pnpm --filter @kia-academy/web exec playwright install chromium`).",
     )
 
     # ── 6. Roles ───────────────────────────────────────────────────────────
@@ -461,10 +461,10 @@ def build():
         doc,
         ["Email", "Role", "Password"],
         [
-            ["admin@pathwise.dev", "SUPER_ADMIN", "Pathwise123!"],
-            ["moderator@pathwise.dev", "ADMIN (matrix A)", "Pathwise123!"],
-            ["moderator2@pathwise.dev", "ADMIN (matrix B)", "Pathwise123!"],
-            ["alex@pathwise.dev", "LEARNER", "Pathwise123!"],
+            ["admin@kia.academy", "SUPER_ADMIN", "KiaAcademy123!"],
+            ["moderator@kia.academy", "ADMIN (matrix A)", "KiaAcademy123!"],
+            ["moderator2@kia.academy", "ADMIN (matrix B)", "KiaAcademy123!"],
+            ["alex@kia.academy", "LEARNER", "KiaAcademy123!"],
         ],
     )
 
@@ -1156,7 +1156,7 @@ def build():
     add_p(
         doc,
         "Prefer `pnpm db:migrate:deploy` in non-interactive CI/agents. `prisma migrate dev` needs CREATEDB "
-        "on the pathwise role for shadow DB (otherwise Prisma P3014).",
+        "on the kia-academy role for shadow DB (otherwise Prisma P3014).",
     )
 
     # ── 15. Payments ───────────────────────────────────────────────────────
@@ -1165,7 +1165,7 @@ def build():
         doc,
         [
             "Currency: amounts stored as IRR integers; Persian UI shows تومان (typically ÷10)",
-            "Catalog: PRODUCT_PRICES and MODULE_PRICES in @pathwise/shared",
+            "Catalog: PRODUCT_PRICES and MODULE_PRICES in @kia-academy/shared",
             "Providers: dev | zarinpal | idpay | stripe (SitePaymentSettings)",
             "Checkout is a review step; confirm redirects to configured provider UX",
             "Stripe webhook supported when provider=stripe",
@@ -1196,7 +1196,7 @@ def build():
             "Node >= 22.13, Corepack/pnpm 11.13.0",
             "PostgreSQL 16 (Cloud VMs: sudo pg_ctlcluster 16 main start — Docker often unavailable)",
             "Copy env: apps/api/.env.example → .env; apps/web/.env.example → .env.local",
-            "Role/DB pathwise/pathwise as in .env.example; grant CREATEDB if using migrate dev",
+            "Role/DB kia-academy/kia-academy as in .env.example; grant CREATEDB if using migrate dev",
         ],
     )
     add_heading(doc, "17.2 Typical commands", 2)
@@ -1204,7 +1204,7 @@ def build():
         doc,
         [
             "pnpm install",
-            "pnpm --filter @pathwise/shared build",
+            "pnpm --filter @kia-academy/shared build",
             "pnpm db:migrate:deploy",
             "pnpm db:seed",
             "pnpm dev  — web :3000 + api :3001",
@@ -1253,7 +1253,7 @@ def build():
         ["Term", "Meaning"],
         [
             ["Kia Academy / آکادمی کیا", "Product name for the Persian-first rebuild"],
-            ["Pathwise", "Historical / monorepo package name"],
+            ["@kia-academy/*", "Monorepo package scope"],
             ["Material Studio", "Public design toolkit at /material"],
             ["Education path", "OTP → profile → assessment → exam → roadmap → pay → learn"],
             ["Readiness / preparations test", "Free timed exam after assessment"],

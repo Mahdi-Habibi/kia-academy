@@ -8,7 +8,7 @@ import {
   type PaymentResponse,
   type RoadmapResponse,
   type SitePaymentSettings,
-} from '@pathwise/shared';
+} from '@kia-academy/shared';
 import { SiteSettingsService } from '../site-settings/site-settings.service';
 import type Stripe from 'stripe';
 import { EmailService } from '../email/email.service';

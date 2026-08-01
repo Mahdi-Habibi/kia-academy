@@ -1,5 +1,5 @@
 import { IsNumber, IsObject, Min } from 'class-validator';
-import type { ModuleScore, ReadinessScores, ReadinessTestDto } from '@pathwise/shared';
+import type { ModuleScore, ReadinessScores, ReadinessTestDto } from '@kia-academy/shared';
 
 export class ModuleScoreDto implements ModuleScore {
   @IsNumber()

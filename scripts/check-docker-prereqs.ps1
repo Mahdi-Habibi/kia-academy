@@ -1,9 +1,9 @@
-# Pathwise — Docker Desktop / Virtualization check (Windows)
+# Kia Academy — Docker Desktop / Virtualization check (Windows)
 # Run in PowerShell. Does NOT change BIOS — only reports what you must enable.
 
 $ErrorActionPreference = 'Continue'
 
-Write-Host "`nPathwise Docker prerequisite check`n" -ForegroundColor Cyan
+Write-Host "`nKia Academy Docker prerequisite check`n" -ForegroundColor Cyan
 
 $cpu = Get-CimInstance Win32_Processor | Select-Object -First 1
 $sys = systeminfo | Select-String -Pattern "Virtualization Enabled In Firmware|Hyper-V Requirements"

@@ -6,7 +6,7 @@ import { FormEvent, useCallback, useEffect, useState } from 'react';
 import { Loader2, Trash2, Upload } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageProvider';
 import { api, ApiError } from '@/lib/api';
-import type { AdminCourse, AdminLesson } from '@pathwise/shared';
+import type { AdminCourse, AdminLesson } from '@kia-academy/shared';
 import { mediaUrl } from '@/lib/mediaUrl';
 
 const LESSON_VIDEO_PATH_RE = /^\/uploads\/lessons\/[a-z0-9/_-]+\.(mp4|webm|ogg|mov|m4v)$/i;

@@ -2,7 +2,7 @@
 
 import { Loader2 } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
-import type { AdminPayment } from '@pathwise/shared';
+import type { AdminPayment } from '@kia-academy/shared';
 import { useLanguage } from '@/context/LanguageProvider';
 import { api, ApiError } from '@/lib/api';
 

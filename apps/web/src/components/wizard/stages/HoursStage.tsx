@@ -1,6 +1,6 @@
 'use client';
 
-import type { AssessmentAnswers } from '@pathwise/shared';
+import type { AssessmentAnswers } from '@kia-academy/shared';
 import { useLanguage } from '@/context/LanguageProvider';
 import { HOURS_MAX, HOURS_MIN } from '../wizardOptions';
 import { WizardRange } from '../WizardRange';

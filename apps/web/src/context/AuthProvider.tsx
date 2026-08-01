@@ -1,6 +1,6 @@
 'use client';
 
-import type { AuthUser, LearnerState, LoginDto, RegisterDto } from '@pathwise/shared';
+import type { AuthUser, LearnerState, LoginDto, RegisterDto } from '@kia-academy/shared';
 import {
   createContext,
   useCallback,

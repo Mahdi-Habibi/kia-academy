@@ -115,7 +115,7 @@ describe('PaymentsService', () => {
       amountCents: 14900,
       currency: 'usd',
       status: 'PENDING',
-      user: { id: 'user-1', name: 'Alex', email: 'alex@pathwise.dev' },
+      user: { id: 'user-1', name: 'Alex', email: 'alex@kia.academy' },
     });
     prisma.payment.update.mockResolvedValue({
       id: 'pay-1',

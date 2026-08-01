@@ -5,7 +5,7 @@ import {
   resolveModeratorAdminAccess,
   type AuthUser,
   type SiteAdminAccessSettings,
-} from '@pathwise/shared';
+} from '@kia-academy/shared';
 import { PrismaService } from '../prisma/prisma.service';
 import { SiteSettingsService } from '../site-settings/site-settings.service';
 

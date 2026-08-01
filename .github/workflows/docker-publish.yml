@@ -27,9 +27,9 @@ jobs:
       matrix:
         include:
           - target: api
-            image: pathwise-api
+            image: kia-academy-api
           - target: web
-            image: pathwise-web
+            image: kia-academy-web
 
     steps:
       - name: Checkout

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { scoreFizzBuzz } from '@pathwise/shared';
+import { scoreFizzBuzz } from '@kia-academy/shared';
 
 describe('scoreFizzBuzz', () => {
   it('returns 0 for empty or minimal code', () => {

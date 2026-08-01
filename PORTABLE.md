@@ -1,4 +1,4 @@
-# Pathwise — setup on a new device
+# Kia Academy — setup on a new device
 
 This repository is a portable copy of the monorepo (source + lockfile). It does **not** include
 `node_modules`, build output, local databases, browser binaries, or local `.env` secrets.
@@ -12,10 +12,10 @@ This repository is a portable copy of the monorepo (source + lockfile). It does 
 ## First run
 
 ```bash
-cd pathwise
+cd kia-academy
 pnpm install
 pnpm approve-builds bcrypt @prisma/client prisma esbuild sharp   # if prompted
-pnpm --filter @pathwise/shared build
+pnpm --filter @kia-academy/shared build
 
 # Create env files from templates
 copy .env.example apps\api\.env
@@ -27,7 +27,7 @@ On macOS/Linux use `cp` instead of `copy`.
 Edit `apps/api/.env` so `DATABASE_URL` matches your machine:
 
 ```
-DATABASE_URL=postgresql://pathwise:pathwise@localhost:5432/pathwise?schema=public
+DATABASE_URL=postgresql://kia_academy:kia_academy@localhost:5432/kia_academy?schema=public
 ```
 
 ### Database once
@@ -39,8 +39,8 @@ Create role + DB (psql as superuser), **or** use Docker:
 pnpm docker:db
 
 # Local Postgres (psql):
-# CREATE ROLE pathwise LOGIN PASSWORD 'pathwise' CREATEDB;
-# CREATE DATABASE pathwise OWNER pathwise;
+# CREATE ROLE kia_academy LOGIN PASSWORD 'kia_academy' CREATEDB;
+# CREATE DATABASE kia_academy OWNER kia_academy;
 
 pnpm db:migrate
 pnpm db:seed
@@ -55,8 +55,8 @@ pnpm dev
 
 | Role    | Email                | Password       |
 | ------- | -------------------- | -------------- |
-| Learner | `alex@pathwise.dev`  | `Pathwise123!` |
-| Admin   | `admin@pathwise.dev` | `Pathwise123!` |
+| Learner | `alex@kia.academy`  | `KiaAcademy123!` |
+| Admin   | `admin@kia.academy` | `KiaAcademy123!` |
 
 ## Notes
 

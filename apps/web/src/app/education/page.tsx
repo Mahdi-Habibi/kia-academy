@@ -8,7 +8,7 @@ import {
   isValidEmail,
   normalizeIranianPhone,
   sanitizeProfileText,
-} from '@pathwise/shared';
+} from '@kia-academy/shared';
 import { RequireAuth } from '@/components/auth/RequireAuth';
 import { PageBackButton } from '@/components/layout/PageBackButton';
 import { useAuth } from '@/context/AuthProvider';

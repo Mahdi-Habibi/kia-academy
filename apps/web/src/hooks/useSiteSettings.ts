@@ -1,6 +1,6 @@
 'use client';
 
-import { createDefaultSiteSettings, type SiteSettings } from '@pathwise/shared';
+import { createDefaultSiteSettings, type SiteSettings } from '@kia-academy/shared';
 import { useEffect, useState } from 'react';
 import { api } from '@/lib/api';
 

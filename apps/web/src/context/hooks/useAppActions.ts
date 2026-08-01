@@ -11,7 +11,7 @@ import {
   type LearnerState,
   type ReadinessResult,
   type RoadmapResponse,
-} from '@pathwise/shared';
+} from '@kia-academy/shared';
 import { useRouter } from 'next/navigation';
 import { api } from '@/lib/api';
 import type { CourseItem, ModalState, PersistedAppState } from '@/lib/storage';

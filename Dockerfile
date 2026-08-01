@@ -28,9 +28,9 @@ FROM deps AS builder
 COPY packages/shared packages/shared
 COPY apps/api apps/api
 COPY apps/web apps/web
-RUN pnpm --filter @pathwise/shared build
-RUN pnpm --filter @pathwise/api exec prisma generate
-RUN pnpm --filter @pathwise/api build
+RUN pnpm --filter @kia-academy/shared build
+RUN pnpm --filter @kia-academy/api exec prisma generate
+RUN pnpm --filter @kia-academy/api build
 
 ARG NEXT_PUBLIC_API_URL=
 ARG NEXT_PUBLIC_APP_URL=http://localhost:3000
@@ -39,7 +39,7 @@ ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 ENV NEXT_PUBLIC_APP_URL=$NEXT_PUBLIC_APP_URL
 ENV API_PROXY_TARGET=$API_PROXY_TARGET
 ENV DOCKER_BUILD=true
-RUN pnpm --filter @pathwise/web build
+RUN pnpm --filter @kia-academy/web build
 
 # Production API image
 FROM base AS api

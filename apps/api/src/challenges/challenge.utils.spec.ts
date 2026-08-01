@@ -1,7 +1,7 @@
-import { buildChallengeResult, scoreFizzBuzz } from '@pathwise/shared';
+import { buildChallengeResult, scoreFizzBuzz } from '@kia-academy/shared';
 
 describe('challenge scoring', () => {
-  it('re-exports scoreFizzBuzz from @pathwise/shared', () => {
+  it('re-exports scoreFizzBuzz from @kia-academy/shared', () => {
     const code = `
       for (let i = 1; i <= 100; i++) {
         if (i % 3 === 0 && i % 5 === 0) console.log('FizzBuzz');
@@ -13,7 +13,7 @@ describe('challenge scoring', () => {
     expect(scoreFizzBuzz(code)).toBeGreaterThanOrEqual(75);
   });
 
-  it('re-exports buildChallengeResult from @pathwise/shared', () => {
+  it('re-exports buildChallengeResult from @kia-academy/shared', () => {
     const code = `
       for (let i = 1; i <= 100; i++) {
         if (i % 3 === 0 && i % 5 === 0) console.log('FizzBuzz');

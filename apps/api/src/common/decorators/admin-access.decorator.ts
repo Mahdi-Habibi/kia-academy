@@ -1,5 +1,5 @@
 import { SetMetadata } from '@nestjs/common';
-import type { AdminAccessSection, AdminSectionPermission } from '@pathwise/shared';
+import type { AdminAccessSection, AdminSectionPermission } from '@kia-academy/shared';
 
 export const ADMIN_ACCESS_KEY = 'adminAccess';
 

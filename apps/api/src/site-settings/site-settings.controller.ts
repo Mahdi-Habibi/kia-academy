@@ -1,5 +1,5 @@
 import { Body, Controller, ForbiddenException, Get, Put, UseGuards } from '@nestjs/common';
-import type { AuthUser, SiteSettings, UpdateSiteSettingsDto } from '@pathwise/shared';
+import type { AuthUser, SiteSettings, UpdateSiteSettingsDto } from '@kia-academy/shared';
 import { AdminAccess } from '../common/decorators/admin-access.decorator';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 import { Roles } from '../common/decorators/roles.decorator';
