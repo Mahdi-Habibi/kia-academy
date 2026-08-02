@@ -430,8 +430,8 @@ export const en = {
   dashboard: {
     loading: 'Loading your dashboard…',
     welcome: 'Welcome',
-    welcomeNamed: 'Welcome, {name}',
-    welcomeBack: 'Welcome back, {name}',
+    welcomeNamed: 'Hi {name}',
+    welcomeBack: 'Hi {name}, welcome back',
     fallbackName: 'Learner',
     empty: {
       sub: 'Complete the free assessment to unlock your personalized dashboard and roadmap.',
@@ -447,7 +447,7 @@ export const en = {
       },
     },
     hub: {
-      sub: 'Everything you need to keep moving, in one place.',
+      sub: 'Pick up where you left off.',
     },
     tile: {
       roadmap: {

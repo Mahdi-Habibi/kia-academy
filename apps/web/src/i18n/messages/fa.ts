@@ -430,9 +430,11 @@ export const fa = {
   dashboard: {
     loading: 'در حال بارگذاری پنل…',
     welcome: 'خوش آمدید',
-    welcomeNamed: 'خوش آمدید، {name}',
-    welcomeBack: 'خوش برگشتی، {name}',
-    fallbackName: 'یادگیر',
+    welcomeNamed: 'سلام {name}',
+    // Natural LMS greeting (Duolingo/Teachable-style “Hi {name}” + Iranian
+    // academy “خوش آمدی”) — avoids the awkward calque «خوش برگشتی».
+    welcomeBack: 'سلام {name}، خوش آمدی',
+    fallbackName: 'یادگیرنده',
     empty: {
       sub: 'برای باز کردن پنل و نقشه راه شخصی، ارزیابی رایگان را کامل کن.',
       startAssessment: {
@@ -447,7 +449,7 @@ export const fa = {
       },
     },
     hub: {
-      sub: 'هرچه برای پیشرفت لازم داری، در یک جا.',
+      sub: 'از همان‌جا که رها کردی ادامه بده.',
     },
     tile: {
       roadmap: {
