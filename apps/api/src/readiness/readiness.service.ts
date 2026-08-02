@@ -390,9 +390,22 @@ export class ReadinessService {
   private async latestReportReadiness(
     userId: string,
   ): Promise<LearnerTestReport['readiness']> {
-    const summaries = await this.listForUser(userId);
-    if (!summaries[0]) return null;
-    return this.toReportReadiness(summaries[0].id, userId);
+    // Prefer timed exam attempts (bilingual verdict) over legacy readiness rows
+    // created as a side-effect of exam submit — those store English-only copy.
+    const latestExam = await this.prisma.examAttempt.findFirst({
+      where: { userId, status: 'SUBMITTED' },
+      orderBy: { submittedAt: 'desc' },
+      select: { id: true },
+    });
+    if (latestExam) return this.toReportReadiness(latestExam.id, userId);
+
+    const latestLegacy = await this.prisma.readinessTest.findFirst({
+      where: { userId },
+      orderBy: { createdAt: 'desc' },
+      select: { id: true },
+    });
+    if (!latestLegacy) return null;
+    return this.toReportReadiness(latestLegacy.id, userId);
   }
 
   /** Preserves bilingual exam verdicts for accurate fa/en report rendering. */
@@ -420,6 +433,33 @@ export class ReadinessService {
       where: { id, userId },
     });
     if (!record) return null;
+
+    // Exam submit also writes a legacy ReadinessTest with English-only verdict.
+    // Prefer the matching ExamAttempt when present so the report stays bilingual.
+    const nearbyExam = await this.prisma.examAttempt.findFirst({
+      where: {
+        userId,
+        status: 'SUBMITTED',
+        average: record.average,
+        submittedAt: {
+          gte: new Date(record.createdAt.getTime() - 120_000),
+          lte: new Date(record.createdAt.getTime() + 120_000),
+        },
+      },
+      orderBy: { submittedAt: 'desc' },
+    });
+    if (nearbyExam) {
+      const submit = this.toSubmitResult(nearbyExam);
+      return {
+        id: nearbyExam.id,
+        createdAt: (nearbyExam.submittedAt ?? nearbyExam.createdAt).toISOString(),
+        percentages: submit.percentages,
+        average: submit.average,
+        passed: submit.passed,
+        verdict: submit.verdict,
+        outcome: submit.outcome,
+      };
+    }
 
     return {
       id: record.id,
