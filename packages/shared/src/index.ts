@@ -19,3 +19,4 @@ export * from './exam';
 export * from './personality';
 export * from './assessment';
 export * from './types/test-banks';
+export * from './types/test-report';

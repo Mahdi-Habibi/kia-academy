@@ -28,6 +28,21 @@ export class AssessmentsService {
     return this.toResponse(record);
   }
 
+  async latestForUser(userId: string): Promise<AssessmentResponse | null> {
+    const record = await this.prisma.assessment.findFirst({
+      where: { userId },
+      orderBy: { createdAt: 'desc' },
+    });
+    return record ? this.toResponse(record) : null;
+  }
+
+  async findForUser(id: string, userId: string): Promise<AssessmentResponse | null> {
+    const record = await this.prisma.assessment.findFirst({
+      where: { id, userId },
+    });
+    return record ? this.toResponse(record) : null;
+  }
+
   private toResponse(record: { id: string; answers: string; createdAt: Date }): AssessmentResponse {
     return {
       id: record.id,

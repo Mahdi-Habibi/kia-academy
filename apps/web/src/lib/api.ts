@@ -20,8 +20,10 @@ import type {
   ExamAttemptSession,
   ExamResponse,
   ExamSubmitResult,
+  LearnerTestReport,
   MiniIpipAnswers,
   PersonalityResult,
+  AssessmentResponse,
   ReadinessResult,
   ReadinessScores,
   ReadinessTestSummary,
@@ -290,6 +292,17 @@ const liveApi = {
 
   latestPersonality(): Promise<PersonalityResult | null> {
     return request<PersonalityResult | null>('/personality/latest');
+  },
+
+  latestAssessment(): Promise<AssessmentResponse | null> {
+    return request<AssessmentResponse | null>('/assessments/latest');
+  },
+
+  getTestReport(examAttemptId?: string): Promise<LearnerTestReport> {
+    const query = examAttemptId
+      ? `?examAttemptId=${encodeURIComponent(examAttemptId)}`
+      : '';
+    return request<LearnerTestReport>(`/readiness/report${query}`);
   },
 
   startExam(roadmapId?: string): Promise<ExamAttemptSession> {

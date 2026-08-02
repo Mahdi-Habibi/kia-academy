@@ -19,8 +19,10 @@ import type {
   ExamAttemptSession,
   ExamResponse,
   ExamSubmitResult,
+  LearnerTestReport,
   MiniIpipAnswers,
   PersonalityResult,
+  AssessmentResponse,
   ReadinessResult,
   ReadinessScores,
   ReadinessTestSummary,
@@ -629,6 +631,90 @@ export const demoApi = {
   async latestPersonality(): Promise<PersonalityResult | null> {
     requireUser();
     return delay(readState().personalityResult);
+  },
+
+  async latestAssessment(): Promise<AssessmentResponse | null> {
+    requireUser();
+    const state = readState();
+    if (!state.lastAnswers) return delay(null);
+    return delay({
+      id: `assessment-${state.roadmapId ?? 'demo'}`,
+      answers: state.lastAnswers,
+      createdAt: new Date().toISOString(),
+    });
+  },
+
+  async getTestReport(examAttemptId?: string): Promise<LearnerTestReport> {
+    requireUser();
+    const state = readState();
+    const personality = state.personalityResult;
+    const assessment = state.lastAnswers
+      ? {
+          id: `assessment-${state.roadmapId ?? 'demo'}`,
+          answers: state.lastAnswers,
+          createdAt: new Date().toISOString(),
+        }
+      : null;
+
+    let readiness: LearnerTestReport['readiness'] = null;
+    if (state.examAttempt?.result) {
+      const result = state.examAttempt.result;
+      readiness = {
+        id: examAttemptId ?? result.attemptId,
+        createdAt: result.submittedAt,
+        percentages: result.percentages,
+        average: result.average,
+        passed: result.passed,
+        verdict: result.verdict,
+        outcome: result.outcome,
+      };
+    } else if (state.testCompleted) {
+      readiness = {
+        id: examAttemptId ?? 'demo-readiness',
+        createdAt: new Date().toISOString(),
+        percentages: {
+          digitalOps: 70,
+          logicalReasoning: 72,
+          techReading: 68,
+          codeSense: 74,
+          problemSolving: 76,
+        },
+        average: 72,
+        passed: true,
+        verdict: {
+          icon: '✓',
+          title: "You're ready for the next module",
+          message: 'Overall score: 72%.',
+          unlockTitle: "You're ready for the next module",
+          unlockSub: 'Your roadmap has been updated.',
+          variant: 'success',
+        },
+      };
+    }
+
+    const settings = readDemoSettings();
+    const answers = state.lastAnswers ?? defaultState().lastAnswers;
+    const built = answers
+      ? buildRoadmapFromAnswers(answers, state.roadmapEnrolled, state.roadmapId ?? 'demo', {
+          tracks: settings.tracks,
+          pricing: settings.pricing,
+        })
+      : null;
+
+    return delay({
+      personality,
+      assessment,
+      readiness,
+      roadmap: built
+        ? {
+            id: built.id,
+            trackKey: built.trackKey,
+            trackName: built.trackName,
+            level: built.level,
+            profile: built.profile,
+          }
+        : null,
+    });
   },
 
   async saveRoadmap(answers: AssessmentAnswers): Promise<RoadmapResponse> {

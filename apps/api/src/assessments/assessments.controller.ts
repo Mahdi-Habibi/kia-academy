@@ -16,6 +16,11 @@ export class AssessmentsController {
     return this.assessmentsService.create(dto, user.id);
   }
 
+  @Get('latest')
+  latest(@CurrentUser() user: AuthUser) {
+    return this.assessmentsService.latestForUser(user.id);
+  }
+
   @Get(':id')
   findOne(@CurrentUser() user: AuthUser, @Param('id') id: string) {
     return this.assessmentsService.findOne(id, user.id);

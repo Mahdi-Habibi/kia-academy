@@ -50,16 +50,37 @@ export class PersonalityService {
   }
 
   async latestForUser(userId: string): Promise<PersonalityResult | null> {
-    const record = await this.prisma.personalityResult.findFirst({
+    return this.forUserAround(userId);
+  }
+
+  /**
+   * Prefer the newest Mini-IPIP result at or before `at` (same session as an exam),
+   * otherwise fall back to the learner's latest result.
+   */
+  async forUserAround(userId: string, at?: Date): Promise<PersonalityResult | null> {
+    const bank = await this.testBanks.getPersonalityBank();
+    if (at) {
+      const around = await this.prisma.personalityResult.findFirst({
+        where: { userId, createdAt: { lte: at } },
+        orderBy: { createdAt: 'desc' },
+      });
+      if (around) return this.toResult(around, bank.citation);
+    }
+    const latest = await this.prisma.personalityResult.findFirst({
       where: { userId },
       orderBy: { createdAt: 'desc' },
     });
-    if (!record) return null;
-    const bank = await this.testBanks.getPersonalityBank();
+    return latest ? this.toResult(latest, bank.citation) : null;
+  }
+
+  private toResult(
+    record: { id: string; answers: string; scores: string; createdAt: Date },
+    citation: string,
+  ): PersonalityResult {
     return {
       id: record.id,
       instrument: 'mini-ipip',
-      citation: bank.citation,
+      citation,
       answers: JSON.parse(record.answers) as MiniIpipAnswers,
       scores: JSON.parse(record.scores) as PersonalityResult['scores'],
       createdAt: record.createdAt.toISOString(),
