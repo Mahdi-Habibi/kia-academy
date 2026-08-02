@@ -669,27 +669,7 @@ export const demoApi = {
         outcome: result.outcome,
       };
     } else if (state.testCompleted) {
-      readiness = {
-        id: examAttemptId ?? 'demo-readiness',
-        createdAt: new Date().toISOString(),
-        percentages: {
-          digitalOps: 70,
-          logicalReasoning: 72,
-          techReading: 68,
-          codeSense: 74,
-          problemSolving: 76,
-        },
-        average: 72,
-        passed: true,
-        verdict: {
-          icon: '✓',
-          title: "You're ready for the next module",
-          message: 'Overall score: 72%.',
-          unlockTitle: "You're ready for the next module",
-          unlockSub: 'Your roadmap has been updated.',
-          variant: 'success',
-        },
-      };
+      readiness = null;
     }
 
     const settings = readDemoSettings();
@@ -929,13 +909,14 @@ export const demoApi = {
   async listReadinessTests(): Promise<ReadinessTestSummary[]> {
     requireUser();
     const state = readState();
-    if (!state.testCompleted) return delay([]);
+    if (!state.examAttempt?.result) return delay([]);
+    const result = state.examAttempt.result;
     return delay([
       {
-        id: state.examAttempt?.attemptId ?? 'demo-readiness',
-        createdAt: new Date().toISOString(),
-        average: state.examAttempt?.result?.average ?? 72,
-        passed: state.examAttempt?.result?.passed ?? true,
+        id: state.examAttempt.attemptId,
+        createdAt: result.submittedAt,
+        average: result.average,
+        passed: result.passed,
       },
     ]);
   },

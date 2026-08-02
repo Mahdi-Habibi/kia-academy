@@ -456,10 +456,16 @@ export const en = {
         status: 'View roadmap →',
       },
       test: {
-        title: 'Continue Test',
+        title: 'Your test score',
         desc: 'Programming readiness assessment',
-        completed: 'Completed →',
+        completed: 'View full report →',
         notStarted: 'Not started →',
+      },
+      retake: {
+        title: 'Retake readiness exam',
+        desc: 'Timed digital readiness check',
+        status: 'Start exam →',
+        lastScore: 'Last exam {score}% →',
       },
       bootcamp: {
         title: 'Active Bootcamp Challenge',

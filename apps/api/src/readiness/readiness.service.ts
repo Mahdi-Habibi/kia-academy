@@ -541,8 +541,20 @@ export class ReadinessService {
       passed: record.passed ?? false,
     }));
 
+    // Drop legacy rows that were written as a side-effect of exam submit
+    // (same average within 2 minutes) so history shows real exam scores once.
     const fromLegacy = legacy
-      .filter((record) => !examIds.has(record.id))
+      .filter((record) => {
+        if (examIds.has(record.id)) return false;
+        const legacyTime = record.createdAt.getTime();
+        return !exams.some((exam) => {
+          const examTime = (exam.submittedAt ?? exam.createdAt).getTime();
+          return (
+            (exam.average ?? 0) === record.average &&
+            Math.abs(examTime - legacyTime) <= 120_000
+          );
+        });
+      })
       .map((record) => ({
         id: record.id,
         createdAt: record.createdAt.toISOString(),

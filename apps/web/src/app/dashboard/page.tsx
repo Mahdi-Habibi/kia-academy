@@ -14,21 +14,44 @@ import {
   PlayCircle,
   Trophy,
 } from 'lucide-react';
-import type { ReadinessTestSummary } from '@kia-academy/shared';
-import { buildRoadmapFromAnswers } from '@kia-academy/shared';
+import {
+  buildRoadmapFromAnswers,
+  computeOverallTestScore,
+  type LearnerTestReport,
+  type ReadinessTestSummary,
+} from '@kia-academy/shared';
 import { useApp } from '@/context/AppProvider';
 import { useAuth } from '@/context/AuthProvider';
 import { useLanguage } from '@/context/LanguageProvider';
 import { moduleMessageKey } from '@/i18n/domain';
 import { api, ApiError } from '@/lib/api';
 
+function resolveDashboardTestScore(
+  report: LearnerTestReport | null,
+  examAverage: number | undefined,
+  historyAverage: number | undefined,
+): number | null {
+  // Prefer the combined three-test score when personality + readiness exist;
+  // otherwise fall back to the real readiness exam average from report/history.
+  const overall = report ? computeOverallTestScore(report) : null;
+  if (overall != null && report?.personality && report.readiness) return overall;
+  if (typeof examAverage === 'number' && Number.isFinite(examAverage)) return examAverage;
+  if (report?.readiness && Number.isFinite(report.readiness.average)) {
+    return report.readiness.average;
+  }
+  if (typeof historyAverage === 'number' && Number.isFinite(historyAverage)) {
+    return historyAverage;
+  }
+  return overall;
+}
+
 export default function DashboardPage() {
   const router = useRouter();
-  const { hasRoadmap, roadmap, answers, testCompleted, hydrated } = useApp();
+  const { hasRoadmap, roadmap, answers, testCompleted, hydrated, examResult } = useApp();
   const { user, learnerState, loading: authLoading, isAuthenticated } = useAuth();
-  const { t } = useLanguage();
-  const { format } = useLanguage();
+  const { t, format } = useLanguage();
   const [testHistory, setTestHistory] = useState<ReadinessTestSummary[]>([]);
+  const [testReport, setTestReport] = useState<LearnerTestReport | null>(null);
   const [historyError, setHistoryError] = useState('');
   const [nextLessonHref, setNextLessonHref] = useState<string | null>(null);
 
@@ -44,13 +67,24 @@ export default function DashboardPage() {
 
   useEffect(() => {
     if (!isAuthenticated) return;
-    api
-      .listReadinessTests()
-      .then(setTestHistory)
+    let cancelled = false;
+    Promise.all([api.listReadinessTests(), api.getTestReport().catch(() => null)])
+      .then(([history, report]) => {
+        if (cancelled) return;
+        setTestHistory(history);
+        setTestReport(report);
+      })
       .catch((err) => {
-        setHistoryError(err instanceof ApiError ? err.message : t('dashboard.testHistory.loadError'));
+        if (!cancelled) {
+          setHistoryError(
+            err instanceof ApiError ? err.message : t('dashboard.testHistory.loadError'),
+          );
+        }
       });
-  }, [isAuthenticated, t]);
+    return () => {
+      cancelled = true;
+    };
+  }, [isAuthenticated, t, testCompleted, examResult?.attemptId]);
 
   useEffect(() => {
     if (!isAuthenticated) return;
@@ -136,7 +170,19 @@ export default function DashboardPage() {
     : t('dashboard.fallbackNextCourse');
   const firstName = user?.name?.split(' ')[0] ?? t('dashboard.fallbackName');
   const lessonHref = nextLessonHref ?? '/learn/javascript-core/variables-and-types';
-  const latestScore = testHistory[0]?.average;
+
+  const latestExamScore =
+    examResult?.average ??
+    testReport?.readiness?.average ??
+    testHistory[0]?.average;
+  const latestScore = resolveDashboardTestScore(
+    testReport,
+    examResult?.average,
+    testHistory[0]?.average,
+  );
+  const testsDone = Boolean(
+    testCompleted || testReport?.readiness || latestExamScore != null,
+  );
 
   return (
     <div className="page-content">
@@ -183,22 +229,26 @@ export default function DashboardPage() {
           <button
             type="button"
             className="tile tile--quarter"
-            onClick={() => router.push('/readiness/results')}
+            onClick={() =>
+              router.push(testsDone ? '/readiness/results' : '/assessment')
+            }
           >
             <span
-              className={`t-icon ${testCompleted ? 't-icon--mint' : ''}`}
+              className={`t-icon ${testsDone ? 't-icon--mint' : ''}`}
               aria-hidden="true"
             >
-              {testCompleted ? <CheckCircle2 size={22} /> : <Lock size={22} />}
+              {testsDone ? <CheckCircle2 size={22} /> : <Lock size={22} />}
             </span>
             <b>{t('dashboard.tile.test.title')}</b>
-            {testCompleted && latestScore !== undefined ? (
-              <span className="t-score mono ltr-isolate">{latestScore}%</span>
+            {testsDone && latestScore != null ? (
+              <span className="t-score mono ltr-isolate">
+                {format.number(latestScore)}%
+              </span>
             ) : (
               <span>{t('dashboard.tile.test.desc')}</span>
             )}
-            <span className={`t-status ${testCompleted ? 't-status--mint' : ''}`}>
-              {testCompleted
+            <span className={`t-status ${testsDone ? 't-status--mint' : ''}`}>
+              {testsDone
                 ? t('dashboard.tile.test.completed')
                 : t('dashboard.tile.test.notStarted')}
             </span>
@@ -238,9 +288,15 @@ export default function DashboardPage() {
             <span className="t-icon t-icon--mint" aria-hidden="true">
               <Gauge size={22} />
             </span>
-            <b>{t('dashboard.tile.test.title')}</b>
-            <span>{t('dashboard.tile.test.desc')}</span>
-            <span className="t-status t-status--mint">{t('dashboard.tile.test.notStarted')}</span>
+            <b>{t('dashboard.tile.retake.title')}</b>
+            <span>{t('dashboard.tile.retake.desc')}</span>
+            <span className="t-status t-status--mint">
+              {latestExamScore != null
+                ? t('dashboard.tile.retake.lastScore', {
+                    score: format.number(latestExamScore),
+                  })
+                : t('dashboard.tile.retake.status')}
+            </span>
           </button>
         </div>
 
@@ -257,7 +313,9 @@ export default function DashboardPage() {
               {testHistory.map((item) => (
                 <div key={item.id} className="test-history-item">
                   <span className="test-history-date">{format.date(item.createdAt)}</span>
-                  <span className="test-history-score mono ltr-isolate">{item.average}%</span>
+                  <span className="test-history-score mono ltr-isolate">
+                    {format.number(item.average)}%
+                  </span>
                   <span
                     className={`chip ${item.passed ? 'chip--mint' : 'chip--amber'}`}
                   >
