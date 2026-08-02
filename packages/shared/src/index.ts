@@ -20,3 +20,4 @@ export * from './personality';
 export * from './assessment';
 export * from './types/test-banks';
 export * from './types/test-report';
+export * from './utils/test-report-score';
