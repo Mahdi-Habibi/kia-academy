@@ -3,18 +3,16 @@
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense, useEffect, useMemo, useState } from 'react';
 import {
-  EXAM_DOMAINS,
   computeReadinessResult,
-  type ExamOutcome,
   type ExamSubmitResult,
-  type ReadinessResult,
+  type LearnerTestReport,
+  type LearnerTestReportReadiness,
 } from '@kia-academy/shared';
 import { RequireAuth } from '@/components/auth/RequireAuth';
 import { PageBackButton } from '@/components/layout/PageBackButton';
-import { RadarChart } from '@/components/readiness/RadarChart';
+import { FullTestReport } from '@/components/test/FullTestReport';
 import { useApp } from '@/context/AppProvider';
 import { useLanguage } from '@/context/LanguageProvider';
-import { moduleMessageKey } from '@/i18n/domain';
 import { api, ApiError } from '@/lib/api';
 
 function pickLocale(
@@ -23,6 +21,18 @@ function pickLocale(
 ): string {
   if (typeof text === 'string') return text;
   return locale === 'fa' ? text.fa : text.en;
+}
+
+function fromExamResult(activeExam: ExamSubmitResult): LearnerTestReportReadiness {
+  return {
+    id: activeExam.attemptId,
+    createdAt: activeExam.submittedAt,
+    percentages: activeExam.percentages,
+    average: activeExam.average,
+    passed: activeExam.passed,
+    verdict: activeExam.verdict,
+    outcome: activeExam.outcome,
+  };
 }
 
 function ReadinessResultsContent() {
@@ -37,11 +47,11 @@ function ReadinessResultsContent() {
     testCompleted,
     hydrated,
     roadmap,
+    answers,
   } = useApp();
-  const [historical, setHistorical] = useState<
-    (ReadinessResult & { id: string; createdAt: string; outcome?: ExamOutcome }) | null
-  >(null);
+  const [report, setReport] = useState<LearnerTestReport | null>(null);
   const [loadError, setLoadError] = useState('');
+  const [loading, setLoading] = useState(true);
 
   const hasScores = Object.keys(readinessScores).length > 0;
   const localFallback = useMemo(
@@ -49,78 +59,92 @@ function ReadinessResultsContent() {
     [readinessResult, readinessScores, hasScores],
   );
 
+  const localReadinessOverride = useMemo(() => {
+    if (testId) return null;
+    if (examResult) return fromExamResult(examResult);
+    if (localFallback) {
+      return {
+        id: 'local',
+        createdAt: new Date().toISOString(),
+        ...localFallback,
+      } satisfies LearnerTestReportReadiness;
+    }
+    return null;
+  }, [testId, examResult, localFallback]);
+
   useEffect(() => {
-    if (!testId) return;
     let cancelled = false;
+    setLoading(true);
+    setLoadError('');
     api
-      .getReadinessTest(testId)
+      .getTestReport(testId ?? undefined)
       .then((res) => {
-        if (!cancelled) setHistorical(res);
+        if (cancelled) return;
+        setReport(res);
+        setLoading(false);
       })
-      .catch(async () => {
-        try {
-          const exam = await api.getExamAttempt(testId);
-          if (cancelled) return;
-          if ('attemptId' in exam && 'outcome' in exam) {
-            const submit = exam as ExamSubmitResult;
-            setHistorical({
-              id: submit.attemptId,
-              createdAt: submit.submittedAt,
-              percentages: submit.percentages,
-              average: submit.average,
-              passed: submit.passed,
-              verdict: {
-                icon: submit.verdict.icon,
-                title: pickLocale(submit.verdict.title, locale),
-                message: pickLocale(submit.verdict.message, locale),
-                unlockTitle: pickLocale(submit.verdict.unlockTitle, locale),
-                unlockSub: pickLocale(submit.verdict.unlockSub, locale),
-                variant: submit.verdict.variant,
-              },
-              outcome: submit.outcome,
-            });
-          }
-        } catch (err) {
-          if (!cancelled) {
-            setLoadError(err instanceof ApiError ? err.message : t('common.errorFallback'));
-          }
+      .catch((err) => {
+        if (cancelled) return;
+        // Offline / unauthenticated fallback: compose from in-memory app state.
+        if (!testId && (examResult || localFallback || answers.goal)) {
+          setReport({
+            personality: null,
+            assessment: answers.goal
+              ? {
+                  id: 'local',
+                  answers,
+                  createdAt: new Date().toISOString(),
+                }
+              : null,
+            readiness: examResult
+              ? fromExamResult(examResult)
+              : localFallback
+                ? {
+                    id: 'local',
+                    createdAt: new Date().toISOString(),
+                    ...localFallback,
+                  }
+                : null,
+            roadmap: roadmap
+              ? {
+                  id: roadmap.id,
+                  trackKey: roadmap.trackKey,
+                  trackName: roadmap.trackName,
+                  level: roadmap.level,
+                  profile: roadmap.profile,
+                }
+              : null,
+          });
+          setLoading(false);
+          return;
         }
+        setLoadError(err instanceof ApiError ? err.message : t('common.errorFallback'));
+        setLoading(false);
       });
     return () => {
       cancelled = true;
     };
-  }, [testId, t, locale]);
+  }, [testId, t, examResult, localFallback, answers, roadmap]);
 
   useEffect(() => {
-    if (!hydrated || testId) return;
+    if (!hydrated || loading || report) return;
+    if (testId) return;
     if (!testCompleted && !hasScores && !readinessResult && !examResult) {
       router.replace('/readiness');
     }
-  }, [hydrated, testCompleted, hasScores, readinessResult, examResult, router, testId]);
+  }, [
+    hydrated,
+    loading,
+    report,
+    testCompleted,
+    hasScores,
+    readinessResult,
+    examResult,
+    router,
+    testId,
+  ]);
 
-  const activeExam = examResult;
-  const result = testId
-    ? historical
-    : activeExam
-      ? {
-          percentages: activeExam.percentages,
-          average: activeExam.average,
-          passed: activeExam.passed,
-          verdict: {
-            icon: activeExam.verdict.icon,
-            title: pickLocale(activeExam.verdict.title, locale),
-            message: pickLocale(activeExam.verdict.message, locale),
-            unlockTitle: pickLocale(activeExam.verdict.unlockTitle, locale),
-            unlockSub: pickLocale(activeExam.verdict.unlockSub, locale),
-            variant: activeExam.verdict.variant,
-          },
-          outcome: activeExam.outcome,
-        }
-      : localFallback
-        ? { ...localFallback, outcome: undefined as ExamOutcome | undefined }
-        : null;
-
-  if (testId && loadError) {
+  if (loadError && !report) {
     return (
       <div className="page-content">
         <div className="container results">
@@ -133,7 +157,7 @@ function ReadinessResultsContent() {
     );
   }
 
-  if (!result) {
+  if (loading || !report) {
     return (
       <div className="page-content">
         <div className="container results">
@@ -143,27 +167,18 @@ function ReadinessResultsContent() {
     );
   }
 
-  const outcome = 'outcome' in result ? result.outcome : undefined;
-  const domainKeys = EXAM_DOMAINS.some((d) => result.percentages[d] != null)
-    ? EXAM_DOMAINS
-    : (Object.keys(result.percentages) as string[]);
-
-  const verdictStyle = result.passed
-    ? {
-        borderColor: 'var(--emerald)',
-        background: 'var(--emerald-dim)',
-        border: '1px solid var(--emerald)',
-      }
-    : {
-        borderColor: 'var(--amber)',
-        background: 'var(--amber-dim)',
-        border: '1px solid var(--amber)',
-      };
-
-  const roadmapId = outcome?.roadmapId ?? roadmap?.id;
+  const readiness = localReadinessOverride ?? report.readiness;
+  const roadmapId = readiness?.outcome?.roadmapId ?? report.roadmap?.id ?? roadmap?.id;
   const roadmapHref = roadmapId
     ? `/roadmap?roadmapId=${encodeURIComponent(roadmapId)}`
     : '/roadmap';
+
+  const unlockTitle = readiness
+    ? pickLocale(readiness.verdict.unlockTitle, locale)
+    : t('tests.report.continueTitle');
+  const unlockSub = readiness
+    ? pickLocale(readiness.verdict.unlockSub, locale)
+    : t('tests.report.continueSub');
 
   return (
     <div className="page-content">
@@ -172,106 +187,16 @@ function ReadinessResultsContent() {
           href={testId ? '/dashboard' : '/readiness'}
           label={testId ? t('readiness.results.backDashboard') : t('readiness.results.backTest')}
         />
-        <div className="results-tag">{t('exam.results.tag')}</div>
-        <h2>{t('exam.results.title')}</h2>
-        <p className="sub">{t('exam.results.sub')}</p>
+        <div className="results-tag">{t('tests.report.tag')}</div>
+        <h2>{t('tests.report.title')}</h2>
+        <p className="sub">{t('tests.report.sub')}</p>
 
-        <div className="results-summary-card">
-          <div className="results-avg">
-            <span className="results-avg-label">{t('readiness.results.average')}</span>
-            <strong className="results-avg-value">{result.average}%</strong>
-          </div>
-          <div className="results-pass-chip" data-passed={result.passed ? 'true' : 'false'}>
-            {result.passed ? t('readiness.results.passed') : t('readiness.results.needsWork')}
-          </div>
-        </div>
+        <FullTestReport report={report} readinessOverride={localReadinessOverride} />
 
-        <div className="results-grid">
-          <RadarChart percentages={result.percentages} domains={domainKeys} />
-          <div className="score-list">
-            {domainKeys.map((m) => (
-              <div key={m} className="score-row">
-                <div className="score-label">
-                  {EXAM_DOMAINS.includes(m as (typeof EXAM_DOMAINS)[number])
-                    ? t(`exam.domains.${m}` as 'exam.domains.digitalOps')
-                    : m}
-                </div>
-                <div className="score-bar-track">
-                  <div
-                    className="score-bar-fill"
-                    style={{ width: `${result.percentages[m] ?? 0}%` }}
-                  />
-                </div>
-                <div className="score-pct">{result.percentages[m] ?? 0}%</div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {outcome && (
-          <section className="exam-outcome">
-            <h3>{t('exam.results.outcomeTitle')}</h3>
-            <p className="sub">{t('exam.results.outcomeSub')}</p>
-            {outcome.passed ? (
-              <ul className="exam-outcome-list">
-                {outcome.modulesUnlocked.map((mod) => (
-                  <li key={mod}>
-                    <span className="exam-outcome-badge exam-outcome-badge--ok">
-                      {t('exam.results.unlocked')}
-                    </span>
-                    {t(moduleMessageKey(mod))}
-                  </li>
-                ))}
-                {outcome.levelAfter !== outcome.levelBefore && (
-                  <li>
-                    <span className="exam-outcome-badge exam-outcome-badge--ok">
-                      {t('exam.results.levelUp')}
-                    </span>
-                    {t('exam.results.levelChange', {
-                      from: outcome.levelBefore,
-                      to: outcome.levelAfter,
-                    })}
-                  </li>
-                )}
-              </ul>
-            ) : (
-              <ul className="exam-outcome-list">
-                {outcome.refreshersInserted.length === 0 ? (
-                  <li>{t('exam.results.noRefreshers')}</li>
-                ) : (
-                  outcome.refreshersInserted.map((mod) => (
-                    <li key={mod}>
-                      <span className="exam-outcome-badge exam-outcome-badge--warn">
-                        {t('exam.results.refresher')}
-                      </span>
-                      {t(moduleMessageKey(mod))}
-                    </li>
-                  ))
-                )}
-              </ul>
-            )}
-            {outcome.roadmapModules.length > 0 && (
-              <div className="exam-outcome-path">
-                <h4>{t('exam.results.updatedPath')}</h4>
-                <ol>
-                  {outcome.roadmapModules.map((mod) => (
-                    <li key={mod}>{t(moduleMessageKey(mod))}</li>
-                  ))}
-                </ol>
-              </div>
-            )}
-          </section>
-        )}
-
-        <div className="verdict-card" style={verdictStyle}>
-          <div className="vi">{result.verdict.icon}</div>
-          <h4>{result.verdict.title}</h4>
-          <p>{result.verdict.message}</p>
-        </div>
         <div className="unlock-cta">
           <div>
-            <h5>{result.verdict.unlockTitle}</h5>
-            <p>{result.verdict.unlockSub}</p>
+            <h5>{unlockTitle}</h5>
+            <p>{unlockSub}</p>
           </div>
           <div className="results-actions">
             <button type="button" className="cta-primary" onClick={() => router.push(roadmapHref)}>

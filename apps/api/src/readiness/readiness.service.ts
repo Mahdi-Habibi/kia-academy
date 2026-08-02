@@ -19,12 +19,17 @@ import {
   type ExamQuestion,
   type ExamResponse,
   type ExamSubmitResult,
+  type LearnerTestReport,
+  type LearnerTestReportReadiness,
+  type LearnerTestReportRoadmap,
   type LocaleText,
   type ReadinessResult,
   type ReadinessScores,
   type ReadinessTestSummary,
 } from '@kia-academy/shared';
+import { AssessmentsService } from '../assessments/assessments.service';
 import { EmailService } from '../email/email.service';
+import { PersonalityService } from '../personality/personality.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { SiteSettingsService } from '../site-settings/site-settings.service';
 import { TestBanksService } from '../test-banks/test-banks.service';
@@ -43,6 +48,8 @@ export class ReadinessService {
     private readonly emailService: EmailService,
     private readonly siteSettings: SiteSettingsService,
     private readonly testBanks: TestBanksService,
+    private readonly personalityService: PersonalityService,
+    private readonly assessmentsService: AssessmentsService,
   ) {}
 
   /** Legacy client-scored path — kept for older clients; prefer exam endpoints. */
@@ -340,6 +347,164 @@ export class ReadinessService {
       average: record.average,
       passed: record.passed,
       verdict: JSON.parse(record.verdict),
+    };
+  }
+
+  /**
+   * Full three-test report: Mini-IPIP personality + goal assessment + readiness exam.
+   * When `examAttemptId` is set, pairs personality/assessment from the same session window.
+   */
+  async getTestReport(userId: string, examAttemptId?: string): Promise<LearnerTestReport> {
+    const readiness = examAttemptId
+      ? await this.toReportReadiness(examAttemptId, userId)
+      : await this.latestReportReadiness(userId);
+
+    const anchorAt = readiness ? new Date(readiness.createdAt) : undefined;
+    const roadmapId =
+      readiness?.outcome?.roadmapId ??
+      (await this.latestRoadmapId(userId, examAttemptId));
+
+    const roadmap = roadmapId ? await this.loadReportRoadmap(roadmapId, userId) : null;
+    const assessment = roadmap?.assessmentId
+      ? await this.assessmentsService.findForUser(roadmap.assessmentId, userId)
+      : await this.assessmentsService.latestForUser(userId);
+
+    const personality = await this.personalityService.forUserAround(userId, anchorAt);
+
+    return {
+      personality,
+      assessment,
+      readiness,
+      roadmap: roadmap
+        ? {
+            id: roadmap.id,
+            trackKey: roadmap.trackKey,
+            trackName: roadmap.trackName,
+            level: roadmap.level,
+            profile: roadmap.profile,
+          }
+        : null,
+    };
+  }
+
+  private async latestReportReadiness(
+    userId: string,
+  ): Promise<LearnerTestReport['readiness']> {
+    // Prefer timed exam attempts (bilingual verdict) over legacy readiness rows
+    // created as a side-effect of exam submit — those store English-only copy.
+    const latestExam = await this.prisma.examAttempt.findFirst({
+      where: { userId, status: 'SUBMITTED' },
+      orderBy: { submittedAt: 'desc' },
+      select: { id: true },
+    });
+    if (latestExam) return this.toReportReadiness(latestExam.id, userId);
+
+    const latestLegacy = await this.prisma.readinessTest.findFirst({
+      where: { userId },
+      orderBy: { createdAt: 'desc' },
+      select: { id: true },
+    });
+    if (!latestLegacy) return null;
+    return this.toReportReadiness(latestLegacy.id, userId);
+  }
+
+  /** Preserves bilingual exam verdicts for accurate fa/en report rendering. */
+  private async toReportReadiness(
+    id: string,
+    userId: string,
+  ): Promise<LearnerTestReport['readiness']> {
+    const exam = await this.prisma.examAttempt.findFirst({
+      where: { id, userId, status: 'SUBMITTED' },
+    });
+    if (exam) {
+      const submit = this.toSubmitResult(exam);
+      return {
+        id: exam.id,
+        createdAt: (exam.submittedAt ?? exam.createdAt).toISOString(),
+        percentages: submit.percentages,
+        average: submit.average,
+        passed: submit.passed,
+        verdict: submit.verdict,
+        outcome: submit.outcome,
+      };
+    }
+
+    const record = await this.prisma.readinessTest.findFirst({
+      where: { id, userId },
+    });
+    if (!record) return null;
+
+    // Exam submit also writes a legacy ReadinessTest with English-only verdict.
+    // Prefer the matching ExamAttempt when present so the report stays bilingual.
+    const nearbyExam = await this.prisma.examAttempt.findFirst({
+      where: {
+        userId,
+        status: 'SUBMITTED',
+        average: record.average,
+        submittedAt: {
+          gte: new Date(record.createdAt.getTime() - 120_000),
+          lte: new Date(record.createdAt.getTime() + 120_000),
+        },
+      },
+      orderBy: { submittedAt: 'desc' },
+    });
+    if (nearbyExam) {
+      const submit = this.toSubmitResult(nearbyExam);
+      return {
+        id: nearbyExam.id,
+        createdAt: (nearbyExam.submittedAt ?? nearbyExam.createdAt).toISOString(),
+        percentages: submit.percentages,
+        average: submit.average,
+        passed: submit.passed,
+        verdict: submit.verdict,
+        outcome: submit.outcome,
+      };
+    }
+
+    return {
+      id: record.id,
+      createdAt: record.createdAt.toISOString(),
+      percentages: JSON.parse(record.percentages) as Record<string, number>,
+      average: record.average,
+      passed: record.passed,
+      verdict: JSON.parse(record.verdict) as LearnerTestReportReadiness['verdict'],
+    };
+  }
+
+  private async latestRoadmapId(
+    userId: string,
+    examAttemptId?: string,
+  ): Promise<string | null> {
+    if (examAttemptId) {
+      const attempt = await this.prisma.examAttempt.findFirst({
+        where: { id: examAttemptId, userId },
+        select: { roadmapId: true },
+      });
+      if (attempt?.roadmapId) return attempt.roadmapId;
+    }
+    const latest = await this.prisma.roadmap.findFirst({
+      where: { userId },
+      orderBy: { createdAt: 'desc' },
+      select: { id: true },
+    });
+    return latest?.id ?? null;
+  }
+
+  private async loadReportRoadmap(
+    id: string,
+    userId: string,
+  ): Promise<(LearnerTestReportRoadmap & { assessmentId: string | null }) | null> {
+    const record = await this.prisma.roadmap.findFirst({
+      where: { id, userId },
+    });
+    if (!record) return null;
+    return {
+      id: record.id,
+      assessmentId: record.assessmentId,
+      trackKey: record.trackKey,
+      trackName: record.trackName,
+      level: record.level,
+      profile: JSON.parse(record.profile) as LearnerTestReportRoadmap['profile'],
     };
   }
 
