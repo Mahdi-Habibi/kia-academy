@@ -431,8 +431,6 @@ export const fa = {
     loading: 'در حال بارگذاری پنل…',
     welcome: 'خوش آمدید',
     welcomeNamed: 'سلام {name}',
-    // Natural LMS greeting (Duolingo/Teachable-style “Hi {name}” + Iranian
-    // academy “خوش آمدی”) — avoids the awkward calque «خوش برگشتی».
     welcomeBack: 'سلام {name}، خوش آمدی',
     fallbackName: 'یادگیرنده',
     empty: {
@@ -449,7 +447,7 @@ export const fa = {
       },
     },
     hub: {
-      sub: 'از همان‌جا که رها کردی ادامه بده.',
+      sub: 'از جایی که رها کردی ادامه بده.',
     },
     tile: {
       roadmap: {
