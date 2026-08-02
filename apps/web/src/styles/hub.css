@@ -120,6 +120,21 @@
   color: var(--progress);
 }
 
+/* Score numerals: Vazirmatn for Persian digits, mono stack for Latin/LTR. */
+.tile .t-score.mono,
+.tile .t-score.mono.ltr-isolate {
+  font-family: var(--font-fa), var(--font-mono), ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+[dir='ltr'] .tile .t-score.mono,
+[dir='ltr'] .tile .t-score.mono.ltr-isolate {
+  font-family: var(--font-mono), var(--font-fa), ui-monospace, monospace;
+}
+
 .tile .t-status {
   display: inline-flex;
   align-items: center;
@@ -248,6 +263,18 @@
   font-size: var(--fs-h3);
   font-weight: 800;
   color: var(--text);
+}
+
+.test-history-score.mono,
+.test-history-score.mono.ltr-isolate {
+  font-family: var(--font-fa), var(--font-mono), ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
+}
+
+[dir='ltr'] .test-history-score.mono,
+[dir='ltr'] .test-history-score.mono.ltr-isolate {
+  font-family: var(--font-mono), var(--font-fa), ui-monospace, monospace;
 }
 
 .test-history-pass {
