@@ -94,6 +94,14 @@ export default function HomePage() {
             <h2 className="door-title">{t('landing.doors.materialTitle')}</h2>
             <p className="door-desc">{t('landing.doors.materialDesc')}</p>
           </Link>
+
+          <Link href="/courses" className="door door--primary">
+            <span className="door-top">
+              <span className="chip chip--mint">{t('landing.doors.coursesBadge')}</span>
+            </span>
+            <h2 className="door-title">{t('landing.doors.coursesTitle')}</h2>
+            <p className="door-desc">{t('landing.doors.coursesDesc')}</p>
+          </Link>
         </section>
       </div>
 

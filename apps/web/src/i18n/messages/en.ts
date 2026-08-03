@@ -128,6 +128,9 @@ export const en = {
       educationDesc: 'Education',
       educationAction: 'Start free',
       educationBadge: 'Assessment is free',
+      coursesBadge: 'Courses',
+      coursesTitle: 'Browse all courses',
+      coursesDesc: 'View every available course and open its introduction before you buy.',
     },
     journey: {
       heading: 'From "where do I start?" to a hireable portfolio',
@@ -281,6 +284,18 @@ export const en = {
       listSep: ' · ',
       continueTitle: 'Continue to your roadmap',
       continueSub: 'Your three-test profile is saved — open the path built from it.',
+    },
+    publicCourses: {
+      eyebrow: 'Public course catalog',
+      title: 'Available courses',
+      sub: 'Explore the full catalog and open any course introduction before buying.',
+      available: 'Available to buy',
+      viewIntro: 'View introduction',
+      buy: 'Buy course',
+      introEyebrow: 'Course introduction',
+      introBody: 'The full lesson content is locked until you purchase the course. You can review the overview and preview a few lessons before deciding.',
+      sessionsLocked: 'Sessions are not available yet',
+      previewTitle: 'Preview lessons',
     },
   },
   auth: {
