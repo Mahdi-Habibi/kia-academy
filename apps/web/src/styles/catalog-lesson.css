@@ -44,13 +44,14 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 44px;
+  width: max-content;
   height: 44px;
   border-radius: var(--radius-md);
   background: var(--brand-tint);
   border: 1px solid var(--brand-hairline);
   color: var(--brand);
   font-size: 1.25rem;
+  padding: 0 0.7rem;
 }
 
 .catalog-card h3 {
