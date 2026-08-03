@@ -1462,6 +1462,10 @@
     grid-template-columns: 1fr;
   }
 
+  .matrix-swatch, .big-swatch {
+    font-size: 0.7rem;
+  }
+  
   .palette-chip-scroll {
     gap: 0.4rem;
   }
