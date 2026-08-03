@@ -77,7 +77,7 @@
 
 .landing-title {
   margin-top: var(--space-6);
-  max-width: 22ch;
+  max-width: 25ch;
   font-family: var(--font-pelak-stack);
   font-size: var(--fs-display);
   font-weight: 800;
