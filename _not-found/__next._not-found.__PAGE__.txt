@@ -1,0 +1,6 @@
+1:"$Sreact.fragment"
+2:I[1521,["1521","static/chunks/1521-3e5309b4c98fdc82.js","4345","static/chunks/app/not-found-f0d6632bc5f37702.js"],""]
+3:I[1501,[],"OutletBoundary"]
+4:"$Sreact.suspense"
+0:{"rsc":["$","$1","c",{"children":[["$","div",null,{"className":"page-content","children":["$","div",null,{"className":"container","children":[["$","h1",null,{"children":"Page not found"}],["$","p",null,{"className":"auth-sub","children":"That route is not part of this Kia Academy build."}],["$","$L2",null,{"href":"/","className":"cta-primary","children":"Back home"}]]}]}],null,["$","$L3",null,{"children":["$","$4",null,{"name":"Next.MetadataOutlet","children":"$@5"}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"fxJCCEzPOmcoeqvdsLBMj"}
+5:null

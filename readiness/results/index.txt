@@ -1,0 +1,36 @@
+1:"$Sreact.fragment"
+2:I[5955,["1521","static/chunks/1521-3e5309b4c98fdc82.js","4674","static/chunks/4674-0d61b04661e8db2d.js","1463","static/chunks/1463-df3da66a805340bc.js","3877","static/chunks/3877-b6a95887088f2ec7.js","2100","static/chunks/2100-0626bff060e258ba.js","7177","static/chunks/app/layout-02def37ce78bc724.js"],"ClientProviders"]
+3:I[5508,["1521","static/chunks/1521-3e5309b4c98fdc82.js","4674","static/chunks/4674-0d61b04661e8db2d.js","1463","static/chunks/1463-df3da66a805340bc.js","3877","static/chunks/3877-b6a95887088f2ec7.js","2100","static/chunks/2100-0626bff060e258ba.js","7177","static/chunks/app/layout-02def37ce78bc724.js"],"SiteChrome"]
+4:I[7552,[],""]
+5:I[4406,[],""]
+6:I[1521,["1521","static/chunks/1521-3e5309b4c98fdc82.js","4345","static/chunks/app/not-found-f0d6632bc5f37702.js"],""]
+7:I[4413,[],"ClientPageRoot"]
+8:I[7645,["1521","static/chunks/1521-3e5309b4c98fdc82.js","4674","static/chunks/4674-0d61b04661e8db2d.js","1463","static/chunks/1463-df3da66a805340bc.js","3877","static/chunks/3877-b6a95887088f2ec7.js","2100","static/chunks/2100-0626bff060e258ba.js","7220","static/chunks/app/readiness/results/page-9e73b05075d4b314.js"],"default"]
+b:I[1501,[],"OutletBoundary"]
+c:"$Sreact.suspense"
+f:I[1501,[],"ViewportBoundary"]
+11:I[1501,[],"MetadataBoundary"]
+13:I[9564,[],"default",1]
+:HL["/kia-academy/_next/static/media/056b7d82c44ad206.p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/kia-academy/_next/static/media/0e5a08c953626cda.p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/kia-academy/_next/static/media/205564086722d747.p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/kia-academy/_next/static/media/4077841f32e55772.p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/kia-academy/_next/static/media/46fb202bb09e7d27.p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/kia-academy/_next/static/media/558ca1a6aa3cb55e-s.p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/kia-academy/_next/static/media/5ba41aa3cbd8960a.p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/kia-academy/_next/static/media/772de90fd0854dfc.p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/kia-academy/_next/static/media/b6b048df321bb000.p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/kia-academy/_next/static/media/c59013ba5480197d.p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/kia-academy/_next/static/media/c8202849c5f2479b.p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/kia-academy/_next/static/media/cfe8d5794ed26baf.p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/kia-academy/_next/static/css/d845fc3e7b26c4c3.css","style"]
+:HL["/kia-academy/_next/static/css/a3f40a50c5cac0ea.css","style"]
+:HL["/kia-academy/_next/static/css/3aa05847d257fbdc.css","style"]
+0:{"P":null,"c":["","readiness","results",""],"q":"","i":false,"f":[[["",{"children":["readiness",{"children":["results",{"children":["__PAGE__",{}]}]}]},"$undefined","$undefined",16],[["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/kia-academy/_next/static/css/d845fc3e7b26c4c3.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}],["$","link","1",{"rel":"stylesheet","href":"/kia-academy/_next/static/css/a3f40a50c5cac0ea.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}],["$","link","2",{"rel":"stylesheet","href":"/kia-academy/_next/static/css/3aa05847d257fbdc.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]],["$","html",null,{"lang":"fa","dir":"rtl","className":"__variable_889b9c __variable_fa01d5 __variable_e7a975","data-theme":"light","suppressHydrationWarning":true,"children":["$","body",null,{"children":["$","$L2",null,{"initialLocale":"fa","children":["$","$L3",null,{"children":["$","$L4",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[["$","div",null,{"className":"page-content","children":["$","div",null,{"className":"container","children":[["$","h1",null,{"children":"Page not found"}],["$","p",null,{"className":"auth-sub","children":"That route is not part of this Kia Academy build."}],["$","$L6",null,{"href":"/","className":"cta-primary","children":"Back home"}]]}]}],[]],"forbidden":"$undefined","unauthorized":"$undefined"}]}]}]}]}]]}],{"children":[["$","$1","c",{"children":[null,["$","$L4",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":[["$","$1","c",{"children":[null,["$","$L4",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":[["$","$1","c",{"children":[["$","$L7",null,{"Component":"$8","serverProvidedParams":{"searchParams":{},"params":{},"promises":["$@9","$@a"]}}],null,["$","$Lb",null,{"children":["$","$c",null,{"name":"Next.MetadataOutlet","children":"$@d"}]}]]}],{},null,false,null]},null,false,"$@e"]},null,false,"$@e"]},null,false,null],["$","$1","h",{"children":[null,["$","$Lf",null,{"children":"$L10"}],["$","div",null,{"hidden":true,"children":["$","$L11",null,{"children":["$","$c",null,{"name":"Next.Metadata","children":"$L12"}]}]}],["$","meta",null,{"name":"next-size-adjust","content":""}]]}],false]],"m":"$undefined","G":["$13",[]],"S":true,"h":null,"s":"$undefined","l":"$undefined","p":"$undefined","d":"$undefined","b":"fxJCCEzPOmcoeqvdsLBMj"}
+14:[]
+e:"$W14"
+9:{}
+a:"$0:f:0:1:1:children:1:children:1:children:0:props:children:0:props:serverProvidedParams:params"
+10:[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1, maximum-scale=5"}],["$","meta","2",{"name":"theme-color","content":"#f5f6fb","media":"(prefers-color-scheme: light)"}],["$","meta","3",{"name":"theme-color","content":"#0e1626","media":"(prefers-color-scheme: dark)"}]]
+d:null
+12:[["$","title","0",{"children":"آکادمی کیا — پلتفرم یادگیری تطبیقی"}],["$","meta","1",{"name":"description","content":"آکادمی کیا: استودیوی متریال، ثبت‌نام با موبایل ایرانی، ارزیابی شخصی‌سازی‌شده و دوره‌های هدایت‌شده."}]]

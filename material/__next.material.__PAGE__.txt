@@ -1,0 +1,7 @@
+1:"$Sreact.fragment"
+2:I[1242,["1521","static/chunks/1521-3e5309b4c98fdc82.js","1463","static/chunks/1463-df3da66a805340bc.js","9366","static/chunks/app/material/page-9d4191e02016ed83.js"],"MaterialStudio"]
+3:I[1501,[],"OutletBoundary"]
+4:"$Sreact.suspense"
+:HL["/kia-academy/_next/static/css/852c2e105e78a9e1.css","style"]
+0:{"rsc":["$","$1","c",{"children":[["$","$L2",null,{}],[["$","link","0",{"rel":"stylesheet","href":"/kia-academy/_next/static/css/852c2e105e78a9e1.css","precedence":"next"}]],["$","$L3",null,{"children":["$","$4",null,{"name":"Next.MetadataOutlet","children":"$@5"}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"fxJCCEzPOmcoeqvdsLBMj"}
+5:null
