@@ -1502,9 +1502,9 @@
 
   .material-mode .palette-matrix th.sticky,
   .material-mode .palette-matrix td.sticky {
-    width: 148px;
-    min-width: 148px;
-    max-width: 148px;
+    width: 6rem;
+    min-width: 6rem;
+    max-width: 6rem;
     padding-inline: 0.6rem;
   }
 
