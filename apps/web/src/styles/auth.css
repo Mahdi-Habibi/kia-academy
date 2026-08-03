@@ -28,7 +28,7 @@
   background: var(--gradient-brand);
 }
 
-/* Persian eyebrow labels must use Vazirmatn (mono stack has no FA glyphs). */
+/* Persian eyebrow labels must use Yekan Bakh (mono stack has no FA glyphs). */
 [dir='rtl'] .auth-card .eyebrow,
 [lang='fa'] .auth-card .eyebrow {
   font-family: var(--font-fa);
@@ -135,7 +135,7 @@
   color: var(--text-faint);
   font-weight: 400;
   /* Explicit FA stack — placeholders don't always inherit reliably, and
-     mono OTP inputs otherwise fall back off Vazirmatn for Persian digits. */
+     mono OTP inputs otherwise fall back off Yekan Bakh for Persian digits. */
   font-family: var(--font-body), var(--font-fa), Tahoma, sans-serif;
 }
 

@@ -514,7 +514,7 @@
 .admin-stat-card b,
 .admin-stat-value {
   /* Currency totals grow unpredictably, so the value scales with its column.
-     Fall back to Vazirmatn — JetBrains Mono (next/font) is latin-only, so FA
+     Fall back to Yekan Bakh — JetBrains Mono (next/font) is latin-only, so FA
      currency words like تومان looked blank / like "no font applied". */
   font-family: var(--font-mono), var(--font-fa), Tahoma, sans-serif;
   font-size: 1.375rem;

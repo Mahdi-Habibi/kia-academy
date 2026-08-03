@@ -37,3 +37,7 @@ Desktop.ini
 *.tsbuildinfo
 *.zip
 .vercel
+
+# Temporary font zip extraction
+_font_extract/
+

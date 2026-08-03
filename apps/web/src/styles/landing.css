@@ -78,6 +78,7 @@
 .landing-title {
   margin-top: var(--space-6);
   max-width: 22ch;
+  font-family: var(--font-pelak-stack);
   font-size: var(--fs-display);
   font-weight: 800;
   letter-spacing: -0.035em;
@@ -85,7 +86,10 @@
   color: var(--text);
 }
 
-[dir='rtl'] .landing-title {
+/* Beat the global RTL h1 → Yekan rule so the hero stays on Pelak. */
+[dir='rtl'] .landing-title,
+[lang='fa'] .landing-title {
+  font-family: var(--font-pelak-stack);
   line-height: 1.4;
   letter-spacing: 0;
 }

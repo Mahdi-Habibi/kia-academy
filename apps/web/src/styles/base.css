@@ -94,11 +94,16 @@
   --fs-xs: 0.8125rem;
   --fs-micro: 0.75rem;
 
-  /* Latin stacks — remapped under [dir=rtl] / [lang=fa] below. */
-  --font-display: var(--font-sora), 'Sora', var(--font-inter), system-ui, sans-serif;
-  --font-body: var(--font-inter), 'Inter', system-ui, sans-serif;
+  /* Yekan Bakh is the site UI font (FaNum). Mono kept for code / Latin digits in LTR. */
+  --font-display: var(--font-yekanbakh), 'Yekan Bakh FaNum', Tahoma, Arial, sans-serif;
+  --font-body: var(--font-yekanbakh), 'Yekan Bakh FaNum', Tahoma, Arial, sans-serif;
   --font-mono: var(--font-jetbrains), 'JetBrains Mono', ui-monospace, monospace;
-  --font-fa: var(--font-vazirmatn), 'Vazirmatn', Tahoma, Arial, sans-serif;
+  --font-fa: var(--font-yekanbakh), 'Yekan Bakh FaNum', Tahoma, Arial, sans-serif;
+  --font-pelak-stack: var(--font-pelak), 'Pelak FA', var(--font-fa), Tahoma, sans-serif;
+  /* Legacy aliases (Material Studio / older CSS). */
+  --font-vazirmatn: var(--font-yekanbakh);
+  --font-inter: var(--font-yekanbakh);
+  --font-sora: var(--font-yekanbakh);
 
   --dur-fast: 120ms;
   --dur-base: 180ms;
@@ -431,7 +436,7 @@ canvas {
 /* =============================================================================
    Persian / RTL
    Remap display + body stacks so every `var(--font-display|body)` consumer
-   (logo, landing brand, wizard titles, etc.) picks up Vazirmatn automatically.
+   (logo, landing brand, wizard titles, etc.) picks up Yekan Bakh automatically.
    ========================================================================== */
 
 [dir='rtl'],
@@ -455,7 +460,6 @@ canvas {
 [lang='fa'] h5,
 [lang='fa'] h6 {
   font-family: var(--font-fa);
-  font-feature-settings: 'ss01' 1;
 }
 
 [dir='rtl'] body,
@@ -474,7 +478,7 @@ canvas {
 }
 
 /* Persian shaping breaks under uppercase and positive tracking.
-   Eyebrows / tile micro-labels need Vazirmatn — JetBrains Mono (next/font)
+   Eyebrows / tile micro-labels need Yekan Bakh — JetBrains Mono (next/font)
    is latin-only, so FA glyphs looked blank / like "no font applied". */
 [dir='rtl'] .eyebrow,
 [dir='rtl'] .label-micro,

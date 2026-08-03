@@ -120,7 +120,7 @@
   color: var(--progress);
 }
 
-/* Score numerals: Vazirmatn for Persian digits, mono stack for Latin/LTR. */
+/* Score numerals: Yekan Bakh for Persian digits, mono stack for Latin/LTR. */
 .tile .t-score.mono,
 .tile .t-score.mono.ltr-isolate {
   font-family: var(--font-fa), var(--font-mono), ui-monospace, monospace;
