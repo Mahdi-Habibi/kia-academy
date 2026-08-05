@@ -2,24 +2,32 @@ import { Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import type { AuthUser, CourseSummary, LessonDetail, LessonSummary } from '@kia-academy/shared';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
+import { OptionalJwtAuthGuard } from '../common/guards/optional-jwt-auth.guard';
 import { CoursesService } from './courses.service';
 
 @Controller('courses')
-@UseGuards(JwtAuthGuard)
 export class CoursesController {
   constructor(private readonly coursesService: CoursesService) {}
 
   @Get()
-  list(@CurrentUser() user: AuthUser): Promise<CourseSummary[]> {
-    return this.coursesService.listCourses(user.id);
+  @UseGuards(OptionalJwtAuthGuard)
+  list(@CurrentUser() user: AuthUser | null): Promise<CourseSummary[]> {
+    return this.coursesService.listCourses(user?.id);
+  }
+
+  @Get('mine')
+  @UseGuards(JwtAuthGuard)
+  listMine(@CurrentUser() user: AuthUser): Promise<CourseSummary[]> {
+    return this.coursesService.listMyCourses(user.id);
   }
 
   @Get(':slug')
+  @UseGuards(OptionalJwtAuthGuard)
   getCourse(
-    @CurrentUser() user: AuthUser,
+    @CurrentUser() user: AuthUser | null,
     @Param('slug') slug: string,
   ): Promise<CourseSummary & { lessons: LessonSummary[] }> {
-    return this.coursesService.getCourse(user.id, slug);
+    return this.coursesService.getCourse(user?.id, slug);
   }
 
   @Get(':slug/lessons/:lessonSlug')

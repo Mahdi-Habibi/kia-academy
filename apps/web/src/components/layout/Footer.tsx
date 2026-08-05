@@ -29,7 +29,7 @@ export function Footer() {
             </Link>
             <Link href="/courses">
               <BookOpen size={15} aria-hidden="true" />
-              {t('nav.footer.courseLibrary')}
+              {t('nav.courses')}
             </Link>
             <Link href="/readiness">
               <ClipboardCheck size={15} aria-hidden="true" />

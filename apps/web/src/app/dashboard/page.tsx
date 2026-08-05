@@ -270,12 +270,12 @@ export default function DashboardPage() {
           <button
             type="button"
             className="tile tile--third"
-            onClick={() => router.push('/courses')}
+            onClick={() => router.push('/dashboard/my-courses')}
           >
             <span className="t-icon" aria-hidden="true">
               <BookOpen size={22} />
             </span>
-            <b>{t('dashboard.tile.courses.title')}</b>
+            <b>{t('nav.myCourses')}</b>
             <span>{t('dashboard.tile.courses.desc')}</span>
             <span className="t-status">{t('dashboard.tile.courses.status')}</span>
           </button>

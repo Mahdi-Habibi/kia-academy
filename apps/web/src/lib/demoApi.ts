@@ -553,6 +553,11 @@ export const demoApi = {
     return delay(courses.filter((c) => c.published).map(toCourseSummary));
   },
 
+  async listMyCourses(): Promise<CourseSummary[]> {
+    requireUser();
+    return delay(courses.filter((course) => course.published && toCourseSummary(course).enrolled).map(toCourseSummary));
+  },
+
   async getCourse(slug: string): Promise<CourseSummary & { lessons: LessonSummary[] }> {
     const course = courses.find((c) => c.slug === slug);
     if (!course) throw new ApiError('Course not found', 404);

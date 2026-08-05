@@ -158,6 +158,27 @@
   min-width: 0;
 }
 
+.landing-courses-link {
+  position: relative;
+  z-index: var(--z-raised);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  width: max-content;
+  max-width: 100%;
+  margin: var(--space-5) auto 0;
+  color: var(--text-dim);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  text-decoration: none;
+  transition: color var(--dur-base) var(--ease-out);
+}
+
+.landing-courses-link:hover {
+  color: var(--brand);
+}
+
 .door {
   display: flex;
   flex-direction: column;

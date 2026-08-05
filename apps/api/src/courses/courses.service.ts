@@ -15,17 +15,19 @@ export class CoursesService {
     private readonly mediaService: MediaService,
   ) {}
 
-  async listCourses(userId: string): Promise<CourseSummary[]> {
+  async listCourses(userId?: string): Promise<CourseSummary[]> {
     const courses = await this.prisma.course.findMany({
       where: { published: true },
       include: {
         lessons: { orderBy: { sortOrder: 'asc' } },
-        enrollments: { where: { userId } },
+        enrollments: userId ? { where: { userId } } : false,
       },
       orderBy: { sortOrder: 'asc' },
     });
 
-    const progressByCourse = await this.getProgressByCourse(userId, courses);
+    const progressByCourse = userId
+      ? await this.getProgressByCourse(userId, courses)
+      : new Map<string, number>();
 
     return courses.map((course) => {
       const enrolled = course.enrollments.length > 0;
@@ -47,15 +49,20 @@ export class CoursesService {
     });
   }
 
+  async listMyCourses(userId: string): Promise<CourseSummary[]> {
+    const courses = await this.listCourses(userId);
+    return courses.filter((course) => course.enrolled);
+  }
+
   async getCourse(
-    userId: string,
+    userId: string | undefined,
     slug: string,
   ): Promise<CourseSummary & { lessons: LessonSummary[] }> {
     const course = await this.prisma.course.findUnique({
       where: { slug },
       include: {
         lessons: { orderBy: { sortOrder: 'asc' } },
-        enrollments: { where: { userId } },
+        enrollments: userId ? { where: { userId } } : false,
       },
     });
 
@@ -63,10 +70,9 @@ export class CoursesService {
       throw new NotFoundException(`Course ${slug} not found`);
     }
 
-    const completedLessonIds = await this.getCompletedLessonIds(
-      userId,
-      course.lessons.map((lesson) => lesson.id),
-    );
+    const completedLessonIds = userId
+      ? await this.getCompletedLessonIds(userId, course.lessons.map((lesson) => lesson.id))
+      : new Set<string>();
 
     const lessons: LessonSummary[] = course.lessons.map((lesson) => ({
       id: lesson.id,

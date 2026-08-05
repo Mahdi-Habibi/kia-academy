@@ -121,8 +121,8 @@ export function TopBar() {
               <Link href="/contact" className="top-nav-link" onClick={() => setNavOpen(false)}>
                 {t('landing.ctaContact')}
               </Link>
-              <Link href="/courses" className="top-nav-link" onClick={() => setNavOpen(false)}>
-                <BookOpen size={14} /> {t('nav.courses')}
+              <Link href="/dashboard/my-courses" className="top-nav-link" onClick={() => setNavOpen(false)}>
+                <BookOpen size={14} /> {t('nav.myCourses')}
               </Link>
               {isAdmin && (
                 <Link href="/admin" className="top-nav-link" onClick={() => setNavOpen(false)}>
@@ -176,7 +176,7 @@ export function TopBar() {
                       {t('nav.dashboard')}
                     </Link>
                     <Link
-                      href="/courses"
+                      href="/dashboard/my-courses"
                       className="user-dropdown-item"
                       onClick={() => setMenuOpen(false)}
                     >

@@ -248,6 +248,10 @@ const liveApi = {
     return request<CourseSummary[]>('/courses');
   },
 
+  listMyCourses(): Promise<CourseSummary[]> {
+    return request<CourseSummary[]>('/courses/mine');
+  },
+
   getCourse(slug: string): Promise<CourseSummary & { lessons: LessonSummary[] }> {
     return request(`/courses/${slug}`);
   },
