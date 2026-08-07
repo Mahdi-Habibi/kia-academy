@@ -432,6 +432,19 @@ export default function AdminSettingsPage() {
           {section === 'payment' && isSuper && (
             <>
               <p className="admin-sub">{t('admin.settings.payment.sub')}</p>
+              <label className="admin-access-toggle" style={{ display: 'flex', gap: '0.5rem' }}>
+                <input
+                  type="checkbox"
+                  checked={settings.payment.enabled}
+                  onChange={(e) =>
+                    setSettings({
+                      ...settings,
+                      payment: { ...settings.payment, enabled: e.target.checked },
+                    })
+                  }
+                />
+                <span>{t('admin.settings.payment.enabled')}</span>
+              </label>
               <label className="form-field">
                 <span>{t('admin.settings.payment.provider')}</span>
                 <select
@@ -453,6 +466,24 @@ export default function AdminSettingsPage() {
                 </select>
               </label>
               <label className="form-field">
+                <span>{t('admin.settings.payment.currency')}</span>
+                <select
+                  value={settings.payment.currency}
+                  onChange={(e) =>
+                    setSettings({
+                      ...settings,
+                      payment: {
+                        ...settings.payment,
+                        currency: e.target.value as typeof settings.payment.currency,
+                      },
+                    })
+                  }
+                >
+                  <option value="irr">IRR</option>
+                  <option value="irt">IRT (تومان)</option>
+                </select>
+              </label>
+              <label className="form-field">
                 <span>{t('admin.settings.payment.displayName')}</span>
                 <input
                   value={settings.payment.displayName}
@@ -461,6 +492,19 @@ export default function AdminSettingsPage() {
                     setSettings({
                       ...settings,
                       payment: { ...settings.payment, displayName: e.target.value },
+                    })
+                  }
+                />
+              </label>
+              <label className="form-field">
+                <span>{t('admin.settings.payment.description')}</span>
+                <textarea
+                  rows={3}
+                  value={settings.payment.description}
+                  onChange={(e) =>
+                    setSettings({
+                      ...settings,
+                      payment: { ...settings.payment, description: e.target.value },
                     })
                   }
                 />
@@ -489,6 +533,48 @@ export default function AdminSettingsPage() {
                     setSettings({
                       ...settings,
                       payment: { ...settings.payment, apiKey: e.target.value },
+                    })
+                  }
+                />
+              </label>
+              <label className="form-field">
+                <span>{t('admin.settings.payment.callbackUrl')}</span>
+                <input
+                  className="ltr-isolate"
+                  value={settings.payment.callbackUrl}
+                  placeholder="/checkout/callback"
+                  onChange={(e) =>
+                    setSettings({
+                      ...settings,
+                      payment: { ...settings.payment, callbackUrl: e.target.value },
+                    })
+                  }
+                />
+              </label>
+              <label className="form-field">
+                <span>{t('admin.settings.payment.successUrl')}</span>
+                <input
+                  className="ltr-isolate"
+                  value={settings.payment.successUrl}
+                  placeholder="/checkout/success"
+                  onChange={(e) =>
+                    setSettings({
+                      ...settings,
+                      payment: { ...settings.payment, successUrl: e.target.value },
+                    })
+                  }
+                />
+              </label>
+              <label className="form-field">
+                <span>{t('admin.settings.payment.failureUrl')}</span>
+                <input
+                  className="ltr-isolate"
+                  value={settings.payment.failureUrl}
+                  placeholder="/checkout/cancel"
+                  onChange={(e) =>
+                    setSettings({
+                      ...settings,
+                      payment: { ...settings.payment, failureUrl: e.target.value },
                     })
                   }
                 />

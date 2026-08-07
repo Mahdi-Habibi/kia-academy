@@ -3,6 +3,8 @@ import type {
   AuthResponse,
   AuthTokens,
   AuthUser,
+  CartItemResponse,
+  CartResponse,
   ChallengeScoreResult,
   CheckoutDto,
   ContactFormDto,
@@ -11,10 +13,14 @@ import type {
   CreateChallengeDto,
   CreateCourseDto,
   CreateLessonDto,
+  GatewayVerifyDto,
+  GatewayVerifyResponse,
+  InvoiceResponse,
   LearnerState,
   LessonDetail,
   LessonSummary,
   LoginDto,
+  OrderResponse,
   PaymentResponse,
   ExamAttemptSession,
   ExamResponse,
@@ -177,6 +183,8 @@ interface DemoPersistedState {
   roadmapId: string | null;
   lastAnswers: AssessmentAnswers | null;
   payments: PaymentResponse[];
+  cartCourseSlugs: string[];
+  orders: OrderResponse[];
   examAttempt: {
     attemptId: string;
     startedAt: string;
@@ -368,6 +376,8 @@ function defaultState(): DemoPersistedState {
       personality: { teamwork: 60, pace: 55 },
     },
     payments: [],
+    cartCourseSlugs: [],
+    orders: [],
     examAttempt: null,
     personalityResult: null,
     roadmapModules: null,
@@ -436,6 +446,47 @@ function delay<T>(value: T, ms = 80): Promise<T> {
   return new Promise((resolve) => {
     setTimeout(() => resolve(value), ms);
   });
+}
+
+function buildDemoCart(state: DemoPersistedState): CartResponse {
+  const settings = readDemoSettings();
+  const unitPrice = settings.pricing.courseCents;
+  const siteName = settings.general.siteName || 'Kia Academy';
+  const trackMap = new Map(settings.tracks.map((t) => [t.key, t.name]));
+  const items: CartItemResponse[] = [];
+  for (const slug of state.cartCourseSlugs) {
+    const course = courses.find((c) => c.slug === slug);
+    if (!course) continue;
+    if (state.enrollments.includes(slug)) continue;
+    const priceCents = unitPrice;
+    const discountCents = 0;
+    items.push({
+      id: `cart-item-${course.id}`,
+      courseId: course.id,
+      courseSlug: course.slug,
+      title: course.title,
+      thumbnail: course.icon || '📘',
+      instructor: (course.trackKey && trackMap.get(course.trackKey)) || siteName,
+      trackKey: course.trackKey,
+      priceCents,
+      discountCents,
+      finalPriceCents: priceCents - discountCents,
+      addedAt: DEMO_CREATED_AT,
+    });
+  }
+  const subtotalCents = items.reduce((s, i) => s + i.priceCents, 0);
+  const discountCents = items.reduce((s, i) => s + i.discountCents, 0);
+  const totalCents = items.reduce((s, i) => s + i.finalPriceCents, 0);
+  return {
+    id: 'demo-cart',
+    items,
+    itemCount: items.length,
+    subtotalCents,
+    discountCents,
+    totalCents,
+    currency: settings.payment.currency,
+    updatedAt: new Date().toISOString(),
+  };
 }
 
 function authResponse(user: AuthUser): AuthResponse {
@@ -578,8 +629,29 @@ export const demoApi = {
 
   async confirmPayment(id: string): Promise<PaymentResponse> {
     requireUser();
-    const found = readState().payments.find((p) => p.id === id);
+    const state = readState();
+    const found = state.payments.find((p) => p.id === id);
     if (!found) throw new ApiError('Payment not found', 404);
+    found.status = 'COMPLETED';
+    if (found.orderId) {
+      const order = state.orders.find((o) => o.id === found.orderId);
+      if (order) {
+        order.status = 'PAID';
+        order.paymentStatus = 'COMPLETED';
+        order.updatedAt = new Date().toISOString();
+        for (const item of order.items) {
+          if (item.productType === 'COURSE' && !state.enrollments.includes(item.productRef)) {
+            state.enrollments.push(item.productRef);
+          }
+        }
+        state.cartCourseSlugs = [];
+      }
+    }
+    if (found.productType === 'ROADMAP_BUNDLE') {
+      state.roadmapEnrolled = true;
+      state.hasRoadmap = true;
+    }
+    writeState(state);
     return delay({ ...found, status: 'COMPLETED' });
   },
 
@@ -594,6 +666,180 @@ export const demoApi = {
   async myPayments(): Promise<PaymentResponse[]> {
     requireUser();
     return delay(readState().payments);
+  },
+
+  async checkoutCart(): Promise<PaymentResponse> {
+    requireUser();
+    const state = readState();
+    const cart = buildDemoCart(state);
+    if (cart.itemCount === 0) throw new ApiError('Cart is empty', 400);
+    const payment: PaymentResponse = {
+      id: `pay-${Date.now()}`,
+      productType: 'COURSE',
+      amountCents: cart.totalCents,
+      currency: cart.currency,
+      status: 'PENDING',
+      orderId: `order-${Date.now()}`,
+      invoiceNumber: `INV-${Date.now()}`,
+      createdAt: new Date().toISOString(),
+    };
+    const order: OrderResponse = {
+      id: payment.orderId!,
+      status: 'AWAITING_PAYMENT',
+      invoiceNumber: payment.invoiceNumber!,
+      subtotalCents: cart.subtotalCents,
+      discountCents: cart.discountCents,
+      totalCents: cart.totalCents,
+      currency: cart.currency,
+      items: cart.items.map((item) => ({
+        id: `oi-${item.id}`,
+        productType: 'COURSE',
+        productRef: item.courseSlug,
+        title: item.title,
+        thumbnail: item.thumbnail,
+        instructor: item.instructor,
+        unitPriceCents: item.priceCents,
+        discountCents: item.discountCents,
+        finalPriceCents: item.finalPriceCents,
+        quantity: 1,
+      })),
+      paymentId: payment.id,
+      paymentStatus: payment.status,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+    state.payments = [payment, ...state.payments];
+    state.orders = [order, ...state.orders];
+    writeState(state);
+    return delay(payment);
+  },
+
+  async retryPayment(orderId: string): Promise<PaymentResponse> {
+    requireUser();
+    const state = readState();
+    const order = state.orders.find((o) => o.id === orderId);
+    if (!order) throw new ApiError('Order not found', 404);
+    const payment: PaymentResponse = {
+      id: `pay-${Date.now()}`,
+      productType: 'COURSE',
+      amountCents: order.totalCents,
+      currency: order.currency,
+      status: 'PENDING',
+      orderId: order.id,
+      invoiceNumber: order.invoiceNumber,
+      createdAt: new Date().toISOString(),
+    };
+    order.paymentId = payment.id;
+    order.paymentStatus = payment.status;
+    order.status = 'AWAITING_PAYMENT';
+    order.updatedAt = new Date().toISOString();
+    state.payments = [payment, ...state.payments];
+    writeState(state);
+    return delay(payment);
+  },
+
+  async verifyPayment(dto: GatewayVerifyDto): Promise<GatewayVerifyResponse> {
+    requireUser();
+    const state = readState();
+    const payment =
+      state.payments.find((p) => p.id === dto.paymentId) ?? state.payments[0];
+    if (!payment) throw new ApiError('Payment not found', 404);
+    payment.status = 'COMPLETED';
+    if (payment.orderId) {
+      const order = state.orders.find((o) => o.id === payment.orderId);
+      if (order) {
+        order.status = 'PAID';
+        order.paymentStatus = 'COMPLETED';
+        order.updatedAt = new Date().toISOString();
+        for (const item of order.items) {
+          if (item.productType === 'COURSE' && !state.enrollments.includes(item.productRef)) {
+            state.enrollments.push(item.productRef);
+          }
+        }
+        state.cartCourseSlugs = [];
+      }
+    }
+    writeState(state);
+    return delay({
+      success: true,
+      payment,
+      redirectUrl: `/checkout/success?payment_id=${encodeURIComponent(payment.id)}`,
+    });
+  },
+
+  async myOrders(): Promise<OrderResponse[]> {
+    requireUser();
+    return delay(readState().orders);
+  },
+
+  async getOrder(orderId: string): Promise<OrderResponse> {
+    requireUser();
+    const order = readState().orders.find((o) => o.id === orderId);
+    if (!order) throw new ApiError('Order not found', 404);
+    return delay(order);
+  },
+
+  async getInvoice(orderId: string): Promise<InvoiceResponse> {
+    requireUser();
+    const user = requireUser();
+    const order = readState().orders.find((o) => o.id === orderId);
+    if (!order) throw new ApiError('Order not found', 404);
+    if (order.status !== 'PAID') throw new ApiError('Invoice unavailable', 404);
+    return delay({
+      id: `inv-${order.id}`,
+      orderId: order.id,
+      invoiceNumber: order.invoiceNumber || order.id,
+      issuedAt: order.updatedAt,
+      buyerName: user.name,
+      buyerEmail: user.email,
+      buyerPhone: user.phone,
+      currency: order.currency,
+      subtotalCents: order.subtotalCents,
+      discountCents: order.discountCents,
+      totalCents: order.totalCents,
+      lineItems: order.items,
+      downloadPath: `/api/payments/orders/${order.id}/invoice.html`,
+    });
+  },
+
+  async getCart(): Promise<CartResponse> {
+    requireUser();
+    return delay(buildDemoCart(readState()));
+  },
+
+  async addToCart(courseSlug: string): Promise<CartResponse> {
+    requireUser();
+    const state = readState();
+    const course = courses.find((c) => c.slug === courseSlug || c.id === courseSlug);
+    if (!course) throw new ApiError('Course not found', 404);
+    if (state.enrollments.includes(course.slug)) {
+      throw new ApiError('Course is already purchased', 409);
+    }
+    if (state.cartCourseSlugs.includes(course.slug)) {
+      throw new ApiError('Course is already in the cart', 409);
+    }
+    state.cartCourseSlugs = [...state.cartCourseSlugs, course.slug];
+    writeState(state);
+    return delay(buildDemoCart(state));
+  },
+
+  async removeCartItem(itemId: string): Promise<CartResponse> {
+    requireUser();
+    const state = readState();
+    const cart = buildDemoCart(state);
+    const item = cart.items.find((i) => i.id === itemId);
+    if (!item) throw new ApiError('Cart item not found', 404);
+    state.cartCourseSlugs = state.cartCourseSlugs.filter((s) => s !== item.courseSlug);
+    writeState(state);
+    return delay(buildDemoCart(state));
+  },
+
+  async clearCart(): Promise<CartResponse> {
+    requireUser();
+    const state = readState();
+    state.cartCourseSlugs = [];
+    writeState(state);
+    return delay(buildDemoCart(state));
   },
 
   async listCourses(): Promise<CourseSummary[]> {

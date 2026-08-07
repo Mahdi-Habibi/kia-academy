@@ -1,9 +1,10 @@
 'use client';
 
 import type { CourseSummary, RoadmapResponse } from '@kia-academy/shared';
-import { Loader2 } from 'lucide-react';
+import { Loader2, ShoppingCart } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
+import { useCart } from '@/context/CartProvider';
 import { useLanguage } from '@/context/LanguageProvider';
 import { useSiteSettings } from '@/hooks/useSiteSettings';
 import { api, ApiError } from '@/lib/api';
@@ -19,10 +20,12 @@ export function PurchaseSection({ roadmap, onEnrollBundle }: PurchaseSectionProp
   const { modules, pricing } = roadmap;
   const { t, format } = useLanguage();
   const { settings } = useSiteSettings();
+  const { addCourse } = useCart();
   const [courses, setCourses] = useState<CourseSummary[]>([]);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [loadingCourses, setLoadingCourses] = useState(true);
   const [error, setError] = useState('');
+  const [cartBusy, setCartBusy] = useState(false);
 
   const courseUnitPrice = settings.pricing.courseCents;
 
@@ -58,6 +61,32 @@ export function PurchaseSection({ roadmap, onEnrollBundle }: PurchaseSectionProp
       slugs: selectedSlugs.join(','),
     });
     router.push(`/checkout?${params.toString()}`);
+  };
+
+  const addSelectedToCart = async () => {
+    if (!selectedSlugs.length) {
+      setError(t('roadmap.purchase.selectAtLeastOne'));
+      return;
+    }
+    setError('');
+    setCartBusy(true);
+    try {
+      for (const slug of selectedSlugs) {
+        try {
+          await addCourse(slug);
+        } catch (err) {
+          if (err instanceof ApiError && err.status === 409) {
+            continue;
+          }
+          throw err;
+        }
+      }
+      router.push('/cart');
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : t('cart.addError'));
+    } finally {
+      setCartBusy(false);
+    }
   };
 
   return (
@@ -112,9 +141,19 @@ export function PurchaseSection({ roadmap, onEnrollBundle }: PurchaseSectionProp
 
           <button
             type="button"
+            className="btn-fill-full"
+            onClick={() => void addSelectedToCart()}
+            disabled={loadingCourses || selectedSlugs.length === 0 || cartBusy}
+            style={{ marginBottom: '0.5rem' }}
+          >
+            {cartBusy ? <Loader2 size={16} className="spin" /> : <ShoppingCart size={16} />}{' '}
+            {t('cart.add')}
+          </button>
+          <button
+            type="button"
             className="btn-outline-full"
             onClick={purchaseSelected}
-            disabled={loadingCourses || selectedSlugs.length === 0}
+            disabled={loadingCourses || selectedSlugs.length === 0 || cartBusy}
           >
             {t('roadmap.purchase.courses.cta')}
           </button>

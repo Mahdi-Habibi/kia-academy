@@ -1,6 +1,7 @@
 'use client';
 
-import { Check, CreditCard, Loader2 } from 'lucide-react';
+import type { CartResponse } from '@kia-academy/shared';
+import { Check, CreditCard, Loader2, ShoppingCart } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense, useEffect, useMemo, useState } from 'react';
 import { RequireAuth } from '@/components/auth/RequireAuth';
@@ -8,6 +9,7 @@ import { PageBackButton } from '@/components/layout/PageBackButton';
 import { api, ApiError } from '@/lib/api';
 import { useApp } from '@/context/AppProvider';
 import { useAuth } from '@/context/AuthProvider';
+import { useCart } from '@/context/CartProvider';
 import { useLanguage } from '@/context/LanguageProvider';
 import { useSiteSettings } from '@/hooks/useSiteSettings';
 
@@ -18,9 +20,11 @@ function CheckoutContent() {
   const searchParams = useSearchParams();
   const { t, format } = useLanguage();
   const { refreshSession, learnerState, user } = useAuth();
+  const { refresh: refreshCart } = useCart();
   const { roadmap } = useApp();
   const { settings } = useSiteSettings();
 
+  const fromCart = searchParams.get('from') === 'cart';
   const queryProduct = searchParams.get('product');
   const courseSlugs = useMemo(
     () =>
@@ -30,7 +34,7 @@ function CheckoutContent() {
         .filter(Boolean),
     [searchParams],
   );
-  const isCourseCheckout = queryProduct === 'COURSE' && courseSlugs.length > 0;
+  const isCourseCheckout = !fromCart && queryProduct === 'COURSE' && courseSlugs.length > 0;
 
   const initialProduct: ProductChoice = queryProduct === 'COURSE' ? 'COURSE' : 'ROADMAP_BUNDLE';
 
@@ -40,13 +44,19 @@ function CheckoutContent() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [returnProcessing, setReturnProcessing] = useState(false);
+  const [cartSummary, setCartSummary] = useState<CartResponse | null>(null);
+  const [cartLoading, setCartLoading] = useState(fromCart);
   const [bundlePrice, setBundlePrice] = useState<number | null>(
     roadmap?.id === roadmapId ? (roadmap?.pricing?.discounted ?? null) : null,
   );
 
   const courseUnitPrice = settings.pricing.courseCents;
   const courseTotal = courseSlugs.length * courseUnitPrice;
-  const amount = isCourseCheckout ? courseTotal : (bundlePrice ?? 0);
+  const amount = fromCart
+    ? (cartSummary?.totalCents ?? 0)
+    : isCourseCheckout
+      ? courseTotal
+      : (bundlePrice ?? 0);
   const sessionId = searchParams.get('session_id');
   const paymentCfg = settings.payment;
   const providerLabel =
@@ -54,8 +64,30 @@ function CheckoutContent() {
     t(`checkout.providers.${paymentCfg.provider}` as 'checkout.providers.dev');
 
   useEffect(() => {
-    if (!roadmapId) {
-      setBundlePrice(null);
+    if (!fromCart) return;
+    let cancelled = false;
+    setCartLoading(true);
+    api
+      .getCart()
+      .then((cart) => {
+        if (!cancelled) setCartSummary(cart);
+      })
+      .catch((err) => {
+        if (!cancelled) {
+          setError(err instanceof ApiError ? err.message : t('checkout.fromCart.loadError'));
+        }
+      })
+      .finally(() => {
+        if (!cancelled) setCartLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [fromCart, t]);
+
+  useEffect(() => {
+    if (fromCart || !roadmapId) {
+      if (!fromCart && !roadmapId) setBundlePrice(null);
       return;
     }
     if (roadmap?.id === roadmapId && roadmap.pricing) {
@@ -74,7 +106,7 @@ function CheckoutContent() {
     return () => {
       cancelled = true;
     };
-  }, [roadmapId, roadmap]);
+  }, [fromCart, roadmapId, roadmap]);
 
   useEffect(() => {
     if (isCourseCheckout) setProduct('COURSE');
@@ -95,6 +127,7 @@ function CheckoutContent() {
           // Stripe webhook may have already completed the payment.
         }
         await refreshSession();
+        await refreshCart();
         if (!cancelled) {
           setSuccess(t('checkout.confirmedInline'));
         }
@@ -110,13 +143,37 @@ function CheckoutContent() {
     return () => {
       cancelled = true;
     };
-  }, [sessionId, refreshSession, t]);
+  }, [sessionId, refreshSession, refreshCart, t]);
 
   const handleCheckout = async () => {
     setError('');
     setSuccess('');
     setLoading(true);
     try {
+      if (fromCart) {
+        if (!cartSummary || cartSummary.itemCount === 0) {
+          setError(t('checkout.fromCart.empty'));
+          return;
+        }
+        const payment = await api.checkoutCart();
+        if (payment.checkoutUrl) {
+          window.location.href = payment.checkoutUrl;
+          return;
+        }
+        const confirmed = await api.confirmPayment(payment.id);
+        if (confirmed.status === 'COMPLETED') {
+          await refreshSession();
+          await refreshCart();
+          setSuccess(t('checkout.successInline'));
+          setTimeout(() => {
+            router.push('/dashboard/finance');
+          }, 1500);
+        } else {
+          setError(t('checkout.incomplete'));
+        }
+        return;
+      }
+
       if (product === 'ROADMAP_BUNDLE' && !roadmapId) {
         setError(t('checkout.missingRoadmap'));
         return;
@@ -152,12 +209,21 @@ function CheckoutContent() {
     }
   };
 
-  const backHref =
-    product === 'COURSE'
+  const backHref = fromCart
+    ? '/cart'
+    : product === 'COURSE'
       ? '/courses'
       : roadmapId
         ? `/roadmap?roadmapId=${encodeURIComponent(roadmapId)}`
         : '/roadmap';
+
+  const payDisabled =
+    loading ||
+    returnProcessing ||
+    cartLoading ||
+    (fromCart
+      ? !cartSummary || cartSummary.itemCount === 0
+      : !isCourseCheckout && amount <= 0 && !bundlePrice);
 
   return (
     <div className="page-content">
@@ -177,49 +243,77 @@ function CheckoutContent() {
           </p>
         )}
 
-        <div className="checkout-card selected highlight" style={{ cursor: 'default' }}>
-          <div className="checkout-card-head">
-            <span className="ci">{isCourseCheckout ? '📘' : '🗺️'}</span>
-            <div>
-              <b>
-                {isCourseCheckout
-                  ? t('checkout.courses.selected', { count: courseSlugs.length })
-                  : t('checkout.bundle.title')}
-              </b>
-              <span>
-                {isCourseCheckout ? courseSlugs.join(' · ') : t('checkout.bundle.meta')}
+        {fromCart ? (
+          <div className="checkout-card selected highlight" style={{ cursor: 'default' }}>
+            <div className="checkout-card-head">
+              <span className="ci">
+                <ShoppingCart size={22} />
               </span>
+              <div>
+                <b>{t('checkout.fromCart.title')}</b>
+                <span>
+                  {cartLoading
+                    ? t('common.loading')
+                    : t('checkout.fromCart.meta', { count: cartSummary?.itemCount ?? 0 })}
+                </span>
+              </div>
+              <span className="checkout-price">{format.currency(amount)}</span>
             </div>
-            <span className="checkout-price">{format.currency(amount)}</span>
+            {cartSummary && cartSummary.items.length > 0 ? (
+              <ul className="checkout-features">
+                {cartSummary.items.map((item) => (
+                  <li key={item.id}>
+                    <Check size={14} /> {item.title} — {format.currency(item.finalPriceCents)}
+                  </li>
+                ))}
+              </ul>
+            ) : null}
           </div>
-          <ul className="checkout-features">
-            {isCourseCheckout ? (
-              <>
-                <li>
-                  <Check size={14} /> {t('checkout.courses.feature1')}
-                </li>
-                <li>
-                  <Check size={14} /> {t('checkout.courses.feature2')}
-                </li>
-              </>
-            ) : (
-              <>
-                <li>
-                  <Check size={14} /> {t('checkout.bundle.feature1')}
-                </li>
-                <li>
-                  <Check size={14} /> {t('checkout.bundle.feature2')}
-                </li>
-                <li>
-                  <Check size={14} /> {t('checkout.bundle.feature3')}
-                </li>
-              </>
+        ) : (
+          <div className="checkout-card selected highlight" style={{ cursor: 'default' }}>
+            <div className="checkout-card-head">
+              <span className="ci">{isCourseCheckout ? '📘' : '🗺️'}</span>
+              <div>
+                <b>
+                  {isCourseCheckout
+                    ? t('checkout.courses.selected', { count: courseSlugs.length })
+                    : t('checkout.bundle.title')}
+                </b>
+                <span>
+                  {isCourseCheckout ? courseSlugs.join(' · ') : t('checkout.bundle.meta')}
+                </span>
+              </div>
+              <span className="checkout-price">{format.currency(amount)}</span>
+            </div>
+            <ul className="checkout-features">
+              {isCourseCheckout ? (
+                <>
+                  <li>
+                    <Check size={14} /> {t('checkout.courses.feature1')}
+                  </li>
+                  <li>
+                    <Check size={14} /> {t('checkout.courses.feature2')}
+                  </li>
+                </>
+              ) : (
+                <>
+                  <li>
+                    <Check size={14} /> {t('checkout.bundle.feature1')}
+                  </li>
+                  <li>
+                    <Check size={14} /> {t('checkout.bundle.feature2')}
+                  </li>
+                  <li>
+                    <Check size={14} /> {t('checkout.bundle.feature3')}
+                  </li>
+                </>
+              )}
+            </ul>
+            {!isCourseCheckout && learnerState?.roadmapEnrolled && (
+              <span className="checkout-owned">{t('checkout.bundle.owned')}</span>
             )}
-          </ul>
-          {!isCourseCheckout && learnerState?.roadmapEnrolled && (
-            <span className="checkout-owned">{t('checkout.bundle.owned')}</span>
-          )}
-        </div>
+          </div>
+        )}
 
         <div className="checkout-summary glass-panel" style={{ marginTop: '1rem', padding: '1rem' }}>
           <h2 style={{ fontSize: '1rem', marginBottom: '0.75rem' }}>{t('checkout.review.details')}</h2>
@@ -235,7 +329,11 @@ function CheckoutContent() {
             <div>
               <dt>{t('checkout.review.product')}</dt>
               <dd>
-                {isCourseCheckout ? t('checkout.courses.title') : t('checkout.bundle.title')}
+                {fromCart
+                  ? t('checkout.fromCart.title')
+                  : isCourseCheckout
+                    ? t('checkout.courses.title')
+                    : t('checkout.bundle.title')}
               </dd>
             </div>
             <div>
@@ -263,7 +361,7 @@ function CheckoutContent() {
           type="button"
           className="cta-primary checkout-pay"
           onClick={handleCheckout}
-          disabled={loading || returnProcessing || (!isCourseCheckout && amount <= 0 && !bundlePrice)}
+          disabled={payDisabled}
         >
           {loading ? (
             <>

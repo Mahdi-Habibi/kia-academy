@@ -61,6 +61,11 @@ export function LearnerNav({ onNavigate }: { onNavigate?: () => void }) {
             label: t('panel.nav.finance'),
           },
           {
+            id: 'dash-orders',
+            href: '/dashboard/finance#orders',
+            label: t('panel.nav.orders'),
+          },
+          {
             id: 'dash-purchases',
             href: '/dashboard/purchases',
             label: t('panel.nav.purchases'),

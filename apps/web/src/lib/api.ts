@@ -5,6 +5,11 @@ import type {
   ChallengeScoreResult,
   ChallengeSubmissionDto,
   CheckoutDto,
+  CartResponse,
+  OrderResponse,
+  InvoiceResponse,
+  GatewayVerifyResponse,
+  GatewayVerifyDto,
   ContactFormDto,
   ContactFormResponse,
   CompleteProfileDto,
@@ -258,9 +263,27 @@ const liveApi = {
     });
   },
 
+  checkoutCart(): Promise<PaymentResponse> {
+    return request<PaymentResponse>('/payments/checkout/cart', { method: 'POST' });
+  },
+
+  retryPayment(orderId: string): Promise<PaymentResponse> {
+    return request<PaymentResponse>('/payments/retry', {
+      method: 'POST',
+      body: JSON.stringify({ orderId }),
+    });
+  },
+
   confirmPayment(id: string): Promise<PaymentResponse> {
     return request<PaymentResponse>(`/payments/confirm/${id}`, {
       method: 'POST',
+    });
+  },
+
+  verifyPayment(dto: GatewayVerifyDto): Promise<GatewayVerifyResponse> {
+    return request<GatewayVerifyResponse>('/payments/verify', {
+      method: 'POST',
+      body: JSON.stringify(dto),
     });
   },
 
@@ -270,6 +293,37 @@ const liveApi = {
 
   myPayments(): Promise<PaymentResponse[]> {
     return request<PaymentResponse[]>('/payments/my');
+  },
+
+  myOrders(): Promise<OrderResponse[]> {
+    return request<OrderResponse[]>('/payments/orders');
+  },
+
+  getOrder(orderId: string): Promise<OrderResponse> {
+    return request<OrderResponse>(`/payments/orders/${orderId}`);
+  },
+
+  getInvoice(orderId: string): Promise<InvoiceResponse> {
+    return request<InvoiceResponse>(`/payments/orders/${orderId}/invoice`);
+  },
+
+  getCart(): Promise<CartResponse> {
+    return request<CartResponse>('/cart');
+  },
+
+  addToCart(courseSlug: string): Promise<CartResponse> {
+    return request<CartResponse>('/cart/items', {
+      method: 'POST',
+      body: JSON.stringify({ courseSlug }),
+    });
+  },
+
+  removeCartItem(itemId: string): Promise<CartResponse> {
+    return request<CartResponse>(`/cart/items/${itemId}`, { method: 'DELETE' });
+  },
+
+  clearCart(): Promise<CartResponse> {
+    return request<CartResponse>('/cart', { method: 'DELETE' });
   },
 
   listCourses(): Promise<CourseSummary[]> {
