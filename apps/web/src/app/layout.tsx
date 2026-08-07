@@ -50,7 +50,10 @@ export const metadata: Metadata = {
   title: messages[DEFAULT_LOCALE].meta.title,
   description: messages[DEFAULT_LOCALE].meta.description,
   icons: {
-    icon: [{ url: '/favicon.svg', type: 'image/svg+xml' }],
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+    ],
     apple: [{ url: '/brand/logo-mark.svg', type: 'image/svg+xml' }],
   },
 };
