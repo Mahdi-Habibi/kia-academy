@@ -611,15 +611,16 @@ export const demoApi = {
       });
       amountCents = roadmap.pricing.discounted;
     }
+    const productType = dto.productType ?? 'COURSE';
     const payment: PaymentResponse = {
       id: `pay-${Date.now()}`,
-      productType: dto.productType,
+      productType,
       amountCents,
       currency: 'irr',
       status: 'COMPLETED',
     };
     state.payments = [payment, ...state.payments];
-    if (dto.productType === 'ROADMAP_BUNDLE') {
+    if (productType === 'ROADMAP_BUNDLE') {
       state.roadmapEnrolled = true;
       state.hasRoadmap = true;
     }
