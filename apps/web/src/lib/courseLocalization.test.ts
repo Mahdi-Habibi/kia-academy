@@ -1,23 +1,24 @@
+import type { CourseSummary, LessonSummary } from '@kia-academy/shared';
 import { describe, expect, it } from 'vitest';
 import { localizeCourse, localizeLesson } from '@/lib/courseLocalization';
 
-const sampleCourse = {
+const sampleCourse: CourseSummary = {
   id: '1',
   slug: 'javascript-core',
   title: 'JavaScript Core',
   description: 'Learn variables, functions, arrays, and async patterns.',
   icon: '📘',
+  trackKey: 'frontend',
   lessonCount: 3,
-  progressPct: 0,
   enrolled: false,
+  progressPct: 0,
 };
 
-const sampleLesson = {
+const sampleLesson: LessonSummary = {
   id: 'l1',
   slug: 'variables-and-types',
   title: 'Variables and Types',
   durationMin: 12,
-  order: 1,
   completed: false,
 };
 
