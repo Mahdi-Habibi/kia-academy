@@ -33,6 +33,15 @@ enum EntitlementSource {
   FREE
 }
 
+enum OrderStatus {
+  PENDING
+  AWAITING_PAYMENT
+  PAID
+  FAILED
+  CANCELLED
+  REFUNDED
+}
+
 model User {
   id              String    @id @default(cuid())
   name            String    @default("")
@@ -60,6 +69,8 @@ model User {
   bootcampProfile      BootcampProfile?
   challengeSubmissions ChallengeSubmission[]
   payments             Payment[]
+  orders               Order[]
+  cart                 Cart?
   entitlements         Entitlement[]
   enrollments          Enrollment[]
   lessonProgress       LessonProgress[]
@@ -192,16 +203,96 @@ model Payment {
   id          String        @id @default(cuid())
   userId      String
   user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  orderId     String?       @unique
+  order       Order?        @relation(fields: [orderId], references: [id], onDelete: SetNull)
   productType ProductType
   productRef  String?
   amountCents Int
   currency    String        @default("irr")
   status      PaymentStatus @default(PENDING)
+  /** Active provider id at checkout time (dev / zarinpal / idpay / stripe). */
+  provider    String?
   stripeId    String?
   gatewayRef  String?
   metadata    String?
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
+}
+
+model Order {
+  id             String      @id @default(cuid())
+  userId         String
+  user           User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  status         OrderStatus @default(PENDING)
+  invoiceNumber  String?     @unique
+  subtotalCents  Int
+  discountCents  Int         @default(0)
+  totalCents     Int
+  currency       String      @default("irr")
+  source         String      @default("DIRECT")
+  metadata       String?
+  items          OrderItem[]
+  payment        Payment?
+  invoice        Invoice?
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+
+  @@index([userId, createdAt])
+}
+
+model OrderItem {
+  id              String      @id @default(cuid())
+  orderId         String
+  order           Order       @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productType     ProductType
+  productRef      String
+  title           String
+  thumbnail       String?
+  instructor      String?
+  unitPriceCents  Int
+  discountCents   Int         @default(0)
+  finalPriceCents Int
+  quantity        Int         @default(1)
+  courseId        String?
+}
+
+model Invoice {
+  id             String   @id @default(cuid())
+  orderId        String   @unique
+  order          Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  invoiceNumber  String   @unique
+  issuedAt       DateTime @default(now())
+  buyerName      String
+  buyerEmail     String?
+  buyerPhone     String?
+  currency       String   @default("irr")
+  subtotalCents  Int
+  discountCents  Int      @default(0)
+  totalCents     Int
+  /** JSON-serialized OrderItemResponse[]. */
+  lineItems      String
+  createdAt      DateTime @default(now())
+}
+
+model Cart {
+  id        String     @id @default(cuid())
+  userId    String     @unique
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items     CartItem[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model CartItem {
+  id        String   @id @default(cuid())
+  cartId    String
+  cart      Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  courseId  String
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([cartId, courseId])
+  @@index([courseId])
 }
 
 model Entitlement {
@@ -231,6 +322,7 @@ model Course {
   enrollments Enrollment[]
   attachments CourseAttachment[]
   tickets     SupportTicket[]
+  cartItems   CartItem[]
 }
 
 model Lesson {

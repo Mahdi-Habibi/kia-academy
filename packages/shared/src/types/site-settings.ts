@@ -44,9 +44,16 @@ export interface SiteBootcampSettings {
 /** Third-party / gateway payment configuration (super-admin editable). */
 export type PaymentProviderId = 'dev' | 'zarinpal' | 'idpay' | 'stripe';
 
+/** Display / gateway preference. Ledger amounts remain stored in IRR. */
+export type PaymentCurrencyCode = 'irr' | 'irt';
+
 export interface SitePaymentSettings {
+  /** Master switch — when false, checkout is rejected. */
+  enabled: boolean;
   /** Active checkout provider. `dev` completes in-app without a gateway. */
   provider: PaymentProviderId;
+  /** Catalog / display currency. Amounts are always stored in IRR. */
+  currency: PaymentCurrencyCode;
   /** Merchant / terminal id for Zarinpal, IDPay, etc. */
   merchantId: string;
   /** Optional API key / access token for the provider. */
@@ -55,6 +62,14 @@ export interface SitePaymentSettings {
   sandbox: boolean;
   /** Public label shown on the payment review page. */
   displayName: string;
+  /** Optional public description for the active gateway. */
+  description: string;
+  /** Absolute or path callback URL (gateway verify return). Empty → APP_URL default. */
+  callbackUrl: string;
+  /** Absolute or path success redirect. Empty → /checkout/success. */
+  successUrl: string;
+  /** Absolute or path failure redirect. Empty → /checkout/cancel. */
+  failureUrl: string;
 }
 
 /** Granular permission flags for a single admin panel section. */
@@ -123,12 +138,21 @@ export function normalizePaymentSettings(raw: unknown): SitePaymentSettings {
     providerRaw === 'dev'
       ? providerRaw
       : 'dev';
+  const currencyRaw = String(source.currency ?? 'irr').toLowerCase();
+  const currency: PaymentCurrencyCode =
+    currencyRaw === 'irt' || currencyRaw === 'toman' ? 'irt' : 'irr';
   return {
+    enabled: source.enabled !== false,
     provider,
+    currency,
     merchantId: String(source.merchantId ?? ''),
     apiKey: String(source.apiKey ?? ''),
     sandbox: source.sandbox !== false,
     displayName: String(source.displayName ?? ''),
+    description: String(source.description ?? ''),
+    callbackUrl: String(source.callbackUrl ?? ''),
+    successUrl: String(source.successUrl ?? ''),
+    failureUrl: String(source.failureUrl ?? ''),
   };
 }
 

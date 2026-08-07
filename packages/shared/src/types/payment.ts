@@ -2,10 +2,12 @@ export type ProductType = 'READINESS_TEST' | 'ROADMAP_BUNDLE' | 'COURSE';
 export type PaymentStatus = 'PENDING' | 'COMPLETED' | 'FAILED' | 'REFUNDED';
 
 export interface CheckoutDto {
-  productType: ProductType;
+  productType?: ProductType;
   productRef?: string;
   /** When purchasing multiple courses independently from the roadmap bundle. */
   courseSlugs?: string[];
+  /** When true, checkout the authenticated user's cart instead of dto products. */
+  fromCart?: boolean;
 }
 
 export interface PaymentResponse {
@@ -17,8 +19,26 @@ export interface PaymentResponse {
   status: PaymentStatus;
   checkoutUrl?: string;
   productRef?: string | null;
+  orderId?: string | null;
+  invoiceNumber?: string | null;
+  provider?: string | null;
   createdAt?: string;
   updatedAt?: string;
+}
+
+export interface GatewayVerifyDto {
+  /** Internal payment id (Authority callback may carry this as payment_id). */
+  paymentId?: string;
+  /** ZarinPal Authority / IDPay track id / Stripe session id. */
+  authority?: string;
+  /** Provider status code from the return URL (e.g. ZarinPal Status=OK). */
+  status?: string;
+}
+
+export interface GatewayVerifyResponse {
+  success: boolean;
+  payment: PaymentResponse;
+  redirectUrl: string;
 }
 
 /** Catalog prices in Iranian Rials (IRR). */

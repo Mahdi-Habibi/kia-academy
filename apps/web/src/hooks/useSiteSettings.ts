@@ -1,6 +1,10 @@
 'use client';
 
-import { createDefaultSiteSettings, type SiteSettings } from '@kia-academy/shared';
+import {
+  createDefaultSiteSettings,
+  mergeSiteSettings,
+  type SiteSettings,
+} from '@kia-academy/shared';
 import { useEffect, useState } from 'react';
 import { api } from '@/lib/api';
 
@@ -13,7 +17,7 @@ export function useSiteSettings() {
     api
       .getSettings()
       .then((next) => {
-        if (!cancelled) setSettings(next);
+        if (!cancelled) setSettings(mergeSiteSettings(createDefaultSiteSettings(), next));
       })
       .catch(() => {
         /* keep defaults */

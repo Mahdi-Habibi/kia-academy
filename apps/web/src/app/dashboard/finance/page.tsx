@@ -130,7 +130,6 @@ export default function FinancePage() {
 
   useEffect(() => {
     void load();
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- load once on mount / locale message change
   }, [t]);
 
   const handleRetry = async (orderId: string) => {

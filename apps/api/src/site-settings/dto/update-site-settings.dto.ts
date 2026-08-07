@@ -177,8 +177,16 @@ export class SiteAdminAccessDto {
 
 export class SitePaymentDto {
   @IsOptional()
+  @IsBoolean()
+  enabled?: boolean;
+
+  @IsOptional()
   @IsString()
   provider?: string;
+
+  @IsOptional()
+  @IsString()
+  currency?: string;
 
   @IsOptional()
   @IsString()
@@ -195,6 +203,22 @@ export class SitePaymentDto {
   @IsOptional()
   @IsString()
   displayName?: string;
+
+  @IsOptional()
+  @IsString()
+  description?: string;
+
+  @IsOptional()
+  @IsString()
+  callbackUrl?: string;
+
+  @IsOptional()
+  @IsString()
+  successUrl?: string;
+
+  @IsOptional()
+  @IsString()
+  failureUrl?: string;
 }
 
 export class UpdateSiteSettingsBodyDto {

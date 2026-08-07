@@ -55,7 +55,6 @@ import type {
   AdminPayment,
   AssessmentBank,
   PersonalityBank,
-  ReadinessBank,
   TestBankId,
   TestBankMeta,
   TestBankPayload,
