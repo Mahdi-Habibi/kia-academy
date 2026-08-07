@@ -53,8 +53,9 @@
 
 .landing-brand-mark {
   display: block;
-  width: clamp(2.25rem, 4.5vw, 3rem);
   height: clamp(2.25rem, 4.5vw, 3rem);
+  width: auto;
+  aspect-ratio: 497.37 / 512;
   color: var(--brand-400);
   flex-shrink: 0;
   overflow: visible;

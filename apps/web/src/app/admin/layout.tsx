@@ -383,7 +383,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
           })}
         </nav>
         <div className="admin-sidebar-profile">
-          <span className="admin-brand-mark" style={{ width: '2.35rem', height: '2.35rem' }}>
+          <span className="admin-brand-mark admin-brand-mark--profile">
             <BrandMark size={18} title="" />
           </span>
           <span className="profile">
