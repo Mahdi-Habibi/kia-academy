@@ -51,12 +51,16 @@ function canRetry(order: OrderResponse) {
   );
 }
 
-async function downloadInvoice(orderId: string, invoiceNumber: string | null) {
+async function downloadInvoice(
+  orderId: string,
+  invoiceNumber: string | null,
+  formatCurrency: (value: number, currency?: string) => string,
+) {
   const invoice = await api.getInvoice(orderId);
   const lines = invoice.lineItems
     .map(
       (item) =>
-        `<tr><td>${escapeHtml(item.title)}</td><td>${item.quantity}</td><td>${item.unitPriceCents}</td><td>${item.finalPriceCents}</td></tr>`,
+        `<tr><td>${escapeHtml(item.title)}</td><td>${item.quantity}</td><td>${escapeHtml(formatCurrency(item.unitPriceCents, invoice.currency))}</td><td>${escapeHtml(formatCurrency(item.finalPriceCents, invoice.currency))}</td></tr>`,
     )
     .join('');
   const html = `<!DOCTYPE html>
@@ -71,6 +75,7 @@ async function downloadInvoice(orderId: string, invoiceNumber: string | null) {
   th, td { border: 1px solid #ddd; padding: 8px; text-align: start; }
   th { background: #f5f5f5; }
   .meta { margin: 4px 0; color: #444; font-size: 0.9rem; }
+  @media print { body { padding: 0; } }
 </style>
 </head>
 <body>
@@ -82,9 +87,9 @@ async function downloadInvoice(orderId: string, invoiceNumber: string | null) {
     <thead><tr><th>Item</th><th>Qty</th><th>Unit</th><th>Total</th></tr></thead>
     <tbody>${lines}</tbody>
   </table>
-  <p><strong>Subtotal:</strong> ${invoice.subtotalCents}</p>
-  <p><strong>Discount:</strong> ${invoice.discountCents}</p>
-  <p><strong>Total:</strong> ${invoice.totalCents} ${escapeHtml(invoice.currency)}</p>
+  <p><strong>Subtotal:</strong> ${escapeHtml(formatCurrency(invoice.subtotalCents, invoice.currency))}</p>
+  <p><strong>Discount:</strong> ${escapeHtml(formatCurrency(invoice.discountCents, invoice.currency))}</p>
+  <p><strong>Total:</strong> ${escapeHtml(formatCurrency(invoice.totalCents, invoice.currency))}</p>
 </body>
 </html>`;
   const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
@@ -159,7 +164,7 @@ export default function FinancePage() {
     setActionMsg('');
     setInvoiceBusyId(order.id);
     try {
-      await downloadInvoice(order.id, order.invoiceNumber);
+      await downloadInvoice(order.id, order.invoiceNumber, format.currency);
     } catch (err) {
       setActionMsg(err instanceof ApiError ? err.message : t('panel.finance.invoiceError'));
     } finally {

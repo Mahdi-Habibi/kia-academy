@@ -542,7 +542,7 @@ export default function AdminSettingsPage() {
                 <input
                   className="ltr-isolate"
                   value={settings.payment.callbackUrl}
-                  placeholder="/checkout/callback"
+                  placeholder="/api/payments/callback"
                   onChange={(e) =>
                     setSettings({
                       ...settings,

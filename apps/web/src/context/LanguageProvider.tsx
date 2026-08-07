@@ -10,6 +10,12 @@ import {
   type ReactNode,
 } from 'react';
 import { useRouter } from 'next/navigation';
+import {
+  createDefaultSiteSettings,
+  mergeSiteSettings,
+  normalizePaymentSettings,
+  type PaymentCurrencyCode,
+} from '@kia-academy/shared';
 import { readLocaleCookie, writeLocaleCookie } from '@/i18n/cookie';
 import { createFormatters, type Formatters } from '@/i18n/formatters';
 import {
@@ -21,6 +27,7 @@ import {
 } from '@/i18n/locales';
 import { en, messages } from '@/i18n/messages';
 import { createTranslator, type MessageKey, type MessageParams } from '@/i18n/translate';
+import { api } from '@/lib/api';
 
 interface LanguageContextValue {
   locale: Locale;
@@ -48,6 +55,9 @@ export function LanguageProvider({
 }: LanguageProviderProps) {
   const router = useRouter();
   const [locale, setLocaleState] = useState<Locale>(parseLocale(initialLocale));
+  const [paymentCurrency, setPaymentCurrency] = useState<PaymentCurrencyCode>(
+    () => normalizePaymentSettings(createDefaultSiteSettings().payment).currency,
+  );
 
   useEffect(() => {
     // Persian-first: prefer an explicit cookie, otherwise keep DEFAULT_LOCALE (fa).
@@ -74,6 +84,23 @@ export function LanguageProvider({
     writeLocaleCookie(locale);
   }, [locale]);
 
+  useEffect(() => {
+    let cancelled = false;
+    api
+      .getSettings()
+      .then((next) => {
+        if (cancelled) return;
+        const merged = mergeSiteSettings(createDefaultSiteSettings(), next);
+        setPaymentCurrency(normalizePaymentSettings(merged.payment).currency);
+      })
+      .catch(() => {
+        /* keep default */
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   const setLocale = useCallback(
     (next: Locale) => {
       const parsed = parseLocale(next);
@@ -94,9 +121,9 @@ export function LanguageProvider({
       dir: dirForLocale(locale),
       setLocale,
       t: createTranslator(catalog, en),
-      format: createFormatters(locale),
+      format: createFormatters(locale, paymentCurrency),
     };
-  }, [locale, setLocale]);
+  }, [locale, setLocale, paymentCurrency]);
 
   return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>;
 }

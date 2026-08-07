@@ -173,6 +173,11 @@ export class SiteAdminAccessDto {
   @ValidateNested()
   @Type(() => AdminSectionPermissionDto)
   payments?: AdminSectionPermissionDto;
+
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => AdminSectionPermissionDto)
+  tests?: AdminSectionPermissionDto;
 }
 
 export class SitePaymentDto {

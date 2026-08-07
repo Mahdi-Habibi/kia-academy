@@ -8,6 +8,8 @@ import {
   hasCourseEntitlement,
   normalizePaymentSettings,
   entitlementKey,
+  toDisplayUnits,
+  normalizePaymentCurrency,
   type CheckoutDto,
   type GatewayVerifyDto,
   type GatewayVerifyResponse,
@@ -342,10 +344,13 @@ export class PaymentsService {
     const invoice = await this.getInvoiceForUser(userId, orderId);
     const settings = await this.siteSettings.get();
     const siteName = settings.general.siteName || 'Kia Academy';
+    const currency = normalizePaymentCurrency(invoice.currency || settings.payment?.currency);
+    const label = currency === 'irt' ? 'IRT' : 'IRR';
+    const fmt = (amount: number) => `${toDisplayUnits(amount, currency)} ${label}`;
     const rows = invoice.lineItems
       .map(
         (line) =>
-          `<tr><td>${escapeHtml(line.title)}</td><td>${line.quantity}</td><td>${line.finalPriceCents}</td></tr>`,
+          `<tr><td>${escapeHtml(line.title)}</td><td>${line.quantity}</td><td>${fmt(line.finalPriceCents)}</td></tr>`,
       )
       .join('');
     return `<!DOCTYPE html>
@@ -373,10 +378,10 @@ export class PaymentsService {
   ${invoice.buyerEmail ? `<p class="meta">Email: ${escapeHtml(invoice.buyerEmail)}</p>` : ''}
   ${invoice.buyerPhone ? `<p class="meta">Phone: ${escapeHtml(invoice.buyerPhone)}</p>` : ''}
   <table>
-    <thead><tr><th>Item</th><th>Qty</th><th>Amount (IRR)</th></tr></thead>
+    <thead><tr><th>Item</th><th>Qty</th><th>Amount (${label})</th></tr></thead>
     <tbody>${rows}</tbody>
   </table>
-  <p class="total">Total: ${invoice.totalCents} IRR</p>
+  <p class="total">Total: ${fmt(invoice.totalCents)}</p>
 </body>
 </html>`;
   }
@@ -461,7 +466,6 @@ export class PaymentsService {
   ): Promise<PaymentResponse> {
     const payment = await this.prisma.payment.findUniqueOrThrow({ where: { id: paymentId } });
     const user = await this.prisma.user.findUniqueOrThrow({ where: { id: userId } });
-    const appUrl = this.configService.get<string>('APP_URL', 'http://localhost:3000');
     const provider = this.providers.resolve(paymentCfg);
 
     const callbackUrl = this.resolveUrl(

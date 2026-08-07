@@ -1174,6 +1174,8 @@ export const en = {
       title: 'Payment successful',
       sub: 'Your purchase is confirmed and access has been unlocked.',
       goReadiness: 'Go to readiness test',
+      goCourses: 'Go to my courses',
+      goOrders: 'View orders',
       dashboard: 'Dashboard',
       verifyError: 'Could not verify payment.',
       verifyIssue: 'Payment verification issue',
@@ -1183,6 +1185,8 @@ export const en = {
       title: 'Checkout cancelled',
       sub: "No charge was made. You can return to checkout whenever you're ready.",
       back: 'Back to checkout',
+      backCart: 'Back to cart',
+      retryFinance: 'Retry from orders',
     },
     fromCart: {
       title: 'Shopping cart checkout',
