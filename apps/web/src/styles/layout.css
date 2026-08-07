@@ -87,32 +87,56 @@
     align-items: stretch;
     justify-content: flex-start;
     gap: var(--space-5);
-    overflow-y: auto;
+    /* Scroll lives on .learner-nav so expanded groups never cover secondary. */
+    overflow: hidden;
   }
 
+  /* Flatten so logo / secondary / nav can be ordered as topbar flex children. */
   .panel-shell .topbar-primary {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    gap: var(--space-5);
-    flex: 0 1 auto;
-    min-height: 0;
+    display: contents;
   }
 
   .panel-shell .logo {
+    order: 1;
     width: 100%;
     justify-content: flex-start;
     padding-inline: var(--space-2);
+    flex: 0 0 auto;
+  }
+
+  /* Fixed account/tools cluster — stays fully visible above the nav. */
+  .panel-shell .topbar-secondary,
+  .panel-shell .top-right {
+    order: 2;
+    flex: 0 0 auto;
+    margin-top: 0;
+    margin-bottom: 0;
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-2);
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--border-soft);
   }
 
   .panel-shell .top-nav {
-    flex: 0 1 auto;
+    order: 3;
+    flex: 1 1 auto;
+    min-height: 0;
     flex-direction: column;
     align-items: stretch;
     justify-content: flex-start;
     gap: var(--space-1);
     min-width: 0;
     width: 100%;
+    overflow: hidden;
+  }
+
+  .panel-shell .learner-nav {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
   }
 
   .panel-shell .top-nav-link {
@@ -120,19 +144,6 @@
     justify-content: flex-start;
     border-radius: var(--radius-md);
     padding: var(--space-3);
-  }
-
-  /* Secondary cluster sits mid-sidebar (not pinned to the bottom) */
-  .panel-shell .topbar-secondary,
-  .panel-shell .top-right {
-    margin-top: var(--space-6);
-    margin-bottom: auto;
-    width: 100%;
-    flex-direction: column;
-    align-items: stretch;
-    gap: var(--space-2);
-    padding-top: var(--space-4);
-    border-top: 1px solid var(--border-soft);
   }
 
   .panel-shell .top-right-tools {
