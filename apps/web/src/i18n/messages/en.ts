@@ -285,18 +285,6 @@ export const en = {
       continueTitle: 'Continue to your roadmap',
       continueSub: 'Your three-test profile is saved — open the path built from it.',
     },
-    publicCourses: {
-      eyebrow: 'Public course catalog',
-      title: 'Available courses',
-      sub: 'Explore the full catalog and open any course introduction before buying.',
-      available: 'Available to buy',
-      viewIntro: 'View introduction',
-      buy: 'Buy course',
-      introEyebrow: 'Course introduction',
-      introBody: 'The full lesson content is locked until you purchase the course. You can review the overview and preview a few lessons before deciding.',
-      sessionsLocked: 'Sessions are not available yet',
-      previewTitle: 'Preview lessons',
-    },
   },
   auth: {
     login: {
@@ -786,6 +774,19 @@ export const en = {
     interview: {
       name: 'Interview & Branding',
     },
+  },
+  publicCourses: {
+    eyebrow: 'Public course catalog',
+    title: 'Available courses',
+    sub: 'Explore the full catalog and open any course introduction before buying.',
+    available: 'Available to buy',
+    viewIntro: 'View introduction',
+    buy: 'Buy course',
+    introEyebrow: 'Course introduction',
+    introBody:
+      'The full lesson content is locked until you purchase the course. You can review the overview and preview a few lessons before deciding.',
+    sessionsLocked: 'Sessions are not available yet',
+    previewTitle: 'Preview lessons',
   },
   lesson: {
     loading: 'Loading lesson…',

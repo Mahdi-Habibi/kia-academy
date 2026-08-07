@@ -56,6 +56,18 @@ describe('i18n translator', () => {
     expect(t('missing.key')).toBe('missing.key');
   });
 
+  it('resolves public courses catalog keys for English and Persian', () => {
+    const tEn = createTranslator(en, en);
+    const tFa = createTranslator(fa, en);
+
+    expect(tEn('publicCourses.title')).toBe('Available courses');
+    expect(tFa('publicCourses.title')).toBe('دوره‌های موجود');
+    expect(tEn('publicCourses.viewIntro')).toBe('View introduction');
+    expect(tFa('publicCourses.viewIntro')).toBe('مشاهده معرفی');
+    expect(tEn('publicCourses.introEyebrow')).toBe('Course introduction');
+    expect(tFa('publicCourses.introEyebrow')).toBe('معرفی دوره');
+  });
+
   it('uses locale formatters for currency and percent', () => {
     const format = createFormatters('en');
     expect(format.currency(19)).toContain('19');
