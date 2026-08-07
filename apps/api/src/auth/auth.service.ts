@@ -12,6 +12,7 @@ import type {
   AuthUser,
   CompleteProfileDto,
   LearnerState,
+  ProfileDetails,
   RequestOtpResponse,
 } from '@kia-academy/shared';
 import {
@@ -244,6 +245,29 @@ export class AuthService {
     return this.issueAuthResponse(await this.buildAuthUser(user));
   }
 
+  async getProfileDetails(userId: string): Promise<ProfileDetails> {
+    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+    if (!user) {
+      throw new UnauthorizedException('User not found');
+    }
+    return {
+      firstName: user.firstName ?? '',
+      lastName: user.lastName ?? '',
+      city: user.city ?? '',
+      email: user.email,
+      phone: user.phone,
+      name: user.name,
+    };
+  }
+
+  async updateProfile(
+    userId: string,
+    dto: CompleteProfileDto,
+  ): Promise<AuthResponse & { refreshToken: string }> {
+    // Same validation/path as onboarding; keeps profileComplete true for existing learners.
+    return this.completeProfile(userId, dto);
+  }
+
   async refresh(
     user: AuthUser,
     refreshToken: string,
@@ -402,6 +426,9 @@ export class AuthService {
     name: string;
     email: string | null;
     phone?: string | null;
+    firstName?: string | null;
+    lastName?: string | null;
+    city?: string | null;
     role: AuthUser['role'];
     profileComplete?: boolean;
     adminPanelAccess?: unknown;
@@ -411,6 +438,9 @@ export class AuthService {
       name: user.name,
       email: user.email,
       phone: user.phone ?? null,
+      firstName: user.firstName ?? null,
+      lastName: user.lastName ?? null,
+      city: user.city ?? null,
       role: user.role,
       profileComplete: Boolean(user.profileComplete),
     };

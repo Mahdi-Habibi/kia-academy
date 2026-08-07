@@ -9,6 +9,9 @@ export interface AuthUser {
   phone: string | null;
   role: UserRole;
   profileComplete: boolean;
+  firstName?: string | null;
+  lastName?: string | null;
+  city?: string | null;
   /** Present for ADMIN (moderator) accounts — individual panel permissions. */
   adminPanelAccess?: SiteAdminAccessSettings;
 }
@@ -51,6 +54,9 @@ export interface CompleteProfileDto {
   city: string;
   email: string;
 }
+
+/** Alias used by the learner profile edit page. */
+export type UpdateProfileDto = CompleteProfileDto;
 
 export interface AuthResponse extends AuthTokens {
   user: AuthUser;

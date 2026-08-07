@@ -385,19 +385,25 @@ export class PaymentsService {
     payment: {
       id: string;
       productType: 'READINESS_TEST' | 'ROADMAP_BUNDLE' | 'COURSE';
+      productRef?: string | null;
       amountCents: number;
       currency: string;
       status: 'PENDING' | 'COMPLETED' | 'FAILED' | 'REFUNDED';
+      createdAt?: Date;
+      updatedAt?: Date;
     },
     checkoutUrl?: string,
   ): PaymentResponse {
     return {
       id: payment.id,
       productType: payment.productType,
+      productRef: payment.productRef ?? null,
       amountCents: payment.amountCents,
       currency: payment.currency,
       status: payment.status,
       checkoutUrl,
+      createdAt: payment.createdAt?.toISOString(),
+      updatedAt: payment.updatedAt?.toISOString(),
     };
   }
 }

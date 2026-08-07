@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Patch,
   Post,
   Req,
   Res,
@@ -9,7 +10,13 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
-import type { AuthResponse, AuthUser, LearnerState, RequestOtpResponse } from '@kia-academy/shared';
+import type {
+  AuthResponse,
+  AuthUser,
+  LearnerState,
+  ProfileDetails,
+  RequestOtpResponse,
+} from '@kia-academy/shared';
 import type { Request, Response } from 'express';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
@@ -73,6 +80,24 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ): Promise<AuthResponse> {
     const result = await this.authService.completeProfile(user.id, dto);
+    this.setRefreshCookie(res, result.refreshToken);
+    return this.stripRefreshToken(result);
+  }
+
+  @Get('profile')
+  @UseGuards(JwtAuthGuard)
+  getProfile(@CurrentUser() user: AuthUser): Promise<ProfileDetails> {
+    return this.authService.getProfileDetails(user.id);
+  }
+
+  @Patch('profile')
+  @UseGuards(JwtAuthGuard)
+  async updateProfile(
+    @CurrentUser() user: AuthUser,
+    @Body() dto: CompleteProfileDto,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<AuthResponse> {
+    const result = await this.authService.updateProfile(user.id, dto);
     this.setRefreshCookie(res, result.refreshToken);
     return this.stripRefreshToken(result);
   }

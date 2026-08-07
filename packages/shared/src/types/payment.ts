@@ -16,6 +16,9 @@ export interface PaymentResponse {
   currency: string;
   status: PaymentStatus;
   checkoutUrl?: string;
+  productRef?: string | null;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 /** Catalog prices in Iranian Rials (IRR). */

@@ -300,6 +300,50 @@ export default function DashboardPage() {
           </button>
         </div>
 
+        <section className="test-history panel-section" aria-labelledby="panel-sections-heading">
+          <h2 id="panel-sections-heading" className="section-heading">
+            {t('panel.nav.dashboard')}
+          </h2>
+          <div className="bento">
+            <Link href="/dashboard/finance" className="tile tile--third">
+              <b>{t('panel.nav.finance')}</b>
+              <span>{t('panel.finance.sub')}</span>
+            </Link>
+            <Link href="/dashboard/purchases" className="tile tile--third">
+              <b>{t('panel.nav.purchases')}</b>
+              <span>{t('panel.purchases.sub')}</span>
+            </Link>
+            <Link href="/dashboard/results" className="tile tile--third">
+              <b>{t('panel.nav.results')}</b>
+              <span>{t('panel.results.sub')}</span>
+            </Link>
+            <Link href="/dashboard/bootcamps" className="tile tile--third">
+              <b>{t('panel.nav.enrolledBootcamps')}</b>
+              <span>{t('panel.bootcamps.sub')}</span>
+            </Link>
+            <Link href="/dashboard/competitions" className="tile tile--third">
+              <b>{t('panel.nav.registeredCompetitions')}</b>
+              <span>{t('panel.competitions.registeredSub')}</span>
+            </Link>
+            <Link href="/dashboard/progress" className="tile tile--third">
+              <b>{t('panel.nav.progress')}</b>
+              <span>{t('panel.progress.sub')}</span>
+            </Link>
+            <Link href="/dashboard/todos" className="tile tile--third">
+              <b>{t('panel.nav.todos')}</b>
+              <span>{t('panel.todos.sub')}</span>
+            </Link>
+            <Link href="/dashboard/tickets" className="tile tile--third">
+              <b>{t('panel.nav.tickets')}</b>
+              <span>{t('panel.tickets.sub')}</span>
+            </Link>
+            <Link href="/dashboard/messages" className="tile tile--third">
+              <b>{t('panel.nav.messages')}</b>
+              <span>{t('panel.messages.sub')}</span>
+            </Link>
+          </div>
+        </section>
+
         <section className="test-history" aria-labelledby="test-history-heading">
           <h2 id="test-history-heading" className="section-heading">
             {t('dashboard.testHistory.title')}
