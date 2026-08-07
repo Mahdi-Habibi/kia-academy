@@ -49,6 +49,20 @@ import type {
   TestBankId,
   TestBankMeta,
   TestBankPayload,
+  SupportTicketSummary,
+  SupportTicketDetail,
+  CreateTicketDto,
+  TicketReplyDto,
+  LearnerMessageDto,
+  LearnerTodoDto,
+  CreateTodoDto,
+  UpdateTodoDto,
+  CompetitionSummary,
+  CourseAttachmentDto,
+  LearnerProgressSummary,
+  ProfileDetails,
+  UpdateProfileDto,
+  BootcampState,
 } from '@kia-academy/shared';
 import {
   buildRoadmapFromAnswers,
@@ -96,6 +110,20 @@ const DEMO_ADMIN: AuthUser = {
 };
 
 const DEMO_CREATED_AT = '2026-01-01T00:00:00.000Z';
+
+let demoTodos: LearnerTodoDto[] = [];
+let demoCompetitions: CompetitionSummary[] = [
+  {
+    id: 'demo-comp-1',
+    slug: 'spring-code-sprint',
+    title: 'Spring Code Sprint',
+    description: 'A timed algorithm sprint for Kia learners.',
+    startsAt: DEMO_CREATED_AT,
+    endsAt: '2026-12-31T00:00:00.000Z',
+    active: true,
+    registered: false,
+  },
+];
 
 let demoAdminUsers: AdminUser[] = [
   {
@@ -478,9 +506,28 @@ export const demoApi = {
       ...user,
       name: `${dto.firstName} ${dto.lastName}`.trim(),
       email: dto.email,
+      firstName: dto.firstName,
+      lastName: dto.lastName,
+      city: dto.city,
       profileComplete: true,
     };
     return delay(authResponse(next));
+  },
+
+  async getProfile(): Promise<ProfileDetails> {
+    const user = requireUser();
+    return delay({
+      firstName: user.firstName ?? user.name.split(' ')[0] ?? '',
+      lastName: user.lastName ?? user.name.split(' ').slice(1).join(' '),
+      city: user.city ?? 'Tehran',
+      email: user.email,
+      phone: user.phone,
+      name: user.name,
+    });
+  },
+
+  async updateProfile(dto: UpdateProfileDto): Promise<AuthResponse> {
+    return this.completeProfile(dto);
   },
 
   async logout(): Promise<void> {
@@ -968,6 +1015,201 @@ export const demoApi = {
     requireUser();
     const settings = readDemoSettings();
     return delay(buildChallengeResult(code, settings.bootcamp));
+  },
+
+  async getBootcampState(): Promise<BootcampState> {
+    requireUser();
+    const settings = readDemoSettings();
+    return delay({
+      rank: settings.bootcamp.defaultRank,
+      points: settings.bootcamp.defaultPoints,
+      leaderboard: [
+        { rank: 1, name: 'Priya M.', score: 890 },
+        { rank: 12, name: 'You', score: settings.bootcamp.defaultPoints, isMe: true },
+      ],
+      cardTimerSeconds: 2 * 3600,
+    });
+  },
+
+  async listTickets(): Promise<SupportTicketSummary[]> {
+    requireUser();
+    return delay([]);
+  },
+
+  async getTicket(id: string): Promise<SupportTicketDetail> {
+    requireUser();
+    throw new ApiError(`Ticket ${id} not found`, 404);
+  },
+
+  async createTicket(dto: CreateTicketDto): Promise<SupportTicketDetail> {
+    requireUser();
+    const now = new Date().toISOString();
+    return delay({
+      id: `demo-ticket-${Date.now()}`,
+      subject: dto.subject,
+      body: dto.body,
+      status: 'OPEN',
+      priority: dto.priority ?? 'NORMAL',
+      courseId: null,
+      courseSlug: dto.courseSlug ?? null,
+      courseTitle: null,
+      createdAt: now,
+      updatedAt: now,
+      replyCount: 0,
+      replies: [],
+    });
+  },
+
+  async replyTicket(id: string, dto: TicketReplyDto): Promise<SupportTicketDetail> {
+    requireUser();
+    const now = new Date().toISOString();
+    return delay({
+      id,
+      subject: 'Demo ticket',
+      body: 'Demo body',
+      status: 'OPEN',
+      priority: 'NORMAL',
+      courseId: null,
+      courseSlug: null,
+      courseTitle: null,
+      createdAt: now,
+      updatedAt: now,
+      replyCount: 1,
+      replies: [
+        {
+          id: `demo-reply-${Date.now()}`,
+          body: dto.body,
+          isStaff: false,
+          authorName: requireUser().name,
+          createdAt: now,
+        },
+      ],
+    });
+  },
+
+  async listMessages(): Promise<LearnerMessageDto[]> {
+    requireUser();
+    return delay([
+      {
+        id: 'demo-msg-1',
+        subject: 'Welcome to your learner panel',
+        body: 'Your dashboard includes finance, tickets, progress, and events.',
+        readAt: null,
+        createdAt: DEMO_CREATED_AT,
+      },
+    ]);
+  },
+
+  async markMessageRead(id: string): Promise<LearnerMessageDto> {
+    requireUser();
+    return delay({
+      id,
+      subject: 'Welcome to your learner panel',
+      body: 'Your dashboard includes finance, tickets, progress, and events.',
+      readAt: new Date().toISOString(),
+      createdAt: DEMO_CREATED_AT,
+    });
+  },
+
+  async listTodos(): Promise<LearnerTodoDto[]> {
+    requireUser();
+    return delay(demoTodos);
+  },
+
+  async createTodo(dto: CreateTodoDto): Promise<LearnerTodoDto> {
+    requireUser();
+    const now = new Date().toISOString();
+    const todo: LearnerTodoDto = {
+      id: `demo-todo-${Date.now()}`,
+      title: dto.title,
+      done: false,
+      sortOrder: demoTodos.length,
+      createdAt: now,
+      updatedAt: now,
+    };
+    demoTodos = [...demoTodos, todo];
+    return delay(todo);
+  },
+
+  async updateTodo(id: string, dto: UpdateTodoDto): Promise<LearnerTodoDto> {
+    requireUser();
+    demoTodos = demoTodos.map((todo) =>
+      todo.id === id
+        ? {
+            ...todo,
+            ...dto,
+            updatedAt: new Date().toISOString(),
+          }
+        : todo,
+    );
+    const found = demoTodos.find((todo) => todo.id === id);
+    if (!found) throw new ApiError('Todo not found', 404);
+    return delay(found);
+  },
+
+  async deleteTodo(id: string): Promise<void> {
+    requireUser();
+    demoTodos = demoTodos.filter((todo) => todo.id !== id);
+    await delay(undefined);
+  },
+
+  async listCompetitions(): Promise<CompetitionSummary[]> {
+    requireUser();
+    return delay(demoCompetitions);
+  },
+
+  async listMyCompetitions(): Promise<CompetitionSummary[]> {
+    requireUser();
+    return delay(demoCompetitions.filter((item) => item.registered));
+  },
+
+  async registerCompetition(slug: string): Promise<CompetitionSummary> {
+    requireUser();
+    demoCompetitions = demoCompetitions.map((item) =>
+      item.slug === slug ? { ...item, registered: true } : item,
+    );
+    const found = demoCompetitions.find((item) => item.slug === slug);
+    if (!found) throw new ApiError('Competition not found', 404);
+    return delay(found);
+  },
+
+  async listCourseAttachments(slug: string): Promise<CourseAttachmentDto[]> {
+    requireUser();
+    if (slug !== 'javascript-core') return delay([]);
+    return delay([
+      {
+        id: 'demo-att-1',
+        title: 'JavaScript cheatsheet',
+        fileName: 'js-cheatsheet.pdf',
+        fileUrl: '#',
+        mimeType: 'application/pdf',
+        sizeBytes: 245000,
+        sortOrder: 0,
+        createdAt: DEMO_CREATED_AT,
+      },
+    ]);
+  },
+
+  async getProgress(): Promise<LearnerProgressSummary> {
+    requireUser();
+    const mine = await this.listMyCourses();
+    return delay({
+      courses: mine.map((course) => ({
+        slug: course.slug,
+        title: course.title,
+        progressPct: course.progressPct,
+      })),
+      examAverage: null,
+      bootcampPoints: 340,
+      points: [
+        ...mine.map((course) => ({
+          label: course.title,
+          value: course.progressPct,
+          kind: 'course' as const,
+        })),
+        { label: 'Bootcamp', value: 34, kind: 'bootcamp' as const },
+      ],
+    });
   },
 
   async adminStats(): Promise<AdminStats> {

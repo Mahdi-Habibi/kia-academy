@@ -244,6 +244,34 @@ export class CoursesService {
     }
   }
 
+  async listAttachments(userId: string, courseSlug: string) {
+    const course = await this.prisma.course.findUnique({
+      where: { slug: courseSlug },
+      include: {
+        enrollments: { where: { userId } },
+        attachments: { orderBy: { sortOrder: 'asc' } },
+      },
+    });
+
+    if (!course || !course.published) {
+      throw new NotFoundException(`Course ${courseSlug} not found`);
+    }
+    if (course.enrollments.length === 0) {
+      throw new ForbiddenException('Enroll in this course to view attachments');
+    }
+
+    return course.attachments.map((attachment) => ({
+      id: attachment.id,
+      title: attachment.title,
+      fileName: attachment.fileName,
+      fileUrl: attachment.fileUrl,
+      mimeType: attachment.mimeType,
+      sizeBytes: attachment.sizeBytes,
+      sortOrder: attachment.sortOrder,
+      createdAt: attachment.createdAt.toISOString(),
+    }));
+  }
+
   private async getCompletedLessonIds(userId: string, lessonIds: string[]): Promise<Set<string>> {
     if (lessonIds.length === 0) {
       return new Set();

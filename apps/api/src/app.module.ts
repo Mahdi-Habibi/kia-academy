@@ -20,6 +20,11 @@ import { AdminModule } from './admin/admin.module';
 import { SiteSettingsModule } from './site-settings/site-settings.module';
 import { ContactModule } from './contact/contact.module';
 import { TestBanksModule } from './test-banks/test-banks.module';
+import { TicketsModule } from './tickets/tickets.module';
+import { TodosModule } from './todos/todos.module';
+import { MessagesModule } from './messages/messages.module';
+import { CompetitionsModule } from './competitions/competitions.module';
+import { ProgressModule } from './progress/progress.module';
 
 @Module({
   imports: [
@@ -50,6 +55,11 @@ import { TestBanksModule } from './test-banks/test-banks.module';
     SiteSettingsModule,
     ContactModule,
     TestBanksModule,
+    TicketsModule,
+    TodosModule,
+    MessagesModule,
+    CompetitionsModule,
+    ProgressModule,
   ],
   providers: [
     {

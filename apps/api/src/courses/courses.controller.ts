@@ -21,6 +21,15 @@ export class CoursesController {
     return this.coursesService.listMyCourses(user.id);
   }
 
+  @Get(':slug/attachments')
+  @UseGuards(JwtAuthGuard)
+  listAttachments(
+    @CurrentUser() user: AuthUser,
+    @Param('slug') slug: string,
+  ) {
+    return this.coursesService.listAttachments(user.id, slug);
+  }
+
   @Get(':slug')
   @UseGuards(OptionalJwtAuthGuard)
   getCourse(

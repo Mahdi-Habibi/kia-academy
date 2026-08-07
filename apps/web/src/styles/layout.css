@@ -72,9 +72,9 @@
     position: sticky;
     top: 0;
     align-self: flex-start;
-    flex: 0 0 16.5rem;
-    width: 16.5rem;
-    max-width: 16.5rem;
+    flex: 0 0 18.5rem;
+    width: 18.5rem;
+    max-width: 18.5rem;
     height: 100vh;
     margin: 0;
     padding: var(--space-5) var(--space-4);

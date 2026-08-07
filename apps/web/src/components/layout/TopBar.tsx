@@ -2,9 +2,10 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { BookOpen, ChevronDown, LogOut, Menu, Shield, X } from 'lucide-react';
+import { ChevronDown, LogOut, Menu, Shield, X } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { LanguageSelector } from '@/components/layout/LanguageSelector';
+import { LearnerNav } from '@/components/layout/LearnerNav';
 import { useApp } from '@/context/AppProvider';
 import { useAuth } from '@/context/AuthProvider';
 import { useLanguage } from '@/context/LanguageProvider';
@@ -112,26 +113,12 @@ export function TopBar() {
             </Link>
           ) : (
             <>
-              <Link href="/material" className="top-nav-link" onClick={() => setNavOpen(false)}>
-                {t('landing.ctaMaterial')}
-              </Link>
-              <Link href="/education" className="top-nav-link" onClick={() => setNavOpen(false)}>
-                {t('landing.ctaEducation')}
-              </Link>
-              <Link href="/contact" className="top-nav-link" onClick={() => setNavOpen(false)}>
-                {t('landing.ctaContact')}
-              </Link>
-              <Link href="/dashboard/my-courses" className="top-nav-link" onClick={() => setNavOpen(false)}>
-                <BookOpen size={14} /> {t('nav.myCourses')}
-              </Link>
+              <LearnerNav onNavigate={() => setNavOpen(false)} />
               {isAdmin && (
                 <Link href="/admin" className="top-nav-link" onClick={() => setNavOpen(false)}>
                   <Shield size={14} /> {t('nav.admin')}
                 </Link>
               )}
-              <Link href="/dashboard" className="top-nav-link" onClick={() => setNavOpen(false)}>
-                {t('nav.dashboard')}
-              </Link>
             </>
           )}
 
@@ -173,14 +160,35 @@ export function TopBar() {
                       className="user-dropdown-item"
                       onClick={() => setMenuOpen(false)}
                     >
-                      {t('nav.dashboard')}
+                      {t('panel.nav.dashboard')}
                     </Link>
                     <Link
                       href="/dashboard/my-courses"
                       className="user-dropdown-item"
                       onClick={() => setMenuOpen(false)}
                     >
-                      {t('nav.myCourses')}
+                      {t('panel.nav.myCourses')}
+                    </Link>
+                    <Link
+                      href="/dashboard/tickets"
+                      className="user-dropdown-item"
+                      onClick={() => setMenuOpen(false)}
+                    >
+                      {t('panel.nav.tickets')}
+                    </Link>
+                    <Link
+                      href="/dashboard/messages"
+                      className="user-dropdown-item"
+                      onClick={() => setMenuOpen(false)}
+                    >
+                      {t('panel.nav.messages')}
+                    </Link>
+                    <Link
+                      href="/dashboard/profile"
+                      className="user-dropdown-item"
+                      onClick={() => setMenuOpen(false)}
+                    >
+                      {t('panel.nav.profile')}
                     </Link>
                     <Link
                       href="/rewards"

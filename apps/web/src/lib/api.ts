@@ -54,6 +54,20 @@ import type {
   TestBankId,
   TestBankMeta,
   TestBankPayload,
+  SupportTicketSummary,
+  SupportTicketDetail,
+  CreateTicketDto,
+  TicketReplyDto,
+  LearnerMessageDto,
+  LearnerTodoDto,
+  CreateTodoDto,
+  UpdateTodoDto,
+  CompetitionSummary,
+  CourseAttachmentDto,
+  LearnerProgressSummary,
+  ProfileDetails,
+  UpdateProfileDto,
+  BootcampState,
 } from '@kia-academy/shared';
 import { clearTokens, getAccessToken, setAccessToken } from '@/lib/auth';
 import { ApiError } from '@/lib/apiError';
@@ -193,6 +207,20 @@ const liveApi = {
   completeProfile(dto: CompleteProfileDto): Promise<AuthResponse> {
     return request<AuthResponse>('/auth/profile', {
       method: 'POST',
+      body: JSON.stringify(dto),
+    }).then((res) => {
+      setAccessToken(res.accessToken);
+      return res;
+    });
+  },
+
+  getProfile(): Promise<ProfileDetails> {
+    return request<ProfileDetails>('/auth/profile');
+  },
+
+  updateProfile(dto: UpdateProfileDto): Promise<AuthResponse> {
+    return request<AuthResponse>('/auth/profile', {
+      method: 'PATCH',
       body: JSON.stringify(dto),
     }).then((res) => {
       setAccessToken(res.accessToken);
@@ -379,6 +407,84 @@ const liveApi = {
       method: 'POST',
       body: JSON.stringify(dto),
     });
+  },
+
+  getBootcampState(): Promise<BootcampState> {
+    return request<BootcampState>('/bootcamp/state');
+  },
+
+  listTickets(): Promise<SupportTicketSummary[]> {
+    return request<SupportTicketSummary[]>('/tickets');
+  },
+
+  getTicket(id: string): Promise<SupportTicketDetail> {
+    return request<SupportTicketDetail>(`/tickets/${id}`);
+  },
+
+  createTicket(dto: CreateTicketDto): Promise<SupportTicketDetail> {
+    return request<SupportTicketDetail>('/tickets', {
+      method: 'POST',
+      body: JSON.stringify(dto),
+    });
+  },
+
+  replyTicket(id: string, dto: TicketReplyDto): Promise<SupportTicketDetail> {
+    return request<SupportTicketDetail>(`/tickets/${id}/replies`, {
+      method: 'POST',
+      body: JSON.stringify(dto),
+    });
+  },
+
+  listMessages(): Promise<LearnerMessageDto[]> {
+    return request<LearnerMessageDto[]>('/messages');
+  },
+
+  markMessageRead(id: string): Promise<LearnerMessageDto> {
+    return request<LearnerMessageDto>(`/messages/${id}/read`, { method: 'PATCH' });
+  },
+
+  listTodos(): Promise<LearnerTodoDto[]> {
+    return request<LearnerTodoDto[]>('/todos');
+  },
+
+  createTodo(dto: CreateTodoDto): Promise<LearnerTodoDto> {
+    return request<LearnerTodoDto>('/todos', {
+      method: 'POST',
+      body: JSON.stringify(dto),
+    });
+  },
+
+  updateTodo(id: string, dto: UpdateTodoDto): Promise<LearnerTodoDto> {
+    return request<LearnerTodoDto>(`/todos/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(dto),
+    });
+  },
+
+  deleteTodo(id: string): Promise<void> {
+    return request<void>(`/todos/${id}`, { method: 'DELETE' });
+  },
+
+  listCompetitions(): Promise<CompetitionSummary[]> {
+    return request<CompetitionSummary[]>('/competitions');
+  },
+
+  listMyCompetitions(): Promise<CompetitionSummary[]> {
+    return request<CompetitionSummary[]>('/competitions/mine');
+  },
+
+  registerCompetition(slug: string): Promise<CompetitionSummary> {
+    return request<CompetitionSummary>(`/competitions/${slug}/register`, {
+      method: 'POST',
+    });
+  },
+
+  listCourseAttachments(slug: string): Promise<CourseAttachmentDto[]> {
+    return request<CourseAttachmentDto[]>(`/courses/${slug}/attachments`);
+  },
+
+  getProgress(): Promise<LearnerProgressSummary> {
+    return request<LearnerProgressSummary>('/progress');
   },
 
   adminStats(): Promise<AdminStats> {

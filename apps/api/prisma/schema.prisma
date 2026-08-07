@@ -63,6 +63,11 @@ model User {
   entitlements         Entitlement[]
   enrollments          Enrollment[]
   lessonProgress       LessonProgress[]
+  supportTickets       SupportTicket[]
+  ticketReplies        TicketReply[]
+  learnerMessages      LearnerMessage[]
+  learnerTodos         LearnerTodo[]
+  competitionRegs      CompetitionRegistration[]
 }
 
 model PhoneOtp {
@@ -224,6 +229,8 @@ model Course {
 
   lessons     Lesson[]
   enrollments Enrollment[]
+  attachments CourseAttachment[]
+  tickets     SupportTicket[]
 }
 
 model Lesson {
@@ -310,4 +317,116 @@ model ContactMessage {
   message   String
   readAt    DateTime?
   createdAt DateTime  @default(now())
+}
+
+enum TicketStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}
+
+enum TicketPriority {
+  LOW
+  NORMAL
+  HIGH
+}
+
+/** Learner support tickets (course-scoped or general). */
+model SupportTicket {
+  id        String         @id @default(cuid())
+  userId    String
+  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  courseId  String?
+  course    Course?        @relation(fields: [courseId], references: [id], onDelete: SetNull)
+  subject   String
+  body      String
+  status    TicketStatus   @default(OPEN)
+  priority  TicketPriority @default(NORMAL)
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+
+  replies TicketReply[]
+
+  @@index([userId, createdAt])
+}
+
+model TicketReply {
+  id        String        @id @default(cuid())
+  ticketId  String
+  ticket    SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  authorId  String
+  author    User          @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  body      String
+  isStaff   Boolean       @default(false)
+  createdAt DateTime      @default(now())
+
+  @@index([ticketId, createdAt])
+}
+
+/** Admin → learner inbox messages. */
+model LearnerMessage {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subject   String
+  body      String
+  readAt    DateTime?
+  createdBy String?
+  createdAt DateTime  @default(now())
+
+  @@index([userId, createdAt])
+}
+
+/** Mini todo list on the learner dashboard. */
+model LearnerTodo {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  done      Boolean  @default(false)
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId, sortOrder])
+}
+
+model Competition {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  description String
+  startsAt    DateTime
+  endsAt      DateTime
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  registrations CompetitionRegistration[]
+}
+
+model CompetitionRegistration {
+  id            String      @id @default(cuid())
+  userId        String
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  competitionId String
+  competition   Competition @relation(fields: [competitionId], references: [id], onDelete: Cascade)
+  createdAt     DateTime    @default(now())
+
+  @@unique([userId, competitionId])
+}
+
+model CourseAttachment {
+  id        String   @id @default(cuid())
+  courseId  String
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  title     String
+  fileName  String
+  fileUrl   String
+  mimeType  String?
+  sizeBytes Int?
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+
+  @@index([courseId, sortOrder])
 }

@@ -393,6 +393,62 @@ Use STAR (Situation, Task, Action, Result) to answer behavioral questions.
   console.log(`Seeded courses: javascript-core, interview-branding`);
   console.log(`Seeded challenge: fizzbuzz`);
 
+  const jsCourse = await prisma.course.findUnique({ where: { slug: 'javascript-core' } });
+  if (jsCourse) {
+    const existingAttachment = await prisma.courseAttachment.findFirst({
+      where: { courseId: jsCourse.id, fileName: 'js-cheatsheet.pdf' },
+    });
+    if (!existingAttachment) {
+      await prisma.courseAttachment.create({
+        data: {
+          courseId: jsCourse.id,
+          title: 'JavaScript cheatsheet',
+          fileName: 'js-cheatsheet.pdf',
+          fileUrl: 'https://kia.academy/assets/sample-js-cheatsheet.pdf',
+          mimeType: 'application/pdf',
+          sizeBytes: 245_000,
+          sortOrder: 0,
+        },
+      });
+    }
+  }
+
+  const competitionStarts = new Date();
+  const competitionEnds = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+  await prisma.competition.upsert({
+    where: { slug: 'spring-code-sprint' },
+    create: {
+      slug: 'spring-code-sprint',
+      title: 'Spring Code Sprint',
+      description: 'A timed algorithm sprint for Kia learners. Register to compete on the public board.',
+      startsAt: competitionStarts,
+      endsAt: competitionEnds,
+      active: true,
+    },
+    update: {
+      title: 'Spring Code Sprint',
+      description: 'A timed algorithm sprint for Kia learners. Register to compete on the public board.',
+      endsAt: competitionEnds,
+      active: true,
+    },
+  });
+
+  const existingMessage = await prisma.learnerMessage.findFirst({
+    where: { userId: user.id, subject: 'Welcome to your learner panel' },
+  });
+  if (!existingMessage) {
+    await prisma.learnerMessage.create({
+      data: {
+        userId: user.id,
+        subject: 'Welcome to your learner panel',
+        body: 'Your dashboard now includes finance history, tickets, progress, and bootcamp events. Open each section from the sidebar.',
+        createdBy: admin.id,
+      },
+    });
+  }
+
+  console.log('Seeded competition, course attachments, and learner welcome message');
+
   const defaults = createDefaultSiteSettings();
   await prisma.siteSetting.upsert({
     where: { key: 'site' },

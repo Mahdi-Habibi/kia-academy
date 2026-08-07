@@ -20,4 +20,5 @@ export * from './personality';
 export * from './assessment';
 export * from './types/test-banks';
 export * from './types/test-report';
+export * from './types/dashboard';
 export * from './utils/test-report-score';
