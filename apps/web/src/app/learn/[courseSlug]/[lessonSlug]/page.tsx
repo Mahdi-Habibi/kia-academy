@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import type { LessonDetail, LessonSummary } from '@kia-academy/shared';
+import { parseLessonContent } from '@kia-academy/shared';
 import { RequireAuth } from '@/components/auth/RequireAuth';
 import { LessonPlayground } from '@/components/lesson/LessonPlayground';
 import { LessonVideo } from '@/components/lesson/LessonVideo';
@@ -68,6 +69,11 @@ function LessonPlayerContent({
     if (!q) return lessons;
     return lessons.filter((item) => item.title.toLowerCase().includes(q));
   }, [lessons, query]);
+
+  const parsedContent = useMemo(
+    () => (lesson ? parseLessonContent(lesson.content) : null),
+    [lesson],
+  );
 
   const progressPct = useMemo(() => {
     if (!lessons.length) return 0;
@@ -201,7 +207,9 @@ function LessonPlayerContent({
 
               <div
                 className="lesson-description lesson-md"
-                dangerouslySetInnerHTML={{ __html: markdownToHtml(lesson.content) }}
+                dangerouslySetInnerHTML={{
+                  __html: markdownToHtml(parsedContent?.markdown ?? lesson.content),
+                }}
               />
 
               <div className="lesson-actions-row">
@@ -260,7 +268,12 @@ function LessonPlayerContent({
                 />
               </article>
 
-              <LessonPlayground storageKey={`kia-lesson-code:${courseSlug}:${lessonSlug}`} />
+              <LessonPlayground
+                storageKey={`kia-lesson-code:${courseSlug}:${lessonSlug}`}
+                starterHtml={parsedContent?.playground?.html}
+                starterCss={parsedContent?.playground?.css}
+                starterJs={parsedContent?.playground?.js}
+              />
             </section>
           </section>
         </div>

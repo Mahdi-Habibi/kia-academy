@@ -10,6 +10,7 @@ import {
   sanitizeProfileText,
 } from '@kia-academy/shared';
 import { RequireAuth } from '@/components/auth/RequireAuth';
+import { BrandMark } from '@/components/brand/BrandMark';
 import { PageBackButton } from '@/components/layout/PageBackButton';
 import { useAuth } from '@/context/AuthProvider';
 import { useLanguage } from '@/context/LanguageProvider';
@@ -333,6 +334,7 @@ function EducationFlow() {
     <div className="container auth-shell">
       <div className="auth-card education-card">
         <Link href="/" className="education-brand">
+          <BrandMark className="education-brand-mark" size={28} title="" />
           {t('common.brand')}
         </Link>
         <span className="auth-step-badge">{t('education.stepBadge', { current: 1, total: 3 })}</span>

@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import type { ComponentType } from 'react';
 import { useEffect } from 'react';
+import { BrandMark } from '@/components/brand/BrandMark';
 import { useAuth } from '@/context/AuthProvider';
 import { useLanguage } from '@/context/LanguageProvider';
 
@@ -55,7 +56,7 @@ export default function HomePage() {
       <div className="landing-intro container">
         <header className="landing-hero">
           <span className="landing-brand">
-            <span className="landing-brand-mark" aria-hidden="true" />
+            <BrandMark className="landing-brand-mark" title="" />
             {t('common.brand')}
           </span>
 

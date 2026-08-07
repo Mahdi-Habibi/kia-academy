@@ -8,7 +8,6 @@ import {
   ChevronDown,
   Coins,
   CreditCard,
-  Crown,
   ClipboardList,
   LineChart,
   Menu,
@@ -25,6 +24,7 @@ import {
   type AdminAccessSection,
   type SiteAdminAccessSettings,
 } from '@kia-academy/shared';
+import { BrandMark } from '@/components/brand/BrandMark';
 import { useAuth } from '@/context/AuthProvider';
 import { useLanguage } from '@/context/LanguageProvider';
 
@@ -320,7 +320,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
       <aside className="admin-sidebar" aria-label={t('admin.sidebar')}>
         <Link href="/admin" className="admin-brand">
           <span className="admin-brand-mark">
-            <Crown size={18} />
+            <BrandMark size={22} title="" />
           </span>
           <span>
             <strong>{t('admin.brand')}</strong>
@@ -384,7 +384,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         </nav>
         <div className="admin-sidebar-profile">
           <span className="admin-brand-mark" style={{ width: '2.35rem', height: '2.35rem' }}>
-            <Crown size={14} />
+            <BrandMark size={18} title="" />
           </span>
           <span className="profile">
             <strong>{user.name || user.email || t('admin.brand')}</strong>

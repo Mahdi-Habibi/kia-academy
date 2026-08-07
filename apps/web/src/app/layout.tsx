@@ -49,6 +49,10 @@ export const metadata: Metadata = {
   metadataBase: new URL(appUrl),
   title: messages[DEFAULT_LOCALE].meta.title,
   description: messages[DEFAULT_LOCALE].meta.description,
+  icons: {
+    icon: [{ url: '/favicon.svg', type: 'image/svg+xml' }],
+    apple: [{ url: '/brand/logo-mark.svg', type: 'image/svg+xml' }],
+  },
 };
 
 export const viewport: Viewport = {

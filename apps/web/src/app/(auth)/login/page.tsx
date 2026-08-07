@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { LogIn } from 'lucide-react';
 import { FormEvent, Suspense, useEffect, useState } from 'react';
 import { PageBackButton } from '@/components/layout/PageBackButton';
+import { BrandMark } from '@/components/brand/BrandMark';
 import { useAuth } from '@/context/AuthProvider';
 import { useLanguage } from '@/context/LanguageProvider';
 import { resolvePostLoginPath } from '@/lib/postLoginPath';
@@ -57,6 +58,10 @@ function LoginForm() {
       <div className="container auth-shell">
         <PageBackButton href="/" />
         <div className="auth-card">
+          <Link href="/" className="education-brand" aria-label={t('common.brand')}>
+            <BrandMark className="education-brand-mark" size={28} title="" />
+            {t('common.brand')}
+          </Link>
           <span className="eyebrow">
             <LogIn size={14} className="inline-leading-icon" />
             {t('auth.login.eyebrow')}
