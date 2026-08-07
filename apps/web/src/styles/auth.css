@@ -282,6 +282,13 @@
   letter-spacing: -0.02em;
 }
 
+.education-brand-mark {
+  display: block;
+  flex: 0 0 auto;
+  color: var(--brand-400);
+  overflow: visible;
+}
+
 .education-brand + .auth-step-badge {
   margin-top: var(--space-1);
 }

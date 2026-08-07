@@ -1591,10 +1591,10 @@
 .material-studio-root .material-brand-mark {
   width: 1.15rem;
   height: 1.15rem;
-  border-radius: 0.35rem;
-  background: linear-gradient(135deg, var(--primary-deep), var(--primary-accent));
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.25);
+  color: var(--primary-accent, var(--brand-400));
   flex: 0 0 auto;
+  display: block;
+  overflow: visible;
 }
 
 .material-studio-root .material-mode {

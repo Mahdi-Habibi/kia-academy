@@ -97,7 +97,8 @@ export default function DashboardPage() {
         const target =
           enrolled.find((c) => c.progressPct < 100) ??
           enrolled[0] ??
-          courses.find((c) => c.slug === 'javascript-core');
+          courses.find((c) => c.slug === 'html') ??
+          courses.find((c) => c.slug === 'javascript');
 
         if (!target || cancelled) return;
 
@@ -109,7 +110,7 @@ export default function DashboardPage() {
         }
       } catch {
         if (!cancelled) {
-          setNextLessonHref('/learn/javascript-core/variables-and-types');
+          setNextLessonHref('/learn/html/html-home');
         }
       }
     })();
@@ -169,7 +170,7 @@ export default function DashboardPage() {
     ? t(moduleMessageKey(data.modules[1]))
     : t('dashboard.fallbackNextCourse');
   const firstName = user?.name?.split(' ')[0] ?? t('dashboard.fallbackName');
-  const lessonHref = nextLessonHref ?? '/learn/javascript-core/variables-and-types';
+  const lessonHref = nextLessonHref ?? '/learn/html/html-home';
 
   const latestExamScore =
     examResult?.average ??

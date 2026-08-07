@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useRef } from "react";
+import { BrandMark } from "@/components/brand/BrandMark";
 import { MaterialController } from "./MaterialController";
 import "./material-studio.css";
 
@@ -27,7 +28,7 @@ export function MaterialStudio() {
       >
         <div className="material-topbar">
           <Link className="material-brand" href="/">
-            <span className="material-brand-mark" aria-hidden="true" />
+            <BrandMark className="material-brand-mark" size={18} title="" />
             آکادمی کیا
           </Link>
           <Link className="home-btn" href="/">

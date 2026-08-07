@@ -24,6 +24,8 @@ const githubPagesBasePath = (process.env.NEXT_BASE_PATH ?? '/pathwise').replace(
 
 const nextConfig: NextConfig = {
   transpilePackages: ['@kia-academy/shared'],
+  // Allow importing monorepo-root `db.json` into the web app.
+  outputFileTracingRoot: path.join(__dirname, '../..'),
   ...(isGitHubPages
     ? {
         output: 'export' as const,
@@ -35,7 +37,6 @@ const nextConfig: NextConfig = {
     : isDockerBuild
       ? {
           output: 'standalone' as const,
-          outputFileTracingRoot: path.join(process.cwd(), '../..'),
         }
       : {}),
   ...(!isGitHubPages

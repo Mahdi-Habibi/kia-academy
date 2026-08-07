@@ -1,22 +1,11 @@
 import type { CourseSummary, LessonSummary } from '@kia-academy/shared';
 import type { Locale } from '@/i18n/locales';
 
-type LocalizedCourse = {
-  title: string;
-  description: string;
-  lessons: Record<string, string>;
-};
-
-const persianCourses: Record<string, LocalizedCourse> = {
-  'javascript-core': {
-    title: 'مبانی جاوااسکریپت',
-    description: 'متغیرها، توابع، آرایه‌ها و الگوهای async را با درس‌های عملی یاد بگیرید.',
-    lessons: {
-      'variables-and-types': 'متغیرها و نوع‌ها',
-      'functions-and-scope': 'توابع و حوزهٔ دسترسی',
-      'async-await': 'Async/Await',
-    },
-  },
+/**
+ * db.json course content is already Persian-first. Keep a small map only for
+ * legacy/en-only bonus courses that still need FA titles.
+ */
+const persianCourses: Record<string, { title: string; description: string; lessons: Record<string, string> }> = {
   'interview-branding': {
     title: 'مصاحبه و برندسازی شخصی',
     description: 'یک رزومه، نمونه‌کار و روایت مصاحبهٔ اثرگذار بسازید.',

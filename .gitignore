@@ -25,6 +25,10 @@ playwright-report/
 !.env.docker.example
 !**/.env.example
 
+# Course catalog (root db.json) must stay tracked.
+!db.json
+!**/db.json
+
 apps/api/prisma/*.db
 apps/api/prisma/*.db-journal
 apps/api/uploads/

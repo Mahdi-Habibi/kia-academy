@@ -1,17 +1,37 @@
 import { PrismaClient, Prisma } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import {
   DEFAULT_ASSESSMENT_BANK,
   EXAM_QUESTION_BANK,
   MINI_IPIP_CITATION,
   MINI_IPIP_ITEMS,
+  buildCourseCatalog,
   createDefaultSiteSettings,
   createSectionPermission,
+  type CourseDbFile,
 } from '@kia-academy/shared';
 
 const prisma = new PrismaClient();
 
 const SEED_PASSWORD = 'KiaAcademy123!';
+
+function loadCourseDb(): CourseDbFile {
+  const candidates = [
+    join(__dirname, '../../../db.json'),
+    join(process.cwd(), 'db.json'),
+    join(process.cwd(), '../../db.json'),
+  ];
+  for (const path of candidates) {
+    try {
+      return JSON.parse(readFileSync(path, 'utf8')) as CourseDbFile;
+    } catch {
+      /* try next */
+    }
+  }
+  throw new Error('Could not find db.json (expected at monorepo root)');
+}
 
 function moderatorAccess(
   stats: [boolean, boolean, boolean],
@@ -137,26 +157,59 @@ async function main() {
     include: { bootcampProfile: true },
   });
 
-  const javascriptCore = await prisma.course.upsert({
-    where: { slug: 'javascript-core' },
-    update: {
-      title: 'JavaScript Core',
-      description:
-        'Master variables, functions, arrays, and async patterns with hands-on markdown lessons.',
-      icon: 'code',
-      trackKey: 'web',
-      sortOrder: 1,
-    },
-    create: {
-      slug: 'javascript-core',
-      title: 'JavaScript Core',
-      description:
-        'Master variables, functions, arrays, and async patterns with hands-on markdown lessons.',
-      icon: 'code',
-      trackKey: 'web',
-      sortOrder: 1,
-    },
-  });
+  const catalog = buildCourseCatalog(loadCourseDb());
+  const seededCourses: { id: string; slug: string }[] = [];
+
+  for (const course of catalog) {
+    const row = await prisma.course.upsert({
+      where: { slug: course.slug },
+      update: {
+        title: course.title,
+        description: course.description,
+        icon: course.icon,
+        trackKey: course.trackKey,
+        sortOrder: course.sortOrder,
+        published: true,
+      },
+      create: {
+        slug: course.slug,
+        title: course.title,
+        description: course.description,
+        icon: course.icon,
+        trackKey: course.trackKey,
+        sortOrder: course.sortOrder,
+        published: true,
+      },
+    });
+    seededCourses.push({ id: row.id, slug: row.slug });
+
+    for (const lesson of course.lessons) {
+      await prisma.lesson.upsert({
+        where: {
+          courseId_slug: {
+            courseId: row.id,
+            slug: lesson.slug,
+          },
+        },
+        update: {
+          title: lesson.title,
+          content: lesson.content,
+          durationMin: lesson.durationMin,
+          sortOrder: lesson.sortOrder,
+          videoUrl: lesson.videoUrl,
+        },
+        create: {
+          courseId: row.id,
+          slug: lesson.slug,
+          title: lesson.title,
+          content: lesson.content,
+          durationMin: lesson.durationMin,
+          sortOrder: lesson.sortOrder,
+          videoUrl: lesson.videoUrl,
+        },
+      });
+    }
+  }
 
   const interviewBranding = await prisma.course.upsert({
     where: { slug: 'interview-branding' },
@@ -165,7 +218,7 @@ async function main() {
       description: 'Build a standout portfolio, resume, and interview story that gets you hired.',
       icon: 'briefcase',
       trackKey: 'web',
-      sortOrder: 2,
+      sortOrder: 100,
     },
     create: {
       slug: 'interview-branding',
@@ -173,94 +226,9 @@ async function main() {
       description: 'Build a standout portfolio, resume, and interview story that gets you hired.',
       icon: 'briefcase',
       trackKey: 'web',
-      sortOrder: 2,
+      sortOrder: 100,
     },
   });
-
-  const jsLessons = [
-    {
-      slug: 'variables-and-types',
-      title: 'Variables & Types',
-      durationMin: 12,
-      sortOrder: 1,
-      // Public sample used so the lesson video player is visible in local/dev.
-      videoUrl: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4',
-      content: `# Variables & Types
-
-Learn how JavaScript stores data with \`let\`, \`const\`, and primitive types.
-
-## Key concepts
-- \`const\` for values that should not be reassigned
-- \`let\` for values that change over time
-- typeof checks for runtime type inspection
-
-## Practice
-Declare a \`const\` for your name and a \`let\` counter starting at zero.`,
-    },
-    {
-      slug: 'functions-and-scope',
-      title: 'Functions & Scope',
-      durationMin: 15,
-      sortOrder: 2,
-      videoUrl: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm',
-      content: `# Functions & Scope
-
-Functions encapsulate logic. Scope determines where variables are visible.
-
-## Key concepts
-- Function declarations vs arrow functions
-- Block scope with \`let\`/\`const\`
-- Returning values from functions
-
-## Practice
-Write a function \`greet(name)\` that returns \`Hello, ${'${name}'}!\`.`,
-    },
-    {
-      slug: 'async-await',
-      title: 'Async/Await',
-      durationMin: 18,
-      sortOrder: 3,
-      videoUrl: null as string | null,
-      content: `# Async/Await
-
-Modern JavaScript uses Promises and \`async/await\` for non-blocking I/O.
-
-## Key concepts
-- Promises represent future values
-- \`async\` functions always return a Promise
-- \`await\` pauses until a Promise settles
-
-## Practice
-Fetch JSON from an API and log the first item.`,
-    },
-  ];
-
-  for (const lesson of jsLessons) {
-    await prisma.lesson.upsert({
-      where: {
-        courseId_slug: {
-          courseId: javascriptCore.id,
-          slug: lesson.slug,
-        },
-      },
-      update: {
-        title: lesson.title,
-        content: lesson.content,
-        durationMin: lesson.durationMin,
-        sortOrder: lesson.sortOrder,
-        videoUrl: lesson.videoUrl,
-      },
-      create: {
-        courseId: javascriptCore.id,
-        slug: lesson.slug,
-        title: lesson.title,
-        content: lesson.content,
-        durationMin: lesson.durationMin,
-        sortOrder: lesson.sortOrder,
-        videoUrl: lesson.videoUrl,
-      },
-    });
-  }
 
   const brandingLessons = [
     {
@@ -314,23 +282,30 @@ Use STAR (Situation, Task, Action, Result) to answer behavioral questions.
     });
   }
 
-  await prisma.enrollment.upsert({
-    where: {
-      userId_courseId: {
-        userId: user.id,
-        courseId: javascriptCore.id,
+  const primaryCourse = seededCourses[0];
+  if (primaryCourse) {
+    await prisma.enrollment.upsert({
+      where: {
+        userId_courseId: {
+          userId: user.id,
+          courseId: primaryCourse.id,
+        },
       },
-    },
-    update: {},
-    create: {
-      userId: user.id,
-      courseId: javascriptCore.id,
-    },
-  });
+      update: {},
+      create: {
+        userId: user.id,
+        courseId: primaryCourse.id,
+      },
+    });
+  }
 
   const entitlements = [
     { resourceType: 'readiness', resourceId: 'test', source: 'PURCHASE' as const },
-    { resourceType: 'course', resourceId: 'javascript-core', source: 'FREE' as const },
+    ...seededCourses.map((course) => ({
+      resourceType: 'course' as const,
+      resourceId: course.slug,
+      source: 'FREE' as const,
+    })),
   ];
 
   for (const entitlement of entitlements) {
@@ -390,10 +365,14 @@ Use STAR (Situation, Task, Action, Result) to answer behavioral questions.
   console.log('Seeded moderators: moderator@kia.academy (courses), moderator2@kia.academy (challenges)');
   console.log(`Seeded learner: ${user.name} (${user.email ?? 'alex@kia.academy'})`);
   console.log(`  Password: ${SEED_PASSWORD}`);
-  console.log(`Seeded courses: javascript-core, interview-branding`);
+  console.log(
+    `Seeded courses from db.json: ${seededCourses.map((c) => c.slug).join(', ')}, interview-branding`,
+  );
   console.log(`Seeded challenge: fizzbuzz`);
 
-  const jsCourse = await prisma.course.findUnique({ where: { slug: 'javascript-core' } });
+  const jsCourse =
+    seededCourses.find((c) => c.slug === 'javascript') ??
+    seededCourses.find((c) => c.slug.includes('javascript'));
   if (jsCourse) {
     const existingAttachment = await prisma.courseAttachment.findFirst({
       where: { courseId: jsCourse.id, fileName: 'js-cheatsheet.pdf' },

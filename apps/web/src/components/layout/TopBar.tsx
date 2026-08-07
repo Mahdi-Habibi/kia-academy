@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ChevronDown, LogOut, Menu, Shield, X } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
+import { BrandMark } from '@/components/brand/BrandMark';
 import { CartBadge } from '@/components/cart/CartBadge';
 import { LanguageSelector } from '@/components/layout/LanguageSelector';
 import { LearnerNav } from '@/components/layout/LearnerNav';
@@ -92,7 +93,7 @@ export function TopBar() {
     <div className="topbar" ref={topbarRef}>
       <div className="topbar-primary">
         <button type="button" className="logo" onClick={handleLogoClick}>
-          <span className="logo-mark" aria-hidden="true" />
+          <BrandMark className="logo-mark" size={26} title="" />
           <span className="logo-text">{settings.general.siteName || t('common.brand')}</span>
         </button>
 

@@ -70,6 +70,7 @@ import type {
   UpdateProfileDto,
   BootcampState,
 } from '@kia-academy/shared';
+import { courseCatalog, primaryCourseSlug } from '@/lib/courseCatalog';
 import {
   buildRoadmapFromAnswers,
   computeReadinessResult,
@@ -203,77 +204,28 @@ function lessonKey(courseSlug: string, lessonSlug: string): string {
 }
 
 function defaultCourses(): DemoCourse[] {
+  const fromDb: DemoCourse[] = courseCatalog.map((course) => ({
+    id: `course-${course.slug}`,
+    slug: course.slug,
+    title: course.title,
+    description: course.description,
+    icon: course.icon,
+    trackKey: course.trackKey,
+    sortOrder: course.sortOrder,
+    published: true,
+    lessons: course.lessons.map((lesson) => ({
+      id: `lesson-${course.slug}-${lesson.slug}`,
+      slug: lesson.slug,
+      title: lesson.title,
+      durationMin: lesson.durationMin,
+      videoUrl: lesson.videoUrl,
+      sortOrder: lesson.sortOrder,
+      content: lesson.content,
+    })),
+  }));
+
   return [
-    {
-      id: 'course-js',
-      slug: 'javascript-core',
-      title: 'JavaScript Core',
-      description:
-        'Master variables, functions, arrays, and async patterns with hands-on markdown lessons.',
-      icon: 'code',
-      trackKey: 'web',
-      sortOrder: 1,
-      published: true,
-      lessons: [
-        {
-          id: 'lesson-js-1',
-          slug: 'variables-and-types',
-          title: 'Variables & Types',
-          durationMin: 12,
-          videoUrl: null,
-          sortOrder: 1,
-          content: `# Variables & Types
-
-Learn how JavaScript stores data with \`let\`, \`const\`, and primitive types.
-
-## Key concepts
-- \`const\` for values that should not be reassigned
-- \`let\` for values that change over time
-- typeof checks for runtime type inspection
-
-## Practice
-Declare a \`const\` for your name and a \`let\` counter starting at zero.`,
-        },
-        {
-          id: 'lesson-js-2',
-          slug: 'functions-and-scope',
-          title: 'Functions & Scope',
-          durationMin: 15,
-          videoUrl: null,
-          sortOrder: 2,
-          content: `# Functions & Scope
-
-Functions encapsulate logic. Scope determines where variables are visible.
-
-## Key concepts
-- Function declarations vs arrow functions
-- Block scope with \`let\`/\`const\`
-- Returning values from functions
-
-## Practice
-Write a function \`greet(name)\` that returns a greeting string.`,
-        },
-        {
-          id: 'lesson-js-3',
-          slug: 'async-await',
-          title: 'Async/Await',
-          durationMin: 18,
-          videoUrl: null,
-          sortOrder: 3,
-          content: `# Async/Await
-
-Modern JavaScript uses Promises and \`async/await\` for non-blocking I/O.
-
-## Key concepts
-- Promises represent future values
-- \`async\` functions always return a Promise
-- \`await\` pauses until a Promise settles
-
-## Practice
-Fetch JSON from an API and log the first item.`,
-        },
-      ],
-    },
+    ...fromDb,
     {
       id: 'course-interview',
       slug: 'interview-branding',
@@ -281,7 +233,7 @@ Fetch JSON from an API and log the first item.`,
       description: 'Build a standout portfolio, resume, and interview story that gets you hired.',
       icon: 'briefcase',
       trackKey: 'web',
-      sortOrder: 2,
+      sortOrder: 100,
       published: true,
       lessons: [
         {
@@ -359,13 +311,13 @@ function writeSession(user: AuthUser | null): void {
 
 function defaultState(): DemoPersistedState {
   return {
-    enrollments: ['javascript-core'],
+    enrollments: [primaryCourseSlug],
     completedLessons: [],
     hasRoadmap: true,
     roadmapEnrolled: false,
     readinessPaid: false,
     testCompleted: false,
-    entitlements: [],
+    entitlements: courseCatalog.map((c) => `course:${c.slug}`),
     roadmapId: 'demo-roadmap',
     lastAnswers: {
       goal: 'job',
@@ -1422,7 +1374,7 @@ export const demoApi = {
 
   async listCourseAttachments(slug: string): Promise<CourseAttachmentDto[]> {
     requireUser();
-    if (slug !== 'javascript-core') return delay([]);
+    if (slug !== 'javascript') return delay([]);
     return delay([
       {
         id: 'demo-att-1',

@@ -30,7 +30,7 @@ export class CoursesService {
       : new Map<string, number>();
 
     return courses.map((course) => {
-      const enrolled = course.enrollments.length > 0;
+      const enrolled = Array.isArray(course.enrollments) && course.enrollments.length > 0;
       const lessonCount = course.lessons.length;
       const completedCount = progressByCourse.get(course.id) ?? 0;
       const progressPct = lessonCount === 0 ? 0 : Math.round((completedCount / lessonCount) * 100);
@@ -83,7 +83,7 @@ export class CoursesService {
       hasVideo: Boolean(lesson.videoUrl),
     }));
 
-    const enrolled = course.enrollments.length > 0;
+    const enrolled = Array.isArray(course.enrollments) && course.enrollments.length > 0;
     const progressPct =
       lessons.length === 0
         ? 0

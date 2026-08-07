@@ -1,10 +1,18 @@
-/** Seed course/lesson slugs used for static export (GitHub Pages). */
+import { courseCatalog } from '@/lib/courseCatalog';
+
+/** Course/lesson slugs used for static export (GitHub Pages). */
 export const STATIC_COURSE_LESSONS = [
-  { courseSlug: 'javascript-core', lessonSlug: 'variables-and-types' },
-  { courseSlug: 'javascript-core', lessonSlug: 'functions-and-scope' },
-  { courseSlug: 'javascript-core', lessonSlug: 'async-await' },
+  ...courseCatalog.flatMap((course) =>
+    course.lessons.map((lesson) => ({
+      courseSlug: course.slug,
+      lessonSlug: lesson.slug,
+    })),
+  ),
   { courseSlug: 'interview-branding', lessonSlug: 'portfolio-story' },
   { courseSlug: 'interview-branding', lessonSlug: 'interview-framework' },
 ] as const;
 
-export const STATIC_COURSE_SLUGS = ['javascript-core', 'interview-branding'] as const;
+export const STATIC_COURSE_SLUGS = [
+  ...courseCatalog.map((course) => course.slug),
+  'interview-branding',
+] as const;

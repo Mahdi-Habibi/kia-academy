@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { BookOpen, ClipboardCheck, Map, Trophy } from 'lucide-react';
+import { BrandMark } from '@/components/brand/BrandMark';
 import { useLanguage } from '@/context/LanguageProvider';
 
 export function Footer() {
@@ -14,7 +15,7 @@ export function Footer() {
         <div className="footer-main">
           <div className="footer-brand">
             <Link href="/dashboard" className="footer-logo" aria-label={t('nav.homeAria')}>
-              <span className="footer-logo-mark" aria-hidden="true" />
+              <BrandMark className="footer-logo-mark" size={26} title="" />
               {t('common.brand')}
             </Link>
             <p>{t('nav.footer.blurb')}</p>
