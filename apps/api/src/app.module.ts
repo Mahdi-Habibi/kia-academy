@@ -24,6 +24,7 @@ import { TicketsModule } from './tickets/tickets.module';
 import { TodosModule } from './todos/todos.module';
 import { MessagesModule } from './messages/messages.module';
 import { CompetitionsModule } from './competitions/competitions.module';
+import { CartModule } from './cart/cart.module';
 import { ProgressModule } from './progress/progress.module';
 
 @Module({
@@ -42,6 +43,7 @@ import { ProgressModule } from './progress/progress.module';
     AuthModule,
     HealthModule,
     PaymentsModule,
+    CartModule,
     CoursesModule,
     AssessmentsModule,
     PersonalityModule,

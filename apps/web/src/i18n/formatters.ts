@@ -1,8 +1,11 @@
+import type { PaymentCurrencyCode } from '@kia-academy/shared';
+import { normalizePaymentCurrency, toDisplayUnits } from '@kia-academy/shared';
 import type { Locale } from './locales';
 
 export interface Formatters {
   number: (value: number) => string;
-  currency: (value: number) => string;
+  /** Format a catalog amount stored in IRR. Respects site payment currency (irr/irt). */
+  currency: (value: number, currencyOverride?: PaymentCurrencyCode | string) => string;
   percent: (value: number) => string;
   date: (value: Date | string | number) => string;
   durationMinutes: (minutes: number) => string;
@@ -10,14 +13,11 @@ export interface Formatters {
   points: (value: number) => string;
 }
 
-export function createFormatters(locale: Locale): Formatters {
+export function createFormatters(
+  locale: Locale,
+  paymentCurrency: PaymentCurrencyCode = locale === 'fa' ? 'irt' : 'irr',
+): Formatters {
   const numberFmt = new Intl.NumberFormat(locale);
-  const useIrr = locale === 'fa';
-  const currencyFmt = new Intl.NumberFormat(locale, {
-    style: 'currency',
-    currency: 'USD',
-    maximumFractionDigits: 0,
-  });
   const percentFmt = new Intl.NumberFormat(locale, {
     style: 'percent',
     maximumFractionDigits: 0,
@@ -28,23 +28,29 @@ export function createFormatters(locale: Locale): Formatters {
     day: 'numeric',
   });
 
+  const labelFor = (code: PaymentCurrencyCode): string => {
+    if (code === 'irt') return locale === 'fa' ? 'تومان' : 'IRT';
+    return locale === 'fa' ? 'ریال' : 'IRR';
+  };
+
   return {
     number: (value) => numberFmt.format(value),
-    currency: (value) => {
-      if (useIrr) {
-        // Catalog amounts are stored in IRR (Rials). Display as Toman (1 تومان = 10 ریال).
-        const toman = Math.round(Number(value) / 10);
-        return `${numberFmt.format(toman)} تومان`;
-      }
-      return currencyFmt.format(value);
+    currency: (value, currencyOverride) => {
+      const code = currencyOverride
+        ? normalizePaymentCurrency(currencyOverride)
+        : paymentCurrency;
+      const units = toDisplayUnits(Number(value) || 0, code);
+      return `${numberFmt.format(units)} ${labelFor(code)}`;
     },
     percent: (value) => percentFmt.format(value / 100),
     date: (value) => dateFmt.format(new Date(value)),
     durationMinutes: (minutes) =>
-      useIrr ? `${numberFmt.format(minutes)} دقیقه` : `${numberFmt.format(minutes)} min`,
+      locale === 'fa'
+        ? `${numberFmt.format(minutes)} دقیقه`
+        : `${numberFmt.format(minutes)} min`,
     durationHours: (hours) =>
-      useIrr ? `${numberFmt.format(hours)} ساعت` : `${numberFmt.format(hours)}h`,
+      locale === 'fa' ? `${numberFmt.format(hours)} ساعت` : `${numberFmt.format(hours)}h`,
     points: (value) =>
-      useIrr ? `${numberFmt.format(value)} امتیاز` : `${numberFmt.format(value)} pts`,
+      locale === 'fa' ? `${numberFmt.format(value)} امتیاز` : `${numberFmt.format(value)} pts`,
   };
 }

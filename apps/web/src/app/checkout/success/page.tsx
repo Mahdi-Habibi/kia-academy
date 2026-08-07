@@ -6,15 +6,19 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense, useEffect, useState } from 'react';
 import { api, ApiError } from '@/lib/api';
 import { useAuth } from '@/context/AuthProvider';
+import { useCart } from '@/context/CartProvider';
 import { useLanguage } from '@/context/LanguageProvider';
+import type { PaymentResponse } from '@kia-academy/shared';
 
 function SuccessContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { t } = useLanguage();
   const { refreshSession } = useAuth();
+  const { refresh: refreshCart } = useCart();
   const [status, setStatus] = useState<'loading' | 'ok' | 'error'>('loading');
   const [error, setError] = useState('');
+  const [payment, setPayment] = useState<PaymentResponse | null>(null);
 
   const paymentId = searchParams.get('payment_id');
 
@@ -23,15 +27,24 @@ function SuccessContent() {
 
     (async () => {
       try {
-        // Stripe: webhook completes payment; dev mode may use confirmPayment with payment id.
+        // Stripe: webhook completes payment; dev/simulator may still need confirm.
         if (paymentId && !process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY) {
           try {
             await api.confirmPayment(paymentId);
           } catch {
-            /* may already be confirmed */
+            /* may already be confirmed via callback */
+          }
+        }
+        if (paymentId) {
+          try {
+            const p = await api.getPayment(paymentId);
+            if (!cancelled) setPayment(p);
+          } catch {
+            /* optional */
           }
         }
         await refreshSession();
+        await refreshCart();
         if (!cancelled) setStatus('ok');
       } catch (err) {
         if (!cancelled) {
@@ -44,7 +57,20 @@ function SuccessContent() {
     return () => {
       cancelled = true;
     };
-  }, [paymentId, refreshSession, t]);
+  }, [paymentId, refreshSession, refreshCart, t]);
+
+  const primaryHref =
+    payment?.productType === 'COURSE'
+      ? '/dashboard/my-courses'
+      : payment?.productType === 'ROADMAP_BUNDLE'
+        ? '/roadmap'
+        : '/dashboard/finance#orders';
+  const primaryLabel =
+    payment?.productType === 'COURSE'
+      ? t('checkout.success.goCourses')
+      : payment?.productType === 'ROADMAP_BUNDLE'
+        ? t('checkout.success.goReadiness')
+        : t('checkout.success.goOrders');
 
   if (status === 'loading') {
     return (
@@ -66,10 +92,13 @@ function SuccessContent() {
               <button
                 type="button"
                 className="cta-primary"
-                onClick={() => router.push('/readiness')}
+                onClick={() => router.push(primaryHref)}
               >
-                {t('checkout.success.goReadiness')}
+                {primaryLabel}
               </button>
+              <Link href="/dashboard/finance#orders" className="cta-secondary">
+                {t('checkout.success.goOrders')}
+              </Link>
               <Link href="/dashboard" className="cta-secondary">
                 {t('checkout.success.dashboard')}
               </Link>
@@ -79,7 +108,7 @@ function SuccessContent() {
           <>
             <h1>{t('checkout.success.verifyIssue')}</h1>
             <p className="form-error">{error}</p>
-            <Link href="/checkout" className="cta-primary">
+            <Link href="/cart" className="cta-primary">
               {t('checkout.success.return')}
             </Link>
           </>

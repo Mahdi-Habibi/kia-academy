@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ChevronDown, LogOut, Menu, Shield, X } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
+import { CartBadge } from '@/components/cart/CartBadge';
 import { LanguageSelector } from '@/components/layout/LanguageSelector';
 import { LearnerNav } from '@/components/layout/LearnerNav';
 import { useApp } from '@/context/AppProvider';
@@ -136,84 +137,87 @@ export function TopBar() {
         </div>
 
         {loading || !user ? null : (
-          <div className="user-menu-wrap" ref={menuRef}>
-            <button
-              type="button"
-              className="user-chip"
-              onClick={() => setMenuOpen((o) => !o)}
-              aria-expanded={menuOpen}
-            >
-              <span className="avatar" aria-hidden="true" />
-              <span className="user-chip-name">{user.name.split(' ')[0]}</span>
-              <ChevronDown size={14} />
-            </button>
-            {menuOpen && (
-              <div className="user-dropdown">
-                <div className="user-dropdown-head">
-                  <b>{user.name}</b>
-                  <span className="ltr-isolate">{user.email || user.phone}</span>
+          <>
+            {!isSuperAdmin ? <CartBadge /> : null}
+            <div className="user-menu-wrap" ref={menuRef}>
+              <button
+                type="button"
+                className="user-chip"
+                onClick={() => setMenuOpen((o) => !o)}
+                aria-expanded={menuOpen}
+              >
+                <span className="avatar" aria-hidden="true" />
+                <span className="user-chip-name">{user.name.split(' ')[0]}</span>
+                <ChevronDown size={14} />
+              </button>
+              {menuOpen && (
+                <div className="user-dropdown">
+                  <div className="user-dropdown-head">
+                    <b>{user.name}</b>
+                    <span className="ltr-isolate">{user.email || user.phone}</span>
+                  </div>
+                  {!isSuperAdmin && (
+                    <>
+                      <Link
+                        href="/dashboard"
+                        className="user-dropdown-item"
+                        onClick={() => setMenuOpen(false)}
+                      >
+                        {t('panel.nav.dashboard')}
+                      </Link>
+                      <Link
+                        href="/dashboard/my-courses"
+                        className="user-dropdown-item"
+                        onClick={() => setMenuOpen(false)}
+                      >
+                        {t('panel.nav.myCourses')}
+                      </Link>
+                      <Link
+                        href="/dashboard/tickets"
+                        className="user-dropdown-item"
+                        onClick={() => setMenuOpen(false)}
+                      >
+                        {t('panel.nav.tickets')}
+                      </Link>
+                      <Link
+                        href="/dashboard/messages"
+                        className="user-dropdown-item"
+                        onClick={() => setMenuOpen(false)}
+                      >
+                        {t('panel.nav.messages')}
+                      </Link>
+                      <Link
+                        href="/dashboard/profile"
+                        className="user-dropdown-item"
+                        onClick={() => setMenuOpen(false)}
+                      >
+                        {t('panel.nav.profile')}
+                      </Link>
+                      <Link
+                        href="/rewards"
+                        className="user-dropdown-item"
+                        onClick={() => setMenuOpen(false)}
+                      >
+                        {t('nav.rewards')}
+                      </Link>
+                    </>
+                  )}
+                  {(isAdmin || isSuperAdmin) && (
+                    <Link
+                      href="/admin"
+                      className="user-dropdown-item"
+                      onClick={() => setMenuOpen(false)}
+                    >
+                      <Shield size={14} /> {t('nav.admin')}
+                    </Link>
+                  )}
+                  <button type="button" className="user-dropdown-item danger" onClick={handleLogout}>
+                    <LogOut size={14} /> {t('nav.signOut')}
+                  </button>
                 </div>
-                {!isSuperAdmin && (
-                  <>
-                    <Link
-                      href="/dashboard"
-                      className="user-dropdown-item"
-                      onClick={() => setMenuOpen(false)}
-                    >
-                      {t('panel.nav.dashboard')}
-                    </Link>
-                    <Link
-                      href="/dashboard/my-courses"
-                      className="user-dropdown-item"
-                      onClick={() => setMenuOpen(false)}
-                    >
-                      {t('panel.nav.myCourses')}
-                    </Link>
-                    <Link
-                      href="/dashboard/tickets"
-                      className="user-dropdown-item"
-                      onClick={() => setMenuOpen(false)}
-                    >
-                      {t('panel.nav.tickets')}
-                    </Link>
-                    <Link
-                      href="/dashboard/messages"
-                      className="user-dropdown-item"
-                      onClick={() => setMenuOpen(false)}
-                    >
-                      {t('panel.nav.messages')}
-                    </Link>
-                    <Link
-                      href="/dashboard/profile"
-                      className="user-dropdown-item"
-                      onClick={() => setMenuOpen(false)}
-                    >
-                      {t('panel.nav.profile')}
-                    </Link>
-                    <Link
-                      href="/rewards"
-                      className="user-dropdown-item"
-                      onClick={() => setMenuOpen(false)}
-                    >
-                      {t('nav.rewards')}
-                    </Link>
-                  </>
-                )}
-                {(isAdmin || isSuperAdmin) && (
-                  <Link
-                    href="/admin"
-                    className="user-dropdown-item"
-                    onClick={() => setMenuOpen(false)}
-                  >
-                    <Shield size={14} /> {t('nav.admin')}
-                  </Link>
-                )}
-                <button type="button" className="user-dropdown-item danger" onClick={handleLogout}>
-                  <LogOut size={14} /> {t('nav.signOut')}
-                </button>
-              </div>
-            )}
-          </div>
+              )}
+            </div>
+          </>
         )}
       </div>
     </div>

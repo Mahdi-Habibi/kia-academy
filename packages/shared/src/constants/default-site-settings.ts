@@ -64,11 +64,17 @@ export function createDefaultSiteSettings(): SiteSettings {
       defaultPoints: 340,
     },
     payment: {
+      enabled: true,
       provider: 'dev',
+      currency: 'irr',
       merchantId: '',
       apiKey: '',
       sandbox: true,
       displayName: '',
+      description: '',
+      callbackUrl: '',
+      successUrl: '',
+      failureUrl: '',
     },
     adminAccess: {
       stats: createSectionPermission(true, true, false),

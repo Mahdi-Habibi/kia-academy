@@ -3,6 +3,7 @@
 import { Modal } from '@/components/ui/Modal';
 import { AppProvider, useApp } from '@/context/AppProvider';
 import { AuthProvider } from '@/context/AuthProvider';
+import { CartProvider } from '@/context/CartProvider';
 import { LanguageProvider } from '@/context/LanguageProvider';
 import { ThemeProvider } from '@/context/ThemeProvider';
 import type { Locale } from '@/i18n/locales';
@@ -23,10 +24,12 @@ export function ClientProviders({
     <ThemeProvider>
       <LanguageProvider initialLocale={initialLocale}>
         <AuthProvider>
-          <AppProvider>
-            {children}
-            <ModalBridge />
-          </AppProvider>
+          <CartProvider>
+            <AppProvider>
+              {children}
+              <ModalBridge />
+            </AppProvider>
+          </CartProvider>
         </AuthProvider>
       </LanguageProvider>
     </ThemeProvider>
