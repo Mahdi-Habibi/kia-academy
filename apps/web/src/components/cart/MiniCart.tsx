@@ -28,9 +28,9 @@ export function MiniCart({ onClose }: MiniCartProps) {
         <ul className="mini-cart-list">
           {items.map((item) => (
             <li key={item.id} className="mini-cart-item">
-              <span className="mini-cart-thumb" aria-hidden="true">
+              {/* <span className="mini-cart-thumb" aria-hidden="true">
                 {item.thumbnail || '📘'}
-              </span>
+              </span> */}
               <div className="mini-cart-item-body">
                 <b>{item.title}</b>
                 <span>{format.currency(item.finalPriceCents)}</span>
