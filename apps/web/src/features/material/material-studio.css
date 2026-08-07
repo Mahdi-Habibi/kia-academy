@@ -1589,8 +1589,9 @@
 }
 
 .material-studio-root .material-brand-mark {
-  width: 1.15rem;
   height: 1.15rem;
+  width: auto;
+  aspect-ratio: 497.37 / 512;
   color: var(--primary-accent, var(--brand-400));
   flex: 0 0 auto;
   display: block;

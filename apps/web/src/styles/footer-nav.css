@@ -66,8 +66,9 @@
 
 .footer-logo-mark {
   display: block;
-  width: 26px;
   height: 26px;
+  width: auto;
+  aspect-ratio: 497.37 / 512;
   flex: 0 0 auto;
   color: var(--brand-400);
   overflow: visible;
