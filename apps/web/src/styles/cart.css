@@ -52,7 +52,7 @@
   position: absolute;
   top: calc(100% + var(--space-2));
   inset-inline-end: 0;
-  width: min(320px, calc(100dvw - 24px));
+  width: min(270px, calc(100dvw - 24px));
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
